@@ -1,4 +1,4 @@
 package org.example.model;
 
-public class Person {
+public class Client {
 }
