@@ -20,18 +20,30 @@ public class TicketSystem {
     }
 
     public Ticket search(Ticket ticket) {
-        return null;
+        if (boughtTickets.contains(ticket)) {
+            System.out.print("Ticket: ");
+            return ticket;
+        } else {
+            throw new IllegalArgumentException("Ticket does not exist.");
+        }
     }
 
     public void displayAllTickets(List<Ticket> tickets) {
-
+        if (!tickets.isEmpty()) {
+            for (Ticket ticket : tickets) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Ticket: ");
+                ticket.displayDetails();
+                System.out.println("--------------------------------------------------");
+            }
+        }
     }
 
     public void add(Client client) {
-
+        //TODO: TO BE DISCUSSED
     }
 
     public void add(Employee employee) {
-
+        //TODO: TO BE DISCUSSED
     }
 }

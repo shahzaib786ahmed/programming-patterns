@@ -1,5 +1,6 @@
 package org.example.model;
 
+import java.util.Objects;
 import java.util.Random;
 
 public abstract class User {
@@ -10,6 +11,16 @@ public abstract class User {
     private String phoneNumber;
     private String emailAddress;
     private int age;
+
+    public User() {
+        this.userId = generateRandomId();
+        this.lName = "";
+        this.fName = "";
+        this.passportNum = validatePassportNum("");
+        this.phoneNumber = validatePhoneNumber("");
+        this.emailAddress = validateEmailAddress("");
+        this.age = 0;
+    }
 
     public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age) {
         this.userId = generateRandomId();
@@ -127,6 +138,20 @@ public abstract class User {
     }
 
     public abstract void displayDetails();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId && age == user.age && Objects.equals(lName, user.lName) && Objects.equals(fName, user.fName) && Objects.equals(passportNum, user.passportNum) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(emailAddress, user.emailAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, lName, fName, passportNum, phoneNumber, emailAddress, age);
+    }
+
     @Override
     public String toString() {
         return "User{" +

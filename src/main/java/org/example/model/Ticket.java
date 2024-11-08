@@ -20,7 +20,7 @@ public class Ticket {
         this.flight = flight;
         this.client = client;
         this.seatNumber = seatNumber;
-        this.ticketStatus = ticketStatus;
+        this.ticketStatus = Status.CREATED;
         this.bookedBy = bookedBy;
         this.operationHistory = new MyQueue<>();
         this.departureDate = departureDate;
@@ -68,6 +68,7 @@ public class Ticket {
     }
 
     public void setOperationHistory(MyQueue<Operation> operationHistory) {
+        //TODO: TO BE DISCUSSED
         this.operationHistory = operationHistory;
     }
 
@@ -96,6 +97,7 @@ public class Ticket {
     }
 
     public void displayDetails() {
+        System.out.println("--------------------------------------------------");
         System.out.println("Ticket Details:");
         System.out.println("Ticket ID: " + ticketId);
         System.out.println("Flight: " + (flight.getFlightNumber()));
@@ -106,6 +108,7 @@ public class Ticket {
         System.out.println("Operation History: " + (operationHistory != null ? operationHistory.toString() : "Not available"));
         System.out.println("Departure Date: " + departureDate);
         System.out.println("Arrival Date: " + arrivalDate);
+        System.out.println("--------------------------------------------------");
     }
 
     public static class Operation {
