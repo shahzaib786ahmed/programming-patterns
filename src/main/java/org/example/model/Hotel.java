@@ -5,8 +5,8 @@ public class Hotel extends Services {
     private String address;
     private final int totalRooms;
 
-    public Hotel(String serviceName, double price, String description, int totalRooms, String address, String name) {
-        super(serviceName, price, description);
+    public Hotel(String serviceName, String description, int totalRooms, String address, String name) {
+        super(serviceName, description);
         this.totalRooms = totalRooms;
         this.address = address;
         this.name = name;

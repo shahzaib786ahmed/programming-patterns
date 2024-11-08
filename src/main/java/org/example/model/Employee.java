@@ -6,8 +6,8 @@ public class Employee extends User{
     private List<Ticket> requestedBookings;
     private double discountRate;
 
-    public Employee(String userId, String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, List<Ticket> requestedBookings, double discountRate) {
-        super(userId, lName, fName, passportNum, phoneNumber, emailAddress, age);
+    public Employee(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, List<Ticket> requestedBookings, double discountRate) {
+        super(lName, fName, passportNum, phoneNumber, emailAddress, age);
         this.requestedBookings = requestedBookings;
         this.discountRate = discountRate;
     }

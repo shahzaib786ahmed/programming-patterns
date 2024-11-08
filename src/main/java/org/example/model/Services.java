@@ -2,12 +2,10 @@ package org.example.model;
 
 public abstract class Services {
     private String serviceName;
-    private double price;
     private String description;
 
-    public Services(String serviceName, double price, String description) {
+    public Services(String serviceName,String description) {
         this.serviceName = serviceName;
-        this.price = price;
         this.description = description;
     }
 
@@ -19,14 +17,6 @@ public abstract class Services {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public String getDescription() {

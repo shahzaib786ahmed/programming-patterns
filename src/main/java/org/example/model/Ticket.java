@@ -4,29 +4,25 @@ import java.time.LocalDateTime;
 
 public class Ticket {
     private int ticketId;
-    private String flightNum;
-    private String clientName;
+    private Flight flight;
+    private Client client;
     private String seatNumber;
     private Status ticketStatus;
     private Employee bookedBy;
     private MyQueue<Operation> operationHistory;
-    private String departureDestination;
-    private String arrivalDestination;
-    private double price;
     private String departureDate;
     private String arrivalDate;
 
-    public Ticket(int ticketId, String flightNum, String clientName, String seatNumber, Status ticketStatus, Employee bookedBy, MyQueue<Operation> operationHistory, String departureDestination, String arrivalDestination, double price, String departureDate, String arrivalDate) {
-        this.ticketId = ticketId;
-        this.flightNum = flightNum;
-        this.clientName = clientName;
+    private static int idCounter = 0;
+
+    public Ticket(Flight flight, Client client, String seatNumber, Status ticketStatus, Employee bookedBy, MyQueue<Operation> operationHistory, String departureDate, String arrivalDate) {
+        this.ticketId = ++idCounter;
+        this.flight = flight;
+        this.client = client;
         this.seatNumber = seatNumber;
         this.ticketStatus = ticketStatus;
         this.bookedBy = bookedBy;
-        this.operationHistory = operationHistory;
-        this.departureDestination = departureDestination;
-        this.arrivalDestination = arrivalDestination;
-        this.price = price;
+        this.operationHistory = new MyQueue<>();
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
     }
@@ -35,24 +31,12 @@ public class Ticket {
         return ticketId;
     }
 
-    public void setTicketId(int ticketId) {
-        this.ticketId = ticketId;
+    public Client getClient() {
+        return client;
     }
 
-    public String getFlightNum() {
-        return flightNum;
-    }
-
-    public void setFlightNum(String flightNum) {
-        this.flightNum = flightNum;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public String getSeatNumber() {
@@ -87,30 +71,6 @@ public class Ticket {
         this.operationHistory = operationHistory;
     }
 
-    public String getDepartureDestination() {
-        return departureDestination;
-    }
-
-    public void setDepartureDestination(String departureDestination) {
-        this.departureDestination = departureDestination;
-    }
-
-    public String getArrivalDestination() {
-        return arrivalDestination;
-    }
-
-    public void setArrivalDestination(String arrivalDestination) {
-        this.arrivalDestination = arrivalDestination;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public String getDepartureDate() {
         return departureDate;
     }
@@ -126,10 +86,41 @@ public class Ticket {
     public void setArrivalDate(String arrivalDate) {
         this.arrivalDate = arrivalDate;
     }
-}
 
-class Operation implements MyQueue{
-    private LocalDateTime operationTime;
-    private Employee operatedBy;
-    private String description;
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
+    }
+
+    public void displayDetails() {
+        System.out.println("Ticket Details:");
+        System.out.println("Ticket ID: " + ticketId);
+        System.out.println("Flight: " + (flight.getFlightNumber()));
+        System.out.println("Client: " + (client));
+        System.out.println("Seat Number: " + seatNumber);
+        System.out.println("Ticket Status: " + (ticketStatus));
+        System.out.println("Booked By: " + (bookedBy.getUserId() + " | " + bookedBy.getlName() + ", " + bookedBy.getfName()));
+        System.out.println("Operation History: " + (operationHistory != null ? operationHistory.toString() : "Not available"));
+        System.out.println("Departure Date: " + departureDate);
+        System.out.println("Arrival Date: " + arrivalDate);
+    }
+
+    public static class Operation {
+        LocalDateTime operationTime;
+        User operatedBy;
+        String description;
+
+        public Operation(User operatedBy, String description) {
+            this.operatedBy = operatedBy;
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return operationTime + ": " + operatedBy + ": " + description;
+        }
+    }
 }

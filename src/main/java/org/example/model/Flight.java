@@ -10,12 +10,11 @@ public class Flight extends Services{
     private String departureTime;
     private String arrivalTime;
 
-    public Flight(String serviceName, double price, String description, String flightNumber, String airline, double price1, int flightSeatNumber, String departureLocation, String arrivalLocation, String departureTime, String arrivalTime) {
-        super(serviceName, price, description);
+    public Flight(String serviceName, String description, String flightNumber, String airline, double price, String departureLocation, String arrivalLocation, String departureTime, String arrivalTime) {
+        super(serviceName,description);
         this.flightNumber = flightNumber;
         this.airline = airline;
-        this.price = price1;
-        this.flightSeatNumber = flightSeatNumber;
+        this.price = price;
         this.departureLocation = departureLocation;
         this.arrivalLocation = arrivalLocation;
         this.departureTime = departureTime;
@@ -24,7 +23,15 @@ public class Flight extends Services{
 
     @Override
     public void displayDetails() {
-
+        System.out.println("--------------------------------------------------");
+        System.out.println("Flight: " + getFlightNumber());
+        System.out.println("Airline: " + getAirline());
+        System.out.println("Departure Airport: " + getDepartureLocation());
+        System.out.println("Arrival Airport: " + getArrivalLocation());
+        System.out.println("Departure Time: " + getDepartureTime());
+        System.out.println("Arrival Time: " + getArrivalTime());
+        System.out.println("Flight Ticket Purchase Price: " + getPrice());
+        System.out.println("--------------------------------------------------");
     }
 
     public String getFlightNumber() {
@@ -43,12 +50,10 @@ public class Flight extends Services{
         this.airline = airline;
     }
 
-    @Override
     public double getPrice() {
         return price;
     }
 
-    @Override
     public void setPrice(double price) {
         this.price = price;
     }

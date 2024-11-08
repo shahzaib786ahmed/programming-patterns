@@ -5,8 +5,8 @@ import java.util.List;
 public class Manager extends Employee{
     private int numberOfEmployeesManaged;
 
-    public Manager(String userId, String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, List<Ticket> requestedBookings, double discountRate, int numberOfEmployeesManaged) {
-        super(userId, lName, fName, passportNum, phoneNumber, emailAddress, age, requestedBookings, discountRate);
+    public Manager(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, List<Ticket> requestedBookings, double discountRate, int numberOfEmployeesManaged) {
+        super(lName, fName, passportNum, phoneNumber, emailAddress, age, requestedBookings, discountRate);
         this.numberOfEmployeesManaged = numberOfEmployeesManaged;
     }
 
