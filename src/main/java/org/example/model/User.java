@@ -23,10 +23,8 @@ public abstract class User {
 
     private static int generateRandomId() {
         Random random = new Random();
-        int randomId;
+        return 1 + random.nextInt(999999);
 
-        randomId = 1 + random.nextInt(999999);
-        return randomId;
     }
 
     private String validatePassportNum(String passportNum) {
@@ -129,4 +127,16 @@ public abstract class User {
     }
 
     public abstract void displayDetails();
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", lName='" + lName + '\'' +
+                ", fName='" + fName + '\'' +
+                ", passportNum='" + passportNum + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }

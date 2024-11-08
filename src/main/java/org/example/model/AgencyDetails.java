@@ -54,7 +54,11 @@ public class AgencyDetails {
     }
 
     public void setAgencyName(String agencyName) {
-        this.agencyName = agencyName;
+        if (agencyName != null && !agencyName.trim().isEmpty()) {
+            this.agencyName = agencyName;
+        } else {
+            throw new IllegalArgumentException("Agency name cannot be null or empty.");
+        }
     }
 
     public String getAgencyAddress() {
