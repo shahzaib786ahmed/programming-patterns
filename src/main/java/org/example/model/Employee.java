@@ -1,8 +1,14 @@
 package org.example.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.util.Objects;
-
+@Setter
+@Getter
+@EqualsAndHashCode
 public class Employee extends User{
     private static List<Ticket> requestedBookings;
     private double discountRate;
@@ -15,6 +21,14 @@ public class Employee extends User{
     public Ticket fetchNewTicket() {
         //TODO: ADD TICKET FETCHING SYSTEM LOGIC
         return null;
+        //CEST COMME CA QUE ON LA FAIT DANS ASS3 SO IT GIVES U AN IDEA
+//        Ticket ticket = TicketSystem.getUnassignedTickets().poll();
+//        TicketSystem.getProcessingTickets().add(ticket);
+//        assignedTickets.add(ticket);
+//        ticket.setStatus(Ticket.Status.ASSIGNED);
+//        ticket.setAssignedTo(this);
+//        ticket.getOperationHistory().add(new Ticket.Operation(this, "Assigned to " + this.getName()));
+//        return ticket;
     }
 
     public void viewAllTickets(List<Ticket> tickets){
@@ -27,39 +41,32 @@ public class Employee extends User{
             }
         }
     }
-
-    public Ticket purchaseTicket() {
-        //TODO: ADD PURCHASING TICKET SYSTEM LOGIC
-        return null;
-    }
-
-    public void cancelTicket(Ticket ticket) {
-        //TODO: ADD CANCELLING TICKET SYSTEM LOGIC
-    }
+//MAYBE WE SHOULD NAME THEM FLIGHTBOOKING BECAUSE SO IT DOESNT CONFUSE US
+//    public Ticket purchaseTicket() {
+//        //TODO: ADD PURCHASING TICKET SYSTEM LOGIC
+//        return null;
+//    }
+//
+//    public void cancelTicket(Ticket ticket) {
+//        //TODO: ADD CANCELLING TICKET SYSTEM LOGIC
+//    }
 
     public void changeTicketStatus(Ticket ticket, Status newStatus) {
         ticket.setTicketStatus(newStatus);
     }
 
-    public void bookHotelRoom(Hotel hotel, Room room) {
-        //TODO: ADD BOOKING HOTEL ROOM SYSTEM LOGIC
+    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room) {
+        if (!hotelSystem.bookRoom(this, client, room)) {
+            System.out.println("Unable to book the room for the client.");
+        }
     }
 
-    public void changeRoomStatus(Room room, Room.RoomStatus newStatus) {
-        room.setRoomStatus(newStatus);
+    public void cancelRoomBooking(HotelSystem hotelSystem, Room room) {
+        if (!hotelSystem.cancelBooking(room)) {
+            System.out.println("Unable to cancel the room booking.");
+        }
     }
 
-    public void cancelHotelBooking(Room room) {
-        //TODO: ADD CANCELLING HOTEL ROOM SYSTEM LOGIC
-    }
-
-    public List<Ticket> getRequestedBookings() {
-        return requestedBookings;
-    }
-
-    public double getDiscountRate() {
-        return discountRate;
-    }
 
     public void setDiscountRate(double discountRate) {
         this.discountRate = 10;

@@ -1,7 +1,14 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@ToString
 public class Ticket {
     private int ticketId;
     private Flight flight;
@@ -11,89 +18,23 @@ public class Ticket {
     private Employee bookedBy;
     private MyQueue<Operation> operationHistory;
     private String departureDate;
+    private Employee assignedTo;
     private String arrivalDate;
 
     private static int idCounter = 0;
 
-    public Ticket(Flight flight, Client client, String seatNumber, Status ticketStatus, Employee bookedBy, MyQueue<Operation> operationHistory, String departureDate, String arrivalDate) {
+    public Ticket(Flight flight, Client client, String seatNumber, Status ticketStatus, Employee bookedBy, MyQueue<Operation> operationHistory, String departureDate, String arrivalDate, Employee assignedTo) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
         this.seatNumber = seatNumber;
+        this.assignedTo = null;
         this.ticketStatus = Status.CREATED;
         this.bookedBy = bookedBy;
         this.operationHistory = new MyQueue<>();
+        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
-    }
-
-    public int getTicketId() {
-        return ticketId;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public String getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(String seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-
-    public Status getTicketStatus() {
-        return ticketStatus;
-    }
-
-    public void setTicketStatus(Status ticketStatus) {
-        this.ticketStatus = ticketStatus;
-    }
-
-    public Employee getBookedBy() {
-        return bookedBy;
-    }
-
-    public void setBookedBy(Employee bookedBy) {
-        this.bookedBy = bookedBy;
-    }
-
-    public MyQueue<Operation> getOperationHistory() {
-        return operationHistory;
-    }
-
-    public void setOperationHistory(MyQueue<Operation> operationHistory) {
-        //TODO: TO BE DISCUSSED
-        this.operationHistory = operationHistory;
-    }
-
-    public String getDepartureDate() {
-        return departureDate;
-    }
-
-    public void setDepartureDate(String departureDate) {
-        this.departureDate = departureDate;
-    }
-
-    public String getArrivalDate() {
-        return arrivalDate;
-    }
-
-    public void setArrivalDate(String arrivalDate) {
-        this.arrivalDate = arrivalDate;
-    }
-
-    public Flight getFlight() {
-        return flight;
-    }
-
-    public void setFlight(Flight flight) {
-        this.flight = flight;
     }
 
     public void displayDetails() {
@@ -104,7 +45,7 @@ public class Ticket {
         System.out.println("Client: " + (client));
         System.out.println("Seat Number: " + seatNumber);
         System.out.println("Ticket Status: " + (ticketStatus));
-        System.out.println("Booked By: " + (bookedBy.getUserId() + " | " + bookedBy.getlName() + ", " + bookedBy.getfName()));
+        System.out.println("Booked By: " + (bookedBy.getUserId() + " | " + bookedBy.getLName() + ", " + bookedBy.getFName()));
         System.out.println("Operation History: " + (operationHistory != null ? operationHistory.toString() : "Not available"));
         System.out.println("Departure Date: " + departureDate);
         System.out.println("Arrival Date: " + arrivalDate);
@@ -119,6 +60,7 @@ public class Ticket {
         public Operation(User operatedBy, String description) {
             this.operatedBy = operatedBy;
             this.description = description;
+            this.operationTime = LocalDateTime.now();
         }
 
         @Override

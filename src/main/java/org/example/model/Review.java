@@ -1,21 +1,23 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
+@Setter
+@Getter
 public class Review {
     private String reviewId;
     private String email;
     private String title;
     private String body;
+
     public Review(String email, String title, String body) {
         this.reviewId = UUID.randomUUID().toString();
         setEmail(email);
         setTitle(title);
         setBody(body);
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
@@ -26,9 +28,6 @@ public class Review {
         }
     }
 
-    public String getTitle() {
-        return title;
-    }
 
     public void setTitle(String title) {
         if (title != null && !title.trim().isEmpty()) {
@@ -38,9 +37,6 @@ public class Review {
         }
     }
 
-    public String getBody() {
-        return body;
-    }
 
     public void setBody(String body) {
         if (body != null && !body.trim().isEmpty()) {
@@ -50,13 +46,6 @@ public class Review {
         }
     }
 
-    public String getReviewId() {
-        return reviewId;
-    }
-
-    public void setReviewId(String reviewId) {
-        this.reviewId = reviewId;
-    }
 
     @Override
     public String toString() {

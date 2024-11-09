@@ -1,7 +1,12 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.LinkedList;
 
+@Getter
+@Setter
 public class AgencyDetails {
     private static AgencyDetails instance;
     private String agencyName;
@@ -9,6 +14,7 @@ public class AgencyDetails {
     private String agencyPhone;
     private String agencyEmail;
     private LinkedList<Review> customerReviews;
+
     private AgencyDetails() {
         this.agencyName = "";
         this.agencyAddress = "";
@@ -16,6 +22,7 @@ public class AgencyDetails {
         this.agencyEmail = "";
         this.customerReviews = new LinkedList<>();
     }
+
     public void addReview(Review review) {
         if (review != null) {
             customerReviews.add(review);
@@ -24,6 +31,7 @@ public class AgencyDetails {
             System.out.println("Invalid review. Cannot add null review.");
         }
     }
+
     public boolean deleteReviewById(String reviewId) {
         for (Review review : customerReviews) {
             if (review.getReviewId().equals(reviewId)) {
@@ -36,11 +44,11 @@ public class AgencyDetails {
         return false;
     }
 
-    private boolean isValidEmail(String email)
-    {
+    private boolean isValidEmail(String email) {
         // Check if email contains an '@' symbol
         return email.contains("@");
     }
+
     private boolean isValidPhone(String phone) {
         return phone.matches("\\d{10}"); // Checks if phone contains exactly 10 digits
     }
@@ -49,9 +57,6 @@ public class AgencyDetails {
         AgencyDetails.instance = instance;
     }
 
-    public String getAgencyName() {
-        return agencyName;
-    }
 
     public void setAgencyName(String agencyName) {
         if (agencyName != null && !agencyName.trim().isEmpty()) {
@@ -61,17 +66,6 @@ public class AgencyDetails {
         }
     }
 
-    public String getAgencyAddress() {
-        return agencyAddress;
-    }
-
-    public void setAgencyAddress(String agencyAddress) {
-        this.agencyAddress = agencyAddress;
-    }
-
-    public String getAgencyPhone() {
-        return agencyPhone;
-    }
 
     public void setAgencyPhone(String agencyPhone) {
         if (isValidPhone(agencyPhone)) {
@@ -81,24 +75,12 @@ public class AgencyDetails {
         }
     }
 
-    public String getAgencyEmail() {
-        return agencyEmail;
-    }
-
     public void setAgencyEmail(String agencyEmail) {
         if (isValidEmail(agencyEmail)) {
             this.agencyEmail = agencyEmail;
         } else {
             throw new IllegalArgumentException("Invalid email: must contain '@'.");
         }
-    }
-
-    public LinkedList<Review> getCustomerReviews() {
-        return customerReviews;
-    }
-
-    public void setCustomerReviews(LinkedList<Review> customerReviews) {
-        this.customerReviews = customerReviews;
     }
 
     public static AgencyDetails getInstance() {
@@ -112,7 +94,7 @@ public class AgencyDetails {
         return instance;
     }
 
-    public void displayAgencyDetails(){
+    public void displayAgencyDetails() {
         System.out.println("===================================");
         System.out.println("         AGENCY DETAILS           ");
         System.out.println("===================================");

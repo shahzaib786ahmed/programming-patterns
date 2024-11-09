@@ -1,8 +1,17 @@
 package org.example.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
 import java.util.Random;
 
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 public abstract class User {
     private int userId;
     private String lName;
@@ -69,6 +78,7 @@ public abstract class User {
             throw new IllegalArgumentException("Passport Number contains 9 characters");
         }
     }
+
     public boolean isPhoneNumberValid(String phoneNumber) {
         if (phoneNumber.length() == 10) {
             return true;
@@ -81,87 +91,26 @@ public abstract class User {
         return emailAddress.contains("@");
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
     public void setUserId(String userId) {
         generateRandomId();
     }
 
-    public String getlName() {
-        return lName;
-    }
-
-    public void setlName(String lName) {
-        this.lName = lName;
-    }
-
-    public String getfName() {
-        return fName;
-    }
-
-    public void setfName(String fName) {
-        this.fName = fName;
-    }
-
-    public String getPassportNum() {
-        return passportNum;
-    }
 
     public void setPassportNum(String passportNum) {
         validatePassportNum(passportNum);
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
         validatePhoneNumber(phoneNumber);
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
 
     public void setEmailAddress(String emailAddress) {
         validateEmailAddress(emailAddress);
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
 
     public abstract void displayDetails();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userId == user.userId && age == user.age && Objects.equals(lName, user.lName) && Objects.equals(fName, user.fName) && Objects.equals(passportNum, user.passportNum) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(emailAddress, user.emailAddress);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, lName, fName, passportNum, phoneNumber, emailAddress, age);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", lName='" + lName + '\'' +
-                ", fName='" + fName + '\'' +
-                ", passportNum='" + passportNum + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", age=" + age +
-                '}';
-    }
 }

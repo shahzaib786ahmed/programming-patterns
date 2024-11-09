@@ -1,5 +1,10 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class Hotel extends Services {
     private String name;
     private String address;
@@ -10,26 +15,6 @@ public class Hotel extends Services {
         this.totalRooms = totalRooms;
         this.address = address;
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public int getTotalRooms() {
-        return totalRooms;
     }
 
     @Override

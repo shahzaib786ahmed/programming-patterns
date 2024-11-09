@@ -1,7 +1,12 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Setter
+@Getter
 public class HotelSystem {
     private List<Client> clients;
     private List<Employee> employees;
@@ -18,40 +23,40 @@ public class HotelSystem {
     public void add(Client client) {
         clients.add(client);
     }
-    public void add(Employee employee){
+
+    public void add(Employee employee) {
         employees.add(employee);
     }
 
-    public List<Client> getClients() {
-        return clients;
+
+    public boolean bookRoom(Employee employee, Client client, Room room) {
+        if (room.getRoomStatus() == Room.RoomStatus.AVAILABLE) {
+            room.setRoomStatus(Room.RoomStatus.RESERVED);
+            room.setClientName(client.getFName() + " " + client.getLName());
+            room.setBookedBy(employee);
+            availableRooms.remove(room);
+            bookedRooms.add(room);
+            System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName());
+            return true;
+        } else {
+            System.out.println("Room " + room.getRoomNum() + " is not available for booking.");
+            return false;
+        }
     }
 
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public List<Room> getAvailableRooms() {
-        return availableRooms;
-    }
-
-    public void setAvailableRooms(List<Room> availableRooms) {
-        this.availableRooms = availableRooms;
-    }
-
-    public List<Room> getBookedRooms() {
-        return bookedRooms;
-    }
-
-    public void setBookedRooms(List<Room> bookedRooms) {
-        this.bookedRooms = bookedRooms;
+    public boolean cancelBooking(Room room) {
+        if (room.getRoomStatus() == Room.RoomStatus.RESERVED) {
+            room.setRoomStatus(Room.RoomStatus.AVAILABLE);
+            room.setClientName(null);
+            room.setBookedBy(null);
+            bookedRooms.remove(room);
+            availableRooms.add(room);
+            System.out.println("Room " + room.getRoomNum() + " booking has been canceled.");
+            return true;
+        } else {
+            System.out.println("Room " + room.getRoomNum() + " is not currently reserved.");
+            return false;
+        }
     }
 
     @Override

@@ -1,14 +1,28 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+@Setter
 public class TicketSystem {
-    private List<Client> clients;
-    private List<Employee> employees;
-    private MyQueue<Ticket> unassignedTickets;
-    private List<Ticket> cancelledTickets;
-    private List<Ticket> processingTickets;
-    private List<Ticket> boughtTickets;
+    @Getter
+    public static List<Client> clients = new ArrayList<>();
+    @Getter
+    public static List<Employee> employees = new ArrayList<>();
+    @Getter
+    public static List<Manager> managers = new ArrayList<>();
+    @Getter
+    public static MyQueue<Ticket> unassignedTickets = new MyQueue<>();//linkedlist doesnt work
+    @Getter
+    public static List<Ticket> cancelledTickets = new ArrayList<>();
+    @Getter
+    public static List<Ticket> processingTickets = new ArrayList<>();
+    @Getter
+    public static List<Ticket> boughtTickets = new ArrayList<>();
 
     public TicketSystem(List<Client> clients, List<Employee> employees, MyQueue<Ticket> unassignedTickets, List<Ticket> cancelledTickets, List<Ticket> processingTickets, List<Ticket> boughtTickets) {
         this.clients = clients;
@@ -19,13 +33,28 @@ public class TicketSystem {
         this.boughtTickets = boughtTickets;
     }
 
-    public Ticket search(Ticket ticket) {
-        if (boughtTickets.contains(ticket)) {
-            System.out.print("Ticket: ");
-            return ticket;
-        } else {
-            throw new IllegalArgumentException("Ticket does not exist.");
+    public static Ticket search(int keyword) {
+        for (Ticket ticket : unassignedTickets) {
+            if (ticket.getTicketId() == keyword) {
+                return ticket;
+            }
         }
+        for (Ticket ticket : processingTickets) {
+            if (ticket.getTicketId() == keyword) {
+                return ticket;
+            }
+        }
+        for (Ticket ticket : cancelledTickets) {
+            if (ticket.getTicketId() == keyword) {
+                return ticket;
+            }
+        }
+        for (Ticket ticket : boughtTickets) {
+            if (ticket.getTicketId() == keyword) {
+                return ticket;
+            }
+        }
+        return null;
     }
 
     public void displayAllTickets(List<Ticket> tickets) {
@@ -39,11 +68,16 @@ public class TicketSystem {
         }
     }
 
-    public void add(Client client) {
-        //TODO: TO BE DISCUSSED
+    public static void add(Client client) {
+        clients.add(client);
     }
 
-    public void add(Employee employee) {
-        //TODO: TO BE DISCUSSED
+    public static void add(Employee employee) {
+        employees.add(employee);
+    }
+
+    public static void add(Manager manager) {
+        employees.add(manager);
+        managers.add(manager);
     }
 }

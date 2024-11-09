@@ -1,7 +1,11 @@
 package org.example.model;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+@Setter
+@Getter
 public class Client extends User{
     private String userName;
     private String password;
@@ -20,16 +24,17 @@ public class Client extends User{
         }
         return this.userName.equals(userName) && this.password.equals(password);
     }
-    public void requestFlightBooking(String fName,String lName, String phoneNumber, String emailAddress, int age, String passportNum) {
-        //TODO:ADD FLIGHT BOOKING LOGIC
-        System.out.println("Flight booking requested for: " + fName + " " + lName);
-
-    }
-    public void requestHotelBooking(String fName,String lName, String phoneNumber, String emailAddress, int age, String passportNum) {
-      //TODO:ADD HOTEL BOOKING LOGIC
-        System.out.println("Hotel booking requested for: " + fName + " " + lName);
-
-    }
+    //i think we should remove the request process we should just imagine that the client will call the agency and a employee will answer and book,cancel,etc for them directly
+//    public void requestFlightBooking(String fName,String lName, String phoneNumber, String emailAddress, int age, String passportNum) {
+//        //TODO:ADD FLIGHT BOOKING LOGIC
+//        System.out.println("Flight booking requested for: " + fName + " " + lName);
+//
+//    }
+//    public void requestHotelBooking(String fName,String lName, String phoneNumber, String emailAddress, int age, String passportNum) {
+//      //TODO:ADD HOTEL BOOKING LOGIC
+//        System.out.println("Hotel booking requested for: " + fName + " " + lName);
+//
+//    }
     public void viewTicketDetails(List<Ticket> tickets, int ticketId) {
         for (Ticket ticket : tickets) {
             if (ticket.getTicketId() == ticketId) {
