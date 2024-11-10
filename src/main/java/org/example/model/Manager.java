@@ -16,7 +16,9 @@ public class Manager extends Employee{
 
     public void assignTo(Ticket ticket, Employee employee) {
         if (ticket.getBookedBy().getUserId() != employee.getUserId()) {
+            ticket = TicketSystem.getUnassignedTickets().poll();
             employee.getRequestedBookings().add(ticket);
+            ticket.setTicketStatus(Status.ASSIGNED);
         } else {
             throw new IllegalArgumentException("This ticket is already assigned to this employee.");
         }
@@ -38,11 +40,6 @@ public class Manager extends Employee{
     }
 
     @Override
-    public Ticket fetchNewTicket() {
-        return super.fetchNewTicket();
-    }
-
-    @Override
     public void viewAllTickets(List<Ticket> tickets) {
         super.viewAllTickets(tickets);
     }
@@ -53,8 +50,8 @@ public class Manager extends Employee{
     }
 
     @Override
-    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room) {
-        super.bookRoomForClient(hotelSystem, client, room);
+    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room, int numOfNights) {
+        super.bookRoomForClient(hotelSystem, client, room, numOfNights);
     }
 
     @Override

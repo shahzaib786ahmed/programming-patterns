@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -23,14 +24,13 @@ public class Ticket {
 
     private static int idCounter = 0;
 
-    public Ticket(Flight flight, Client client, String seatNumber, Status ticketStatus, Employee bookedBy, MyQueue<Operation> operationHistory, String departureDate, String arrivalDate, Employee assignedTo) {
+    public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String arrivalDate) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
         this.seatNumber = seatNumber;
         this.assignedTo = null;
         this.ticketStatus = Status.CREATED;
-        this.bookedBy = bookedBy;
         this.operationHistory = new MyQueue<>();
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;

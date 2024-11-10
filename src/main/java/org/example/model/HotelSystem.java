@@ -3,6 +3,7 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -28,11 +29,12 @@ public class HotelSystem {
         employees.add(employee);
     }
 
-
-    public boolean bookRoom(Employee employee, Client client, Room room) {
+    //Instead of having checkIn and checkOut dates, we should stick to only number of nights staying so it's easy to calculate the stay price
+    public boolean bookRoom(Employee employee, Client client, Room room, int numberOfNights) {
         if (room.getRoomStatus() == Room.RoomStatus.AVAILABLE) {
             room.setRoomStatus(Room.RoomStatus.RESERVED);
             room.setClientName(client.getFName() + " " + client.getLName());
+            room.setNumberOfNights(numberOfNights);
             room.setBookedBy(employee);
             availableRooms.remove(room);
             bookedRooms.add(room);

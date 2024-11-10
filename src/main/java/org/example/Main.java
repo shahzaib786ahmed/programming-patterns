@@ -22,7 +22,7 @@ public class Main {
 
         //Testing Flight class
         Flight flight = new Flight("Flight Info","Flight information from Montreal to Casablanca",
-                "AT207","Royal Air Maroc",1380.46,"YUL - Montreal Trudeau", "CMN - Casablanca Mohammed V Int'l",
+                "AT207","Royal Air Maroc",1380.46,256,"YUL - Montreal Trudeau", "CMN - Casablanca Mohammed V Int'l",
                 "9:25 AM","10:00 PM");
         flight.displayDetails();
     }

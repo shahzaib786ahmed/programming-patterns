@@ -16,7 +16,7 @@ public class TicketSystem {
     @Getter
     public static List<Manager> managers = new ArrayList<>();
     @Getter
-    public static MyQueue<Ticket> unassignedTickets = new MyQueue<>();//linkedlist doesnt work
+    public static MyQueue<Ticket> unassignedTickets = new MyQueue<>();
     @Getter
     public static List<Ticket> cancelledTickets = new ArrayList<>();
     @Getter
@@ -68,15 +68,15 @@ public class TicketSystem {
         }
     }
 
-    public static void add(Client client) {
+    public static void addClient(Client client) {
         clients.add(client);
     }
 
-    public static void add(Employee employee) {
+    public static void addEmployee(Employee employee) {
         employees.add(employee);
     }
 
-    public static void add(Manager manager) {
+    public static void addManager(Manager manager) {
         employees.add(manager);
         managers.add(manager);
     }

@@ -10,25 +10,12 @@ import java.util.Objects;
 @Getter
 @EqualsAndHashCode
 public class Employee extends User{
-    private static List<Ticket> requestedBookings;
+    private List<Ticket> requestedBookings;
     private double discountRate;
 
     public Employee(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, double discountRate) {
         super(lName, fName, passportNum, phoneNumber, emailAddress, age);
         this.discountRate = discountRate;
-    }
-
-    public Ticket fetchNewTicket() {
-        //TODO: ADD TICKET FETCHING SYSTEM LOGIC
-        return null;
-        //CEST COMME CA QUE ON LA FAIT DANS ASS3 SO IT GIVES U AN IDEA
-//        Ticket ticket = TicketSystem.getUnassignedTickets().poll();
-//        TicketSystem.getProcessingTickets().add(ticket);
-//        assignedTickets.add(ticket);
-//        ticket.setStatus(Ticket.Status.ASSIGNED);
-//        ticket.setAssignedTo(this);
-//        ticket.getOperationHistory().add(new Ticket.Operation(this, "Assigned to " + this.getName()));
-//        return ticket;
     }
 
     public void viewAllTickets(List<Ticket> tickets){
@@ -41,22 +28,42 @@ public class Employee extends User{
             }
         }
     }
-//MAYBE WE SHOULD NAME THEM FLIGHTBOOKING BECAUSE SO IT DOESNT CONFUSE US
-//    public Ticket purchaseTicket() {
-//        //TODO: ADD PURCHASING TICKET SYSTEM LOGIC
-//        return null;
-//    }
-//
-//    public void cancelTicket(Ticket ticket) {
-//        //TODO: ADD CANCELLING TICKET SYSTEM LOGIC
-//    }
+
+    //REMOVED FETCHTICKET BECAUSE MANAGER FETCHES TICKET AND ADDS IT TO EMPLOYEE'S REQUESTED BOOKING LIST WHERE EMPLOYEE WILL RETRIEVE.
+
+    public void viewRequestedBookings() {
+        for (Ticket requestedBooking: requestedBookings) {
+            System.out.println(requestedBooking);
+        }
+    }
+
+    public Ticket purchaseFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String arrivalDate) {
+        //add if statement to check if eligible for employee discount.
+        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, arrivalDate);
+        ticket.setTicketStatus(Status.BOUGHT);
+        TicketSystem.getBoughtTickets().add(ticket);
+
+        System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
+                " for flight: " + flight.getFlightNumber() + " from" + flight.getDepartureLocation() + " to" + flight.getArrivalLocation());
+        System.out.println("Here's your ticket: ");
+        ticket.displayDetails();
+        return ticket;
+    }
+
+    public void cancelFlightTicket(Ticket ticket) {
+        ticket.setTicketStatus(Status.CANCELLED);
+        TicketSystem.getBoughtTickets().remove(ticket);
+        TicketSystem.getCancelledTickets().add(ticket);
+
+        System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
+    }
 
     public void changeTicketStatus(Ticket ticket, Status newStatus) {
         ticket.setTicketStatus(newStatus);
     }
 
-    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room) {
-        if (!hotelSystem.bookRoom(this, client, room)) {
+    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room, int numOfNights) {
+        if (!hotelSystem.bookRoom(this, client, room, numOfNights)) {
             System.out.println("Unable to book the room for the client.");
         }
     }
