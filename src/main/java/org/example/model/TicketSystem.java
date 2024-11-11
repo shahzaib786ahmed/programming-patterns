@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 @Setter
 public class TicketSystem {
@@ -16,7 +17,7 @@ public class TicketSystem {
     @Getter
     public static List<Manager> managers = new ArrayList<>();
     @Getter
-    public static MyQueue<Ticket> unassignedTickets = new MyQueue<>();
+    public static Queue<Ticket> unassignedTickets = new LinkedList<>();
     @Getter
     public static List<Ticket> cancelledTickets = new ArrayList<>();
     @Getter
@@ -24,7 +25,7 @@ public class TicketSystem {
     @Getter
     public static List<Ticket> boughtTickets = new ArrayList<>();
 
-    public TicketSystem(List<Client> clients, List<Employee> employees, MyQueue<Ticket> unassignedTickets, List<Ticket> cancelledTickets, List<Ticket> processingTickets, List<Ticket> boughtTickets) {
+    public TicketSystem(List<Client> clients, List<Employee> employees, Queue<Ticket> unassignedTickets, List<Ticket> cancelledTickets, List<Ticket> processingTickets, List<Ticket> boughtTickets) {
         this.clients = clients;
         this.employees = employees;
         this.unassignedTickets = unassignedTickets;
