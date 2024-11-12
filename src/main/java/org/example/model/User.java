@@ -13,7 +13,7 @@ import java.util.Random;
 @ToString
 @EqualsAndHashCode
 public abstract class User {
-    private int userId;
+    private int id;
     private String lName;
     private String fName;
     private String passportNum;
@@ -22,7 +22,7 @@ public abstract class User {
     private int age;
 
     public User() {
-        this.userId = generateRandomId();
+        this.id = generateRandomId();
         this.lName = "";
         this.fName = "";
         this.passportNum = validatePassportNum("");
@@ -32,7 +32,7 @@ public abstract class User {
     }
 
     public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age) {
-        this.userId = generateRandomId();
+        this.id = generateRandomId();
         this.lName = lName;
         this.fName = fName;
         this.passportNum = validatePassportNum(passportNum);

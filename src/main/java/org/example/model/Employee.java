@@ -19,7 +19,7 @@ public class Employee extends User{
         this.discountRate = discountRate;
     }
 
-    public static void viewAllTickets(){
+    public static void viewAllBoughtTickets(){
         if (!TicketSystem.getBoughtTickets().isEmpty()) {
             for (Ticket ticket : TicketSystem.getBoughtTickets()) {
                 System.out.println("--------------------------------------------------");
@@ -29,12 +29,14 @@ public class Employee extends User{
             }
         }
     }
-
-    //REMOVED FETCHTICKET BECAUSE MANAGER FETCHES TICKET AND ADDS IT TO EMPLOYEE'S REQUESTED BOOKING LIST WHERE EMPLOYEE WILL RETRIEVE.
-
-    public void viewRequestedBookings() {
-        for (Ticket requestedBooking: requestedBookings) {
-            System.out.println(requestedBooking);
+    public static void viewAllCanceledTickets(){
+        if (!TicketSystem.getCancelledTickets().isEmpty()) {
+            for (Ticket ticket : TicketSystem.getCancelledTickets()) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Ticket: ");
+                ticket.displayDetails();
+                System.out.println("--------------------------------------------------");
+            }
         }
     }
 

@@ -3,17 +3,19 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Setter
 public class HotelSystem {
-    private List<Client> clients;
-    private List<Employee> employees;
+    private List<Client> clients
+            = new ArrayList<>();
+    private List<Employee> employees=new ArrayList<>();
     @Getter
-    public static List<Room> availableRooms;
+    public static List<Room> availableRooms = new ArrayList<>();
     @Getter
-    public static List<Room> bookedRooms;
+    public static List<Room> bookedRooms = new ArrayList<>();
 
     public HotelSystem() {
         this.clients = clients;
