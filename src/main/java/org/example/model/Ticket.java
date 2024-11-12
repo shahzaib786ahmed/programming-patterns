@@ -45,8 +45,7 @@ public class Ticket {
         System.out.println("Client: " + (client));
         System.out.println("Seat Number: " + seatNumber);
         System.out.println("Ticket Status: " + (ticketStatus));
-        System.out.println("Booked By: " + (bookedBy.getUserId() + " | " + bookedBy.getLName() + ", " + bookedBy.getFName()));
-        System.out.println("Operation History: " + (operationHistory != null ? operationHistory.toString() : "Not available"));
+//        System.out.println("Booked By: " +  + " | " + bookedBy.getLName() + ", " + bookedBy.getFName());
         System.out.println("Departure Date: " + departureDate);
         System.out.println("Arrival Date: " + arrivalDate);
         System.out.println("--------------------------------------------------");

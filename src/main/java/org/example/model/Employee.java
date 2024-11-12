@@ -18,9 +18,9 @@ public class Employee extends User{
         this.discountRate = discountRate;
     }
 
-    public void viewAllTickets(List<Ticket> tickets){
-        if (!tickets.isEmpty()) {
-            for (Ticket ticket : tickets) {
+    public static void viewAllTickets(){
+        if (!TicketSystem.getBoughtTickets().isEmpty()) {
+            for (Ticket ticket : TicketSystem.getBoughtTickets()) {
                 System.out.println("--------------------------------------------------");
                 System.out.println("Ticket: ");
                 ticket.displayDetails();
@@ -37,7 +37,7 @@ public class Employee extends User{
         }
     }
 
-    public Ticket purchaseFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String arrivalDate) {
+    public static Ticket purchaseFlightTicket(Flight flight,Employee employe, Client client, String seatNumber, String departureDate, String arrivalDate) {
         //add if statement to check if eligible for employee discount.
         Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, arrivalDate);
         ticket.setTicketStatus(Status.BOUGHT);
@@ -50,20 +50,20 @@ public class Employee extends User{
         return ticket;
     }
 
-    public void cancelFlightTicket(Ticket ticket) {
+    public static void cancelFlightTicket(Ticket ticket) {
         ticket.setTicketStatus(Status.CANCELLED);
         TicketSystem.getBoughtTickets().remove(ticket);
         TicketSystem.getCancelledTickets().add(ticket);
 
         System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
     }
+// i dont think we need it?
+//    public void changeTicketStatus(Ticket ticket, Status newStatus) {
+//        ticket.setTicketStatus(newStatus);
+//    }
 
-    public void changeTicketStatus(Ticket ticket, Status newStatus) {
-        ticket.setTicketStatus(newStatus);
-    }
-
-    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room, int numOfNights) {
-        if (!hotelSystem.bookRoom(this, client, room, numOfNights)) {
+    public void bookRoomForClient(Employee employee, Client client, Room room, int numOfNights) {
+        if (!HotelSystem.bookRoom(this, client, room, numOfNights)) {
             System.out.println("Unable to book the room for the client.");
         }
     }

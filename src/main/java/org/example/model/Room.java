@@ -23,16 +23,16 @@ public class Room {
         AVAILABLE, RESERVED;
     }
 
-    public Room(String roomNum, int capacity, RoomStatus roomStatus, Date checkOutDate, Date checkInDate, int numberOfNights, double price, Employee bookedBy, boolean includesFood, String clientName) {
+    public Room(String roomNum, int capacity, RoomStatus roomStatus, Employee bookedBy, String clientName) {
         this.roomNum = roomNum;
         this.capacity = capacity;
         this.roomStatus = RoomStatus.AVAILABLE;
-        this.checkOutDate = checkOutDate;
-        this.checkInDate = checkInDate;
-        this.numberOfNights = numberOfNights;
-        this.price = price;
+//        this.checkOutDate = checkOutDate;
+//        this.checkInDate = checkInDate;
+//        this.numberOfNights = numberOfNights;
+//        this.price = price;
         this.bookedBy = bookedBy;
-        this.includesFood = includesFood;
+//        this.includesFood = includesFood;
         this.clientName = clientName;
     }
 

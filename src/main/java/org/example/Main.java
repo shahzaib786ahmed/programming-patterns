@@ -1,16 +1,20 @@
 package org.example;
 
-import org.example.model.AgencyDetails;
-import org.example.model.Flight;
-import org.example.model.Review;
-import org.example.model.Ticket;
+import org.example.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.example.model.Employee.*;
+import static org.example.model.Manager.viewAllTickets;
 
 public class Main {
     public static void main(String[] args) {
+
         //Testing the agencyDetails with reviews(add/delete review)
-        Review review2 = new Review("aya@gmail.com","excellent service","i like it here,would recommend");
-        Review review1 = new Review("aya@gmail.com","excellent service","i like it here,would recommend");
-        AgencyDetails agency= AgencyDetails.getInstance();
+        Review review2 = new Review("aya@gmail.com", "excellent service", "i like it here,would recommend");
+        Review review1 = new Review("aya@gmail.com", "excellent service", "i like it here,would recommend");
+        AgencyDetails agency = AgencyDetails.getInstance();
         agency.setAgencyName("Vanier Travel Agency");
         agency.setAgencyAddress("123 Main St, Cityville");
         agency.setAgencyPhone("1234567890");
@@ -21,9 +25,35 @@ public class Main {
         agency.displayAgencyDetails();
 
         //Testing Flight class
-        Flight flight = new Flight("Flight Info","Flight information from Montreal to Casablanca",
-                "AT207","Royal Air Maroc",1380.46,256,"YUL - Montreal Trudeau", "CMN - Casablanca Mohammed V Int'l",
-                "9:25 AM","10:00 PM");
+        Flight flight = new Flight("Flight Info", "Flight information from Montreal to Casablanca",
+                "AT207", "Royal Air Maroc", 1380.46, 256, "YUL - Montreal Trudeau", "CMN - Casablanca Mohammed V Int'l",
+                "9:25 AM", "10:00 PM");
         flight.displayDetails();
+
+        //Testing Ticket/Employe/TicketSystem
+        //Adding an employee,client
+        Employee employe = new Employee("Kharchafi", "Aya", "123456789", "5143334343", "ayakharchafi@gmail.com", 20, 50);
+        Client client = new Client("Lemrani", "Youness", "098765432", "4325678899", "youness@gmail.com", 45, "Youness", "lemrani123", 0);
+        //buying a ticket
+        Ticket t1 = purchaseFlightTicket(flight, employe, client, "A89", "2 octobre 2023", "15 octobre 2023");
+        Ticket t2 = purchaseFlightTicket(flight, employe, client, "A89", "2 octobre 2023", "15 octobre 2023");
+        //canceling a ticket
+        cancelFlightTicket(t2);
+        //displaying all bought tickets
+        viewAllTickets();
+
+        //Testing HotelSystem/Employe/Room/Hotel
+        Room room = new Room("A1",2, Room.RoomStatus.AVAILABLE, employe,client.getFName());
+        Room room2 = new Room("A1",2, Room.RoomStatus.AVAILABLE, employe,client.getFName());
+        List<Room> rooms = new ArrayList<>();
+        rooms.add(room);
+        List<Room> availables = new ArrayList<>();
+        availables.add(room2);
+        employe.bookRoomForClient(employe,client,rooms.get(0),2);
+        HotelSystem hotelSystem = new HotelSystem();
+        hotelSystem.toString();
+
+
+
     }
 }

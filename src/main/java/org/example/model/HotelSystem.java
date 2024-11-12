@@ -11,10 +11,10 @@ import java.util.List;
 public class HotelSystem {
     private List<Client> clients;
     private List<Employee> employees;
-    private List<Room> availableRooms;
-    private List<Room> bookedRooms;
+    private static List<Room> availableRooms;
+    private static List<Room> bookedRooms;
 
-    public HotelSystem(List<Client> clients, List<Employee> employees, List<Room> availableRooms, List<Room> bookedRooms) {
+    public HotelSystem() {
         this.clients = clients;
         this.employees = employees;
         this.availableRooms = availableRooms;
@@ -30,7 +30,7 @@ public class HotelSystem {
     }
 
     //Instead of having checkIn and checkOut dates, we should stick to only number of nights staying so it's easy to calculate the stay price
-    public boolean bookRoom(Employee employee, Client client, Room room, int numberOfNights) {
+    public static boolean bookRoom(Employee employee, Client client, Room room, int numberOfNights) {
         if (room.getRoomStatus() == Room.RoomStatus.AVAILABLE) {
             room.setRoomStatus(Room.RoomStatus.RESERVED);
             room.setClientName(client.getFName() + " " + client.getLName());
@@ -65,8 +65,7 @@ public class HotelSystem {
     public String toString() {
         return "Hotel System Overview:\n" +
                 "-------------------------------------------------\n" +
-                " Clients        : " + (clients != null ? clients : "No clients available") + "\n" +
-                " Employees      : " + (employees != null ? employees : "No employees available") + "\n" +
+
                 " Available Rooms: " + (availableRooms != null ? availableRooms : "No available rooms") + "\n" +
                 " Booked Rooms   : " + (bookedRooms != null ? bookedRooms : "No booked rooms") + "\n" +
                 "-------------------------------------------------";

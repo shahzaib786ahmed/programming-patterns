@@ -38,21 +38,21 @@ public class Manager extends Employee{
         employees.remove(employee);
         numberOfEmployeesManaged--;
     }
+//bc its not static we cannot use it again here
+//    @Override
+//    public static void viewAllTickets(List<Ticket> tickets) {
+//        super.viewAllTickets(tickets);
+//    }
 
-    @Override
-    public void viewAllTickets(List<Ticket> tickets) {
-        super.viewAllTickets(tickets);
-    }
-
-    @Override
-    public void changeTicketStatus(Ticket ticket, Status newStatus) {
-        super.changeTicketStatus(ticket, newStatus);
-    }
-
-    @Override
-    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room, int numOfNights) {
-        super.bookRoomForClient(hotelSystem, client, room, numOfNights);
-    }
+//    @Override
+//    public void changeTicketStatus(Ticket ticket, Status newStatus) {
+//        super.changeTicketStatus(ticket, newStatus);
+//    }
+//
+//    @Override
+//    public void bookRoomForClient(HotelSystem hotelSystem, Client client, Room room, int numOfNights) {
+//        super.bookRoomForClient(hotelSystem, client, room, numOfNights);
+//    }
 
     @Override
     public void cancelRoomBooking(HotelSystem hotelSystem, Room room) {
