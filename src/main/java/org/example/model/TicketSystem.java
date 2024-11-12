@@ -16,36 +16,19 @@ public class TicketSystem {
     public static List<Employee> employees = new ArrayList<>();
     @Getter
     public static List<Manager> managers = new ArrayList<>();
-//    @Getter
-//    public static Queue<Ticket> unassignedTickets = new LinkedList<>();
     @Getter
     public static List<Ticket> cancelledTickets = new ArrayList<>();
-//    maybe we dont need processing..
-    @Getter
-    public static List<Ticket> processingTickets = new ArrayList<>();
     @Getter
     public static List<Ticket> boughtTickets = new ArrayList<>();
 
-    public TicketSystem(List<Client> clients, List<Employee> employees, List<Ticket> cancelledTickets, List<Ticket> processingTickets, List<Ticket> boughtTickets) {
+    public TicketSystem(List<Client> clients, List<Employee> employees, List<Ticket> cancelledTickets, List<Ticket> boughtTickets) {
         this.clients = clients;
         this.employees = employees;
-//        this.unassignedTickets = unassignedTickets;
         this.cancelledTickets = cancelledTickets;
-        this.processingTickets = processingTickets;
         this.boughtTickets = boughtTickets;
     }
 
     public static Ticket search(int keyword) {
-//        for (Ticket ticket : unassignedTickets) {
-//            if (ticket.getTicketId() == keyword) {
-//                return ticket;
-//            }
-//        }
-        for (Ticket ticket : processingTickets) {
-            if (ticket.getTicketId() == keyword) {
-                return ticket;
-            }
-        }
         for (Ticket ticket : cancelledTickets) {
             if (ticket.getTicketId() == keyword) {
                 return ticket;
@@ -69,17 +52,18 @@ public class TicketSystem {
             }
         }
     }
-//do we need these and the method in manager ask yi
-    public static void addClient(Client client) {
-        clients.add(client);
-    }
 
-    public static void addEmployee(Employee employee) {
-        employees.add(employee);
-    }
-
-    public static void addManager(Manager manager) {
-        employees.add(manager);
-        managers.add(manager);
-    }
+////do we need these and the method in manager ask yi
+//    public static void addClient(Client client) {
+//        clients.add(client);
+//    }
+//
+//    public static void addEmployee(Employee employee) {
+//        employees.add(employee);
+//    }
+//
+//    public static void addManager(Manager manager) {
+//        employees.add(manager);
+//        managers.add(manager);
+//    }
 }

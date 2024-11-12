@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Employee extends User{
     private List<Ticket> requestedBookings;
     @Setter
@@ -141,18 +141,13 @@ public class Employee extends User{
         HotelSystem.getAvailableRooms().add(room);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Double.compare(discountRate, employee.discountRate) == 0 && Objects.equals(requestedBookings, employee.requestedBookings);
-    }
+    public void makePayment(Ticket ticket) {
+        double flightPrice = ticket.getFlight().getPrice();
+        double serviceFee = 100.00;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(requestedBookings, discountRate);
-    };
+        ticket.getFlight().setPrice(flightPrice + serviceFee);
+        System.out.println("Payment successfully made.");
+    }
 
     @Override
     public void displayDetails() {

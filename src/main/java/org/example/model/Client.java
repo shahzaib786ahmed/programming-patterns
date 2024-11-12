@@ -3,6 +3,7 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 @Setter
 @Getter
@@ -10,6 +11,7 @@ public class Client extends User{
     private String userName;
     private String password;
     private int loyaltyPoints;
+    private List<Double> paymentHistory = new ArrayList<>();
 
     public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
         super(lName, fName, passportNum, phoneNumber, emailAddress, age);
