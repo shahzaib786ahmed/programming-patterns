@@ -11,6 +11,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 public class Employee extends User{
     private List<Ticket> requestedBookings;
+    @Setter
     private double discountRate;
 
     public Employee(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, double discountRate) {
@@ -37,14 +38,77 @@ public class Employee extends User{
         }
     }
 
-    public static Ticket purchaseFlightTicket(Flight flight,Employee employe, Client client, String seatNumber, String departureDate, String arrivalDate) {
-        //add if statement to check if eligible for employee discount.
-        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, arrivalDate);
-        ticket.setTicketStatus(Status.BOUGHT);
+    public static Ticket purchaseFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String arrivalDate) {
+        if (flight.getFlightSeatNumber() == 0) {
+            throw new IllegalArgumentException("Flight is fully booked!");
+        } else {
+            flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
+        }
+
+        Ticket ticket = new Ticket(flight, employee, client, seatNumber, departureDate, arrivalDate);
+        ticket.setTicketStatus(Status.PURCHASED);
         TicketSystem.getBoughtTickets().add(ticket);
+        client.setLoyaltyPoints((int) flight.getPrice() / 4);
 
         System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
-                " for flight: " + flight.getFlightNumber() + " from" + flight.getDepartureLocation() + " to" + flight.getArrivalLocation());
+                " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
+        System.out.println("Here's your ticket: ");
+        ticket.displayDetails();
+        return ticket;
+    }
+
+    public static Ticket purchaseEmployeeFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String arrivalDate) {
+        if (flight.getFlightSeatNumber() == 0) {
+            throw new IllegalArgumentException("Flight is fully booked!");
+        } else {
+            flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
+        }
+
+        Ticket ticket = new Ticket(flight, employee, seatNumber, departureDate, arrivalDate);
+        flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.discountRate / 100)));
+        ticket.setTicketStatus(Status.PURCHASED);
+        TicketSystem.getBoughtTickets().add(ticket);
+
+        System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
+                " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
+        System.out.println("Here's your ticket: ");
+        ticket.displayDetails();
+        return ticket;
+    }
+
+    public static Ticket purchaseOneWayFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate) {
+        if (flight.getFlightSeatNumber() == 0) {
+            throw new IllegalArgumentException("Flight is fully booked!");
+        } else {
+            flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
+        }
+
+        Ticket ticket = new Ticket(flight, employee, client, seatNumber, departureDate);
+        ticket.setTicketStatus(Status.PURCHASED);
+        TicketSystem.getBoughtTickets().add(ticket);
+        client.setLoyaltyPoints((int) flight.getPrice() / 4);
+
+        System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
+                " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
+        System.out.println("Here's your ticket: ");
+        ticket.displayDetails();
+        return ticket;
+    }
+
+    public static Ticket purchaseEmployeeOneWayFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate) {
+        if (flight.getFlightSeatNumber() == 0) {
+            throw new IllegalArgumentException("Flight is fully booked!");
+        } else {
+            flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
+        }
+
+        Ticket ticket = new Ticket(flight, employee, seatNumber, departureDate);
+        flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.discountRate / 100)));
+        ticket.setTicketStatus(Status.PURCHASED);
+        TicketSystem.getBoughtTickets().add(ticket);
+
+        System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
+                " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
         System.out.println("Here's your ticket: ");
         ticket.displayDetails();
         return ticket;
@@ -54,29 +118,25 @@ public class Employee extends User{
         ticket.setTicketStatus(Status.CANCELLED);
         TicketSystem.getBoughtTickets().remove(ticket);
         TicketSystem.getCancelledTickets().add(ticket);
+        ticket.getFlight().setFlightSeatNumber(ticket.getFlight().getFlightSeatNumber() + 1);
 
         System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
     }
-// i dont think we need it?
-//    public void changeTicketStatus(Ticket ticket, Status newStatus) {
-//        ticket.setTicketStatus(newStatus);
-//    }
 
-    public void bookRoomForClient(Employee employee, Client client, Room room, int numOfNights) {
-        if (!HotelSystem.bookRoom(this, client, room, numOfNights)) {
+    public static void bookRoomForClient(Employee employee, Client client, Room room, int numOfNights) {
+        if (!HotelSystem.bookRoom(employee, client, room, numOfNights)) {
             System.out.println("Unable to book the room for the client.");
         }
+        HotelSystem.getAvailableRooms().remove(room);
+        HotelSystem.getBookedRooms().add(room);
     }
 
     public void cancelRoomBooking(HotelSystem hotelSystem, Room room) {
         if (!hotelSystem.cancelBooking(room)) {
             System.out.println("Unable to cancel the room booking.");
         }
-    }
-
-
-    public void setDiscountRate(double discountRate) {
-        this.discountRate = 10;
+        HotelSystem.getBookedRooms().remove(room);
+        HotelSystem.getAvailableRooms().add(room);
     }
 
     @Override

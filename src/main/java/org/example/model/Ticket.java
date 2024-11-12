@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Getter
 @Setter
@@ -20,11 +19,11 @@ public class Ticket {
     private MyQueue<Operation> operationHistory;
     private String departureDate;
     private Employee assignedTo;
-    private String arrivalDate;
+    private String returnDate;
 
     private static int idCounter = 0;
 
-    public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String arrivalDate) {
+    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String returnDate) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
@@ -34,20 +33,66 @@ public class Ticket {
         this.operationHistory = new MyQueue<>();
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
-        this.arrivalDate = arrivalDate;
+        this.returnDate = returnDate;
     }
+
+    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate) {
+        this.ticketId = ++idCounter;
+        this.flight = flight;
+        this.client = client;
+        this.seatNumber = seatNumber;
+        this.assignedTo = null;
+        this.ticketStatus = Status.CREATED;
+        this.operationHistory = new MyQueue<>();
+        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
+        this.departureDate = departureDate;
+    }
+
+    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate) {
+        this.ticketId = ++idCounter;
+        this.flight = flight;
+        this.seatNumber = seatNumber;
+        this.assignedTo = null;
+        this.ticketStatus = Status.CREATED;
+        this.operationHistory = new MyQueue<>();
+        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
+        this.departureDate = departureDate;
+        this.returnDate = returnDate;
+    }
+
+    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate) {
+        this.ticketId = ++idCounter;
+        this.flight = flight;
+        this.seatNumber = seatNumber;
+        this.assignedTo = null;
+        this.ticketStatus = Status.CREATED;
+        this.operationHistory = new MyQueue<>();
+        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
+        this.departureDate = departureDate;
+    }
+
 
     public void displayDetails() {
         System.out.println("--------------------------------------------------");
         System.out.println("Ticket Details:");
         System.out.println("Ticket ID: " + ticketId);
         System.out.println("Flight: " + (flight.getFlightNumber()));
-        System.out.println("Client: " + (client));
+        if (client != null) {
+            System.out.println("Client: " + (client));
+            System.out.println("Loyalty Points: " + client.getLoyaltyPoints());
+        } else {
+            System.out.println("Employee Ticket");
+        }
         System.out.println("Seat Number: " + seatNumber);
         System.out.println("Ticket Status: " + (ticketStatus));
 //        System.out.println("Booked By: " +  + " | " + bookedBy.getLName() + ", " + bookedBy.getFName());
         System.out.println("Departure Date: " + departureDate);
-        System.out.println("Arrival Date: " + arrivalDate);
+        if (returnDate == null) {
+            System.out.println("Price: " + (flight.getPrice() / 2));
+        } else {
+            System.out.println("Arrival Date: " + returnDate);
+            System.out.println("Price: " + (flight.getPrice()));
+        }
         System.out.println("--------------------------------------------------");
     }
 

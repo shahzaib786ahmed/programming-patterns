@@ -42,16 +42,29 @@ public class Main {
         //displaying all bought tickets
         viewAllTickets();
 
+
+        //Purchasing one way ticket
+        Ticket t3 = purchaseOneWayFlightTicket(flight,employe,client,"8B","15 february 2024");
+
+
+        //Purchasing Employee ticket two way
+        Ticket t4 = purchaseEmployeeFlightTicket(flight, employe,"30F","12 January 2024", "15 March 2024");
+
+
+        //Purchasing Employee ticket one way
+        Ticket t5 = purchaseEmployeeOneWayFlightTicket(flight,employe,"24A","25 August 2024");
+
+
         //Testing HotelSystem/Employe/Room/Hotel
-        Room room = new Room("A1",2, Room.RoomStatus.AVAILABLE, employe,client.getFName());
-        Room room2 = new Room("A1",2, Room.RoomStatus.AVAILABLE, employe,client.getFName());
-        List<Room> rooms = new ArrayList<>();
-        rooms.add(room);
-        List<Room> availables = new ArrayList<>();
-        availables.add(room2);
-        employe.bookRoomForClient(employe,client,rooms.get(0),2);
-        HotelSystem hotelSystem = new HotelSystem();
-        hotelSystem.toString();
+//        Room room = new Room("A1",2,89 , employe,client.getFName());
+//        Room room2 = new Room("A1",2, 89, employe,client.getFName());
+//        List<Room> rooms = new ArrayList<>();
+//        rooms.add(room);
+//        List<Room> availables = new ArrayList<>();
+//        availables.add(room2);
+//        employe.bookRoomForClient(employe,client,rooms.get(0),2);
+//        HotelSystem hotelSystem = new HotelSystem();
+//        hotelSystem.toString();
 
 
 

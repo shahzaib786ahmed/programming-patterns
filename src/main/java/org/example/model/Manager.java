@@ -18,7 +18,9 @@ public class Manager extends Employee{
         if (ticket.getBookedBy().getUserId() != employee.getUserId()) {
             ticket = TicketSystem.getUnassignedTickets().poll();
             employee.getRequestedBookings().add(ticket);
-            ticket.setTicketStatus(Status.ASSIGNED);
+            if (ticket != null) {
+                ticket.setTicketStatus(Status.ASSIGNED);
+            }
         } else {
             throw new IllegalArgumentException("This ticket is already assigned to this employee.");
         }

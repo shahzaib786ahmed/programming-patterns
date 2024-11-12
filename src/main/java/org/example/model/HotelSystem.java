@@ -7,12 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 @Setter
-@Getter
 public class HotelSystem {
     private List<Client> clients;
     private List<Employee> employees;
-    private static List<Room> availableRooms;
-    private static List<Room> bookedRooms;
+    @Getter
+    public static List<Room> availableRooms;
+    @Getter
+    public static List<Room> bookedRooms;
 
     public HotelSystem() {
         this.clients = clients;
@@ -35,6 +36,7 @@ public class HotelSystem {
             room.setRoomStatus(Room.RoomStatus.RESERVED);
             room.setClientName(client.getFName() + " " + client.getLName());
             room.setNumberOfNights(numberOfNights);
+            room.setPrice(numberOfNights * room.getPrice());
             room.setBookedBy(employee);
             availableRooms.remove(room);
             bookedRooms.add(room);
