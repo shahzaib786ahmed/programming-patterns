@@ -50,7 +50,7 @@ public class Employee extends User{
         Ticket ticket = new Ticket(flight, employee, client, seatNumber, departureDate, arrivalDate);
         ticket.setTicketStatus(Status.PURCHASED);
         TicketSystem.getBoughtTickets().add(ticket);
-        client.setLoyaltyPoints((int) flight.getPrice() / 4);
+        client.pointsAccumulate((int) flight.getPrice() / 4);
 
         System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
                 " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());

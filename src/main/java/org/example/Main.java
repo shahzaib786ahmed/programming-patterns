@@ -33,7 +33,7 @@ public class Main {
         //Testing Ticket/Employe/TicketSystem
         //Adding an employee,client
         Employee employe = new Employee("Kharchafi", "Aya", "123456789", "5143334343", "ayakharchafi@gmail.com", 20, 50);
-        Client client = new Client("Lemrani", "Youness", "098765432", "4325678899", "youness@gmail.com", 45, "Youness", "lemrani123", 0);
+        Client client = new Client("Lemrani", "Youness", "098765432", "4325678899", "youness@gmail.com", 45, "Youness", "lemrani123");
        Manager manager = new Manager("Tremblay","Francois","123456789","5142346677","francoisTremblay@gmail.con",67,50);
 //jlai comment pcq snn ca fait une erreur pcq c null so check why
        //       manager.addEmployee(employe);

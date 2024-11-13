@@ -71,7 +71,6 @@ public class Ticket {
         this.departureDate = departureDate;
     }
 
-
     public void displayDetails() {
         System.out.println("--------------------------------------------------");
         System.out.println("Ticket Details:");

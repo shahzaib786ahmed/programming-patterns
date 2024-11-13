@@ -13,11 +13,10 @@ public class Client extends User{
     private int loyaltyPoints;
     private List<Double> paymentHistory = new ArrayList<>();
 
-    public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
+    public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String userName, String password) {
         super(lName, fName, passportNum, phoneNumber, emailAddress, age);
         this.userName = userName;
         this.password = password;
-        this.loyaltyPoints = loyaltyPoints;
     }
 
     public boolean isLogin(String userName, String password) {
@@ -39,8 +38,8 @@ public class Client extends User{
         }
         System.out.println("Ticket with ID " + ticketId + " not found.");
     }
-    public int pointsAccumulate(int loyaltyPoints) {
-        return this.loyaltyPoints + loyaltyPoints;
+    public void pointsAccumulate(int loyaltyPoints) {
+        this.loyaltyPoints += loyaltyPoints;
     }
     @Override
     public void displayDetails() {

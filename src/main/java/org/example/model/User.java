@@ -21,16 +21,6 @@ public abstract class User {
     private String emailAddress;
     private int age;
 
-    public User() {
-        this.id = generateRandomId();
-        this.lName = "";
-        this.fName = "";
-        this.passportNum = validatePassportNum("");
-        this.phoneNumber = validatePhoneNumber("");
-        this.emailAddress = validateEmailAddress("");
-        this.age = 0;
-    }
-
     public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age) {
         this.id = generateRandomId();
         this.lName = lName;
@@ -75,7 +65,7 @@ public abstract class User {
         if (passportNum.length() == 9) {
             return true;
         } else {
-            throw new IllegalArgumentException("Passport Number contains 9 characters");
+            throw new IllegalArgumentException("Passport Number should contain 9 characters");
         }
     }
 
@@ -83,12 +73,16 @@ public abstract class User {
         if (phoneNumber.length() == 10) {
             return true;
         } else {
-            throw new IllegalArgumentException("Phone Number contains 10 characters");
+            throw new IllegalArgumentException("Phone Number should contain 10 characters");
         }
     }
 
     public boolean isEmailValid(String emailAddress) {
-        return emailAddress.contains("@");
+        if (emailAddress.contains("@") && emailAddress.contains(".com")) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Email address is invalid! Should include '@' or/and '.com'");
+        }
     }
 
     public void setUserId(String userId) {

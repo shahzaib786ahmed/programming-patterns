@@ -271,7 +271,7 @@ public class ClientDAO {
                     String password = rs.getString("password");
                     int loyaltyPoints = rs.getInt("loyaltyPoints");
 
-                    clients.add(new Client( lName,  fName,  passportNumber,  phoneNumber, emailAddress,  age, userName, password, loyaltyPoints));
+                    clients.add(new Client( lName,  fName,  passportNumber,  phoneNumber, emailAddress,  age, userName, password));
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
