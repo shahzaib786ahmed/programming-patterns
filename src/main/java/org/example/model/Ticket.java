@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -93,6 +94,19 @@ public class Ticket {
             System.out.println("Price: " + (flight.getPrice()));
         }
         System.out.println("--------------------------------------------------");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return ticketId == ticket.ticketId && Objects.equals(flight, ticket.flight) && Objects.equals(client, ticket.client) && Objects.equals(seatNumber, ticket.seatNumber) && ticketStatus == ticket.ticketStatus && Objects.equals(bookedBy, ticket.bookedBy) && Objects.equals(operationHistory, ticket.operationHistory) && Objects.equals(departureDate, ticket.departureDate) && Objects.equals(assignedTo, ticket.assignedTo) && Objects.equals(returnDate, ticket.returnDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ticketId, flight, client, seatNumber, ticketStatus, bookedBy, operationHistory, departureDate, assignedTo, returnDate);
     }
 
     public static class Operation {

@@ -50,7 +50,7 @@ public class HotelSystem {
         }
     }
 
-    public boolean cancelBooking(Room room) {
+    public static boolean cancelBooking(Room room) {
         if (room.getRoomStatus() == Room.RoomStatus.RESERVED) {
             room.setRoomStatus(Room.RoomStatus.AVAILABLE);
             room.setClientName(null);

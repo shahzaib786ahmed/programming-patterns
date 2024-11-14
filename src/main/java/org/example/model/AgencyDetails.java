@@ -45,8 +45,7 @@ public class AgencyDetails {
     }
 
     private boolean isValidEmail(String email) {
-        // Check if email contains an '@' symbol
-        return email.contains("@");
+        return email.contains("@") && email.contains(".com");
     }
 
     private boolean isValidPhone(String phone) {
