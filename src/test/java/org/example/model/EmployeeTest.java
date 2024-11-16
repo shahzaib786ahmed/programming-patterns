@@ -13,8 +13,8 @@ public class EmployeeTest{
         Employee employee = new Employee("Kharchafi", "Aya", "123456789", "5143334343", "ayakharchafi@gmail.com", 20, 50);
         Client client = new Client("Ahmed", "Shahzaib", "098765432", "4325678899", "youness@gmail.com", 45, "Youness", "lemrani123");
 
-        Ticket expResult = new Ticket(flight,employee,client,"13A","12 January 2024", "15 March 2024");
-        Ticket result = Employee.purchaseFlightTicket(flight,employee,client,"13A","12 January 2024", "15 March 2024");
+        Ticket expResult = new Ticket(flight, client,"13A","12 January 2024", "15 March 2024");
+        Ticket result = Employee.purchaseFlightTicket(flight,employee,client,"13A","12 January 2024", "15 March 2024","credit", client.getEmailAddress(),"1234765432123456");
         assertEquals(expResult, result);
     }
 
@@ -25,8 +25,8 @@ public class EmployeeTest{
                 "9:25 AM", "10:00 PM");
         Employee employee = new Employee("Kharchafi", "Aya", "123456789", "5143334343", "ayakharchafi@gmail.com", 20, 50);
 
-        Ticket expResult = new Ticket(flight,employee,"13A","12 January 2024", "15 March 2024");
-        Ticket result = Employee.purchaseEmployeeFlightTicket(flight,employee,"13A","12 January 2024", "15 March 2024");
+        Ticket expResult = new Ticket(flight, "13A","12 January 2024", "15 March 2024");
+        Ticket result = Employee.purchaseEmployeeFlightTicket(flight,employee,"13A","12 January 2024", "15 March 2024","credit", employee.getEmailAddress(),"9999999999999999");
         assertEquals(expResult, result);
     }
 
@@ -38,8 +38,8 @@ public class EmployeeTest{
         Employee employee = new Employee("Kharchafi", "Aya", "123456789", "5143334343", "ayakharchafi@gmail.com", 20, 50);
         Client client = new Client("Ahmed", "Shahzaib", "098765432", "4325678899", "youness@gmail.com", 45, "Youness", "lemrani123");
 
-        Ticket expResult = new Ticket(flight,employee,client,"13A","12 January 2024");
-        Ticket result = Employee.purchaseOneWayFlightTicket(flight,employee,client,"13A","12 January 2024");
+        Ticket expResult = new Ticket(flight, client,"13A","12 January 2024","loyalty");
+        Ticket result = Employee.purchaseOneWayFlightTicket(flight,employee,client,"13A","12 January 2024","loyalty", client.getEmailAddress(),"1234765432123456");
         assertEquals(expResult, result);
     }
 
@@ -50,8 +50,8 @@ public class EmployeeTest{
                 "9:25 AM", "10:00 PM");
         Employee employee = new Employee("Kharchafi", "Aya", "123456789", "5143334343", "ayakharchafi@gmail.com", 20, 50);
 
-        Ticket expResult = new Ticket(flight,employee,"13A","12 January 2024");
-        Ticket result = Employee.purchaseEmployeeOneWayFlightTicket(flight,employee,"13A","12 January 2024");
+        Ticket expResult = new Ticket(flight, "13A","12 January 2024","credit");
+        Ticket result = Employee.purchaseEmployeeOneWayFlightTicket(flight,employee,"13A","12 January 2024","credit", employee.getEmailAddress(),"9999999999999999");
         assertEquals(expResult, result);
     }
 }

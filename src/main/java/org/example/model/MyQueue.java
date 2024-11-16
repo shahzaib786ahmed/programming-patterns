@@ -10,7 +10,6 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * Appends a new value at the tail of the queue
-     *
      * @param value the value of the new element
      * @return if the element is appended successfully
      */
@@ -29,7 +28,6 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * gets the element of the head
-     *
      * @return the value of the head element
      */
     public E peek() {
@@ -41,7 +39,6 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * removes an element of the head
-     *
      * @return the value of the removed head element
      */
     public E poll() {

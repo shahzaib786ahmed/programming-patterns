@@ -20,18 +20,18 @@ public class Client extends User{
     }
 
     /**
-     *
-     * @param loyaltyPoints
+     * Sets the loyalty points for the client
+     * @param loyaltyPoints of the client
      */
     public void setLoyaltyPoints(int loyaltyPoints) {
         this.loyaltyPoints += loyaltyPoints;
     }
 
     /**
-     *
-     * @param userName
-     * @param password
-     * @return
+     * Checks to see if the correct user is logging in
+     * @param userName of the client
+     * @param password of the client
+     * @return the boolean and checks if the username and password is correct, if not, return false
      */
     public boolean isLogin(String userName, String password) {
         if (userName == null || password == null) {
@@ -41,9 +41,9 @@ public class Client extends User{
     }
 
     /**
-     *
-     * @param tickets
-     * @param ticketId
+     * Checks a ticket from the list of bought ticket(s) of a client
+     * @param tickets list of the client
+     * @param ticketId of the ticket to be searched for in the list of ticket(s)
      */
     public void viewTicketDetails(List<Ticket> tickets, int ticketId) {
         for (Ticket ticket : tickets) {
@@ -59,24 +59,11 @@ public class Client extends User{
     }
 
     /**
-     *
+     * Display the details of the client
      */
     @Override
     public void displayDetails() {
         System.out.println("Client Details:");
-        System.out.println(this);
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String toString() {
-        return "Client{" +
-                "userName='" + userName + '\'' +
-                ", loyaltyPoints=" + loyaltyPoints +
-                ", User Details=" + super.toString() +
-                '}';
+        System.out.println(super.toString());
     }
 }

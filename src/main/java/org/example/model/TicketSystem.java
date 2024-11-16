@@ -21,35 +21,32 @@ public class TicketSystem {
     @Getter
     public static List<Ticket> boughtTickets = new ArrayList<>();
 
-    public TicketSystem(List<Client> clients, List<Employee> employees, List<Ticket> cancelledTickets, List<Ticket> boughtTickets) {
-        this.clients = clients;
-        this.employees = employees;
-        this.cancelledTickets = cancelledTickets;
-        this.boughtTickets = boughtTickets;
-    }
-
     /**
-     *
-     * @param keyword
-     * @return
+     * Searches for a specific ticket using ticketID to find a ticket
+     * @param keyword the ticketID to be used to search for the ticket
+     * @return the ticket if found
      */
     public static Ticket search(int keyword) {
         for (Ticket ticket : cancelledTickets) {
             if (ticket.getTicketId() == keyword) {
                 return ticket;
+            } else {
+                System.out.println("Ticket not found");
             }
         }
         for (Ticket ticket : boughtTickets) {
             if (ticket.getTicketId() == keyword) {
                 return ticket;
+            } else {
+                System.out.println("Ticket not found");
             }
         }
         return null;
     }
 
     /**
-     *
-     * @param tickets
+     * Display all the tickets from the agency based on the input of list tickets (bought, cancelled)
+     * @param tickets that will be displayed
      */
     public static void displayAllTickets(List<Ticket> tickets) {
         if (!tickets.isEmpty()) {
@@ -61,17 +58,4 @@ public class TicketSystem {
             }
         }
     }
-////TODO:do we need these and the method in manager ask yi
-//    public static void addClient(Client client) {
-//        clients.add(client);
-//    }
-//
-//    public static void addEmployee(Employee employee) {
-//        employees.add(employee);
-//    }
-//
-//    public static void addManager(Manager manager) {
-//        employees.add(manager);
-//        managers.add(manager);
-//    }
 }

@@ -24,8 +24,8 @@ public class AgencyDetails {
     }
 
     /**
-     *
-     * @param review
+     * Adds a review of the customer to the list of customer reviews
+     * @param review to be added from the client
      */
     public void addReview(Review review) {
         if (review != null) {
@@ -37,9 +37,9 @@ public class AgencyDetails {
     }
 
     /**
-     *
-     * @param reviewId
-     * @return
+     * Deletes a review of the customer
+     * @param reviewId of the review to be deleted
+     * @return the boolean to see if the review is found by reviewId, if it is, delete it
      */
     public boolean deleteReviewById(String reviewId) {
         for (Review review : customerReviews) {
@@ -54,34 +54,34 @@ public class AgencyDetails {
     }
 
     /**
-     *
-     * @param email
-     * @return
+     * Checks if email address format is valid
+     * @param email to be checked to see if it's valid
+     * @return the boolean that checks if it contains @ and .com
      */
     private boolean isValidEmail(String email) {
         return email.contains("@") && email.contains(".com");
     }
 
     /**
-     *
-     * @param phone
-     * @return
+     * Checks if phone number format is valid
+     * @param phone to be checked to see if it's valid
+     * @return the boolean that checks if it contains 10 digits and not more or less
      */
     private boolean isValidPhone(String phone) {
-        return phone.matches("\\d{10}"); // Checks if phone contains exactly 10 digits
+        return phone.matches("\\d{10}");
     }
 
     /**
-     *
-     * @param instance
+     * Sets an instance of agencyDetails
+     * @param instance of a single agencyDetail
      */
     public static void setInstance(AgencyDetails instance) {
         AgencyDetails.instance = instance;
     }
 
     /**
-     *
-     * @param agencyName
+     * Sets the name of the agency
+     * @param agencyName of the agency
      */
     public void setAgencyName(String agencyName) {
         if (agencyName != null && !agencyName.trim().isEmpty()) {
@@ -92,8 +92,8 @@ public class AgencyDetails {
     }
 
     /**
-     *
-     * @param agencyPhone
+     * Sets the phone number of the agency
+     * @param agencyPhone of the agency
      */
     public void setAgencyPhone(String agencyPhone) {
         if (isValidPhone(agencyPhone)) {
@@ -104,8 +104,8 @@ public class AgencyDetails {
     }
 
     /**
-     *
-     * @param agencyEmail
+     * Sets the email address of the agency
+     * @param agencyEmail of the agency
      */
     public void setAgencyEmail(String agencyEmail) {
         if (isValidEmail(agencyEmail)) {
@@ -116,8 +116,8 @@ public class AgencyDetails {
     }
 
     /**
-     *
-     * @return
+     * If an instance of AgencyDetails is not created, it's created
+     * @return using singleton, to see if there's one instance created only, if not, create one
      */
     public static AgencyDetails getInstance() {
         if (instance == null) {
@@ -131,7 +131,7 @@ public class AgencyDetails {
     }
 
     /**
-     *
+     * Displays the details of the agency
      */
     public void displayAgencyDetails() {
         System.out.println("===================================");

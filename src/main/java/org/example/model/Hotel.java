@@ -18,7 +18,7 @@ public class Hotel extends Services {
     }
 
     /**
-     *
+     * Display details of the hotel
      */
     @Override
     public void displayDetails() {

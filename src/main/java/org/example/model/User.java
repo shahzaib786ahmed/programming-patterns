@@ -30,20 +30,20 @@ public abstract class User {
         this.emailAddress = validateEmailAddress(emailAddress);
         this.age = age;
     }
-    //need to figure out if were still going to use it because in database the id start from 1
+
     /**
-     *
-     * @return
+     * Generates a random ID for the user
+     * @return an int containing a random ID for the user
      */
     private static int generateRandomId() {
         Random random = new Random();
-        return 1 + random.nextInt(999999);
+        return (1 + random.nextInt(999999));
     }
 
     /**
-     *
-     * @param passportNum
-     * @return
+     * Validates the format of the passport number
+     * @param passportNum to be used to verify the format
+     * @return the string to return the passport number or error message
      */
     private String validatePassportNum(String passportNum) {
         if (isPassportNumValid(passportNum)) {
@@ -54,9 +54,9 @@ public abstract class User {
     }
 
     /**
-     *
-     * @param phoneNumber
-     * @return
+     * Validates the format of the phone number
+     * @param phoneNumber to be used to verify the format
+     * @return the string to return the phone number or error message
      */
     private String validatePhoneNumber(String phoneNumber) {
         if (isPhoneNumberValid(phoneNumber)) {
@@ -67,9 +67,9 @@ public abstract class User {
     }
 
     /**
-     *
-     * @param emailAddress
-     * @return
+     * Validates the format of the phone number
+     * @param emailAddress to be used to verify the format
+     * @return the string to return the email address or error message
      */
     private String validateEmailAddress(String emailAddress) {
         if (isEmailValid(emailAddress)) {
@@ -80,9 +80,9 @@ public abstract class User {
     }
 
     /**
-     *
-     * @param passportNum
-     * @return
+     * Checks if the passport number has the proper format
+     * @param passportNum to be used to verify the format
+     * @return the boolean to see if it has the correct format, if not, throw an exception
      */
     public boolean isPassportNumValid(String passportNum) {
         if (passportNum.length() == 9) {
@@ -93,9 +93,9 @@ public abstract class User {
     }
 
     /**
-     *
-     * @param phoneNumber
-     * @return
+     * Checks if the phone number has the proper format
+     * @param phoneNumber to be used to verify the format
+     * @return the boolean to see if it has the correct format, if not, throw an exception
      */
     public boolean isPhoneNumberValid(String phoneNumber) {
         if (phoneNumber.length() == 10) {
@@ -106,15 +106,15 @@ public abstract class User {
     }
 
     /**
-     *
-     * @param emailAddress
-     * @return
+     * Checks if the email address has the proper format
+     * @param emailAddress to be used to verify the format
+     * @return the boolean to see if it has the correct format, if not, throw an exception
      */
     public boolean isEmailValid(String emailAddress) {
-        if (emailAddress.contains("@") && emailAddress.contains(".com")) {
+        if (emailAddress.contains("@")) {
             return true;
         } else {
-            throw new IllegalArgumentException("Email address is invalid! Should include '@' or/and '.com'");
+            throw new IllegalArgumentException("Email address is invalid! Should include '@'");
         }
     }
 
@@ -135,7 +135,7 @@ public abstract class User {
     }
 
     /**
-     *
+     * Displays the details of the user
      */
     public abstract void displayDetails();
 }

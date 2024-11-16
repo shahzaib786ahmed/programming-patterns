@@ -21,8 +21,8 @@ public class Review {
     }
 
     /**
-     *
-     * @param email
+     * Sets the email to be used for the review
+     * @param email to be used for the review and checks if it contains @
      */
     public void setEmail(String email) {
         if (email != null && email.contains("@")) {
@@ -33,8 +33,8 @@ public class Review {
     }
 
     /**
-     *
-     * @param title
+     * Sets the main title of the review
+     * @param title of the review
      */
     public void setTitle(String title) {
         if (title != null && !title.trim().isEmpty()) {
@@ -45,8 +45,8 @@ public class Review {
     }
 
     /**
-     *
-     * @param body
+     * Sets the body description of the review
+     * @param body of the review with description
      */
     public void setBody(String body) {
         if (body != null && !body.trim().isEmpty()) {
@@ -57,8 +57,8 @@ public class Review {
     }
 
     /**
-     *
-     * @return
+     * Displays the details of the review
+     * @return the details of the review
      */
     @Override
     public String toString() {

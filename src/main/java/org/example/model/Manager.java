@@ -15,9 +15,9 @@ public class Manager extends Employee{
     }
 
     /**
-     *
-     * @param newEmployee
-     * @return
+     * Adds a new employee to the agency
+     * @param newEmployee to be added at the agency
+     * @return the new employee added
      */
     //TODO:need to choose how to add employe here or in ticket system class
     public Employee addEmployee(Employee newEmployee) {
@@ -30,8 +30,8 @@ public class Manager extends Employee{
     }
 
     /**
-     *
-     * @param employee
+     * Removes an employee from the agency
+     * @param employee to be removed from the agency
      */
     //TODO:do we remove here or do we add it in ticketsystem
     public void removeEmployee(Employee employee) {
@@ -39,7 +39,7 @@ public class Manager extends Employee{
     }
 
     /**
-     *
+     * Display the details of the manager
      */
     @Override
     public void displayDetails() {

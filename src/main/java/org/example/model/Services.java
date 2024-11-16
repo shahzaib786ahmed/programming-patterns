@@ -16,7 +16,7 @@ public abstract class Services {
     }
 
     /**
-     *
+     * Display the details of the service
      */
     public abstract void displayDetails();
 }

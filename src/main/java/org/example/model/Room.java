@@ -8,6 +8,7 @@ import java.util.Date;
 @Setter
 @Getter
 public class Room {
+    private Client client;
     private String roomNum;
     private int capacity;
     private RoomStatus roomStatus;
@@ -17,7 +18,8 @@ public class Room {
         AVAILABLE, RESERVED;
     }
 
-    public Room(String roomNum, int capacity, double price) {
+    public Room(Client client, String roomNum, int capacity, double price) {
+        this.client = client;
         this.roomNum = roomNum;
         this.capacity = capacity;
         this.roomStatus = RoomStatus.AVAILABLE;
@@ -25,8 +27,8 @@ public class Room {
     }
 
     /**
-     *
-     * @return
+     * Displays the room details
+     * @return the details of the review
      */
     @Override
     public String toString() {

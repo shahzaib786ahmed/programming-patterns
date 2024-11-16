@@ -25,7 +25,7 @@ public class Ticket {
 
     private static int idCounter = 0;
 
-    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String returnDate, String paymentType) {
+    public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String returnDate, String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
@@ -39,7 +39,7 @@ public class Ticket {
         this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate,String paymentType) {
+    public Ticket(Flight flight, Client client, String seatNumber, String departureDate,String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
@@ -52,7 +52,7 @@ public class Ticket {
         this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate,String paymentType) {
+    public Ticket(Flight flight, String seatNumber, String departureDate, String returnDate,String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.seatNumber = seatNumber;
@@ -65,7 +65,7 @@ public class Ticket {
         this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate,String paymentType) {
+    public Ticket(Flight flight, String seatNumber, String departureDate,String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.seatNumber = seatNumber;
@@ -78,7 +78,7 @@ public class Ticket {
     }
 
     /**
-     *
+     * Details of the flight ticket
      */
     public void displayDetails() {
         System.out.println("--------------------------------------------------");
@@ -93,7 +93,6 @@ public class Ticket {
         }
         System.out.println("Seat Number: " + seatNumber);
         System.out.println("Ticket Status: " + (ticketStatus));
-//        System.out.println("Booked By: " +  + " | " + bookedBy.getLName() + ", " + bookedBy.getFName());
         System.out.println("Departure Date: " + departureDate);
         if (returnDate == null) {
             System.out.println("Price: " + (flight.getPrice() / 2));

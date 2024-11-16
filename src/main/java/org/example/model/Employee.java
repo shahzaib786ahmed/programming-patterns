@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Objects;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = false)
@@ -20,7 +19,7 @@ public class Employee extends User{
     }
 
     /**
-     *
+     * Displays all bought tickets
      */
     public static void viewAllBoughtTickets(){
         if (!TicketSystem.getBoughtTickets().isEmpty()) {
@@ -34,7 +33,7 @@ public class Employee extends User{
     }
 
     /**
-     *
+     * Displays all cancelled tickets
      */
     public static void viewAllCanceledTickets(){
         if (!TicketSystem.getCancelledTickets().isEmpty()) {
@@ -48,14 +47,13 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param ticket
-     * @param paymentType
-     * @param userId
-     * @param email
-     * @param creditCardNumber
+     * Makes the payment for the flight ticket for the passenger
+     * @param ticket of the passenger
+     * @param paymentType to make the payment for the ticket
+     * @param recipientEmail of the passenger to send email of confirmation
+     * @param creditCardNumber of the passenger to be used if paid by credit card
      */
-    public void makePayment(Ticket ticket, String paymentType, String userId, String email, String creditCardNumber) {
+    public void makePayment(Ticket ticket, String paymentType, String recipientEmail, String creditCardNumber) {
         double flightPrice = ticket.getFlight().getPrice();
         double serviceFee = 100.00;
         double totalCost = flightPrice + serviceFee;
@@ -80,14 +78,14 @@ public class Employee extends User{
             return;
         }
 
-        sendConfirmationEmail(email, "Payment Confirmation", "Your payment of $" + totalCost + " was successful for ticket " + ticket.getTicketId());
+        sendConfirmationEmail(recipientEmail, "Payment Confirmation", "Your payment of $" + totalCost + " was successful for ticket " + ticket.getTicketId());
     }
 
     /**
-     *
-     * @param recipientEmail
-     * @param subject
-     * @param messageBody
+     * Sends an email confirmation containing the payment details
+     * @param recipientEmail of the passenger to send email of confirmation
+     * @param subject line for payment confirmation
+     * @param messageBody where the confirmation of the payment for the ticket will be written, with the total price paid
      */
     public void sendConfirmationEmail(String recipientEmail, String subject, String messageBody) {
         System.out.println("Sending email to: " + recipientEmail);
@@ -97,31 +95,30 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param flight
-     * @param employee
-     * @param client
-     * @param seatNumber
-     * @param departureDate
-     * @param arrivalDate
-     * @param paymentType
-     * @param userId
-     * @param email
-     * @param creditCardNumber
-     * @return
+     * Purchases a two-way (round-trip) flight ticket for the client
+     * @param flight to be booked for the passenger
+     * @param employee that is booking the ticket
+     * @param client that is purchasing the ticket
+     * @param seatNumber of the passenger where they will be assigned
+     * @param departureDate of the flight selected
+     * @param returnDate of the flight selected
+     * @param paymentType to make the payment for the ticket
+     * @param recipientEmail of the passenger to send email of confirmation
+     * @param creditCardNumber of the passenger to be used if paid by credit card
+     * @return a new ticket for the passenger
      */
-    public static Ticket purchaseFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String arrivalDate, String paymentType, String userId, String email, String creditCardNumber) {
+    public static Ticket purchaseFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
         if (flight.getFlightSeatNumber() == 0) {
             throw new IllegalArgumentException("Flight is fully booked!");
         } else {
             flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
         }
 
-        Ticket ticket = new Ticket(flight, employee, client, seatNumber, departureDate, arrivalDate,paymentType);
-        ticket.setTicketStatus(Status.PURCHASED);
+        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate,paymentType);
+        employee.makePayment(ticket,paymentType,recipientEmail,creditCardNumber);
         TicketSystem.getBoughtTickets().add(ticket);
+        ticket.setTicketStatus(Status.PURCHASED);
         client.setLoyaltyPoints((int) flight.getPrice() / 4);
-        employee.makePayment(ticket,paymentType,userId,email,creditCardNumber);
 
         System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
                 " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
@@ -131,30 +128,29 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param flight
-     * @param employee
-     * @param seatNumber
-     * @param departureDate
-     * @param arrivalDate
-     * @param paymentType
-     * @param userId
-     * @param email
-     * @param creditCardNumber
-     * @return
+     * Purchases a two-way (round-trip) flight ticket for the employee
+     * @param flight to be booked for the passenger
+     * @param employee that is booking the ticket
+     * @param seatNumber of the passenger where they will be assigned
+     * @param departureDate of the flight selected
+     * @param returnDate of the flight selected
+     * @param paymentType to make the payment for the ticket
+     * @param recipientEmail of the passenger to send email of confirmation
+     * @param creditCardNumber of the passenger to be used to make the payment
+     * @return a new ticket for the passenger
      */
-    public static Ticket purchaseEmployeeFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String arrivalDate, String paymentType, String userId, String email, String creditCardNumber) {
+    public static Ticket purchaseEmployeeFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
         if (flight.getFlightSeatNumber() == 0) {
             throw new IllegalArgumentException("Flight is fully booked!");
         } else {
             flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
         }
 
-        Ticket ticket = new Ticket(flight, employee, seatNumber, departureDate, arrivalDate,paymentType);
+        Ticket ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
         flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.discountRate / 100)));
-        ticket.setTicketStatus(Status.PURCHASED);
+        employee.makePayment(ticket,paymentType,recipientEmail,creditCardNumber);
         TicketSystem.getBoughtTickets().add(ticket);
-        employee.makePayment(ticket,paymentType,userId,email,creditCardNumber);
+        ticket.setTicketStatus(Status.PURCHASED);
 
         System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
                 " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
@@ -164,30 +160,29 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param flight
-     * @param employee
-     * @param client
-     * @param seatNumber
-     * @param departureDate
-     * @param paymentType
-     * @param userId
-     * @param email
-     * @param creditCardNumber
-     * @return
+     * Purchases a one-way flight ticket for the client
+     * @param flight to be booked for the passenger
+     * @param employee that is booking the ticket
+     * @param client that is purchasing the ticket
+     * @param seatNumber of the passenger where they will be assigned
+     * @param departureDate of the flight selected
+     * @param paymentType to make the payment for the ticket
+     * @param recipientEmail of the passenger to send email of confirmation
+     * @param creditCardNumber of the passenger to be used if paid by credit card
+     * @return a new ticket for the passenger
      */
-    public static Ticket purchaseOneWayFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String paymentType, String userId, String email, String creditCardNumber) {
+    public static Ticket purchaseOneWayFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
         if (flight.getFlightSeatNumber() == 0) {
             throw new IllegalArgumentException("Flight is fully booked!");
         } else {
             flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
         }
 
-        Ticket ticket = new Ticket(flight, employee, client, seatNumber, departureDate,paymentType);
-        ticket.setTicketStatus(Status.PURCHASED);
+        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate,paymentType);
+        employee.makePayment(ticket,paymentType,recipientEmail,creditCardNumber);
         TicketSystem.getBoughtTickets().add(ticket);
+        ticket.setTicketStatus(Status.PURCHASED);
         client.setLoyaltyPoints((int) flight.getPrice() / 4);
-        employee.makePayment(ticket,paymentType,userId,email,creditCardNumber);
 
         System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
                 " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
@@ -197,29 +192,28 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param flight
-     * @param employee
-     * @param seatNumber
-     * @param departureDate
-     * @param paymentType
-     * @param userId
-     * @param email
-     * @param creditCardNumber
-     * @return
+     * Purchases a one-way flight ticket for the employee
+     * @param flight to be booked for the passenger
+     * @param employee that is booking the ticket
+     * @param seatNumber of the passenger where they will be assigned
+     * @param departureDate of the flight selected
+     * @param paymentType to make the payment for the ticket
+     * @param recipientEmail of the passenger to send email of confirmation
+     * @param creditCardNumber of the passenger to be used to make the payment
+     * @return a new ticket for the passenger
      */
-    public static Ticket purchaseEmployeeOneWayFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate,String paymentType,String userId, String email, String creditCardNumber) {
+    public static Ticket purchaseEmployeeOneWayFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
         if (flight.getFlightSeatNumber() == 0) {
             throw new IllegalArgumentException("Flight is fully booked!");
         } else {
             flight.setFlightSeatNumber(flight.getFlightSeatNumber() - 1);
         }
 
-        Ticket ticket = new Ticket(flight, employee, seatNumber, departureDate,paymentType);
+        Ticket ticket = new Ticket(flight, seatNumber, departureDate,paymentType);
         flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.discountRate / 100)));
         ticket.setTicketStatus(Status.PURCHASED);
         TicketSystem.getBoughtTickets().add(ticket);
-        employee.makePayment(ticket,paymentType,userId,email,creditCardNumber);
+        employee.makePayment(ticket,paymentType,recipientEmail,creditCardNumber);
 
         System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
                 " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
@@ -229,8 +223,8 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param ticket
+     * Refunds a ticket to the passenger
+     * @param ticket of the passenger that wants/needs a refund
      */
     public void refund(Ticket ticket) {
         Client client = ticket.getClient();
@@ -246,10 +240,10 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param ticket
+     * Cancels a flight ticket for the passenger
+     * @param ticket of the passenger that wants/needs to cancel their flight
      */
-    public static void cancelFlightTicket(Employee employee,Ticket ticket) {
+    public static void cancelFlightTicket(Employee employee, Ticket ticket) {
         ticket.setTicketStatus(Status.CANCELLED);
         TicketSystem.getBoughtTickets().remove(ticket);
         TicketSystem.getCancelledTickets().add(ticket);
@@ -259,37 +253,38 @@ public class Employee extends User{
     }
 
     /**
-     *
-     * @param employee
-     * @param client
-     * @param room
-     * @param numOfNights
+     * Books a hotel room for a client
+     * @param employee that is booking the room
+     * @param client that is purchasing the ticket
+     * @param room to be booked
+     * @param numOfNights number of nights that the passenger is staying
      */
     public static void bookRoomForClient(Employee employee, Client client, Room room, int numOfNights) {
-        if (!HotelSystem.bookRoom(employee, client, room, numOfNights)) {
+        if (!HotelSystem.bookRoom(client, room, numOfNights)) {
             System.out.println("Unable to book the room for the client.");
         }
+        HotelSystem.getClients().add(client);
         HotelSystem.getAvailableRooms().remove(room);
         HotelSystem.getBookedRooms().add(room);
-       // TODO:PAYMENT
+       //TODO: PAYMENT FOR THE OF THE HOTEL ROOM BOOKING
     }
 
     /**
-     *
-     * @param hotelSystem
-     * @param room
+     * Cancels a hotel room for the customer
+     * @param room to be cancelled
      */
-    public void cancelRoomBooking(HotelSystem hotelSystem, Room room) {
-        if (!hotelSystem.cancelBooking(room)) {
+    public void cancelRoomBooking(Room room) {
+        if (!HotelSystem.cancelBooking(room)) {
             System.out.println("Unable to cancel the room booking.");
         }
+        HotelSystem.getClients().remove(room.getClient());
         HotelSystem.getBookedRooms().remove(room);
         HotelSystem.getAvailableRooms().add(room);
-       // TODO:REFUND
+        //TODO: REFUND FOR THE OF THE HOTEL ROOM BOOKING
     }
 
     /**
-     *
+     * Display the details of the employee
      */
     @Override
     public void displayDetails() {

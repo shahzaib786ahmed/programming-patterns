@@ -4,56 +4,48 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Setter
 public class HotelSystem {
     @Getter
-    private List<Client> clients = new ArrayList<>();
+    private static List<Client> clients = new ArrayList<>();
     @Getter
-    private List<Employee> employees=new ArrayList<>();
+    private static List<Employee> employees = new ArrayList<>();
     @Getter
     public static List<Room> availableRooms = new ArrayList<>();
     @Getter
     public static List<Room> bookedRooms = new ArrayList<>();
 
-    public HotelSystem() {
-        this.clients = clients;
-        this.employees = employees;
-        this.availableRooms = availableRooms;
-        this.bookedRooms = bookedRooms;
-    }
-
     /**
-     *
-     * @param client
+     * Adds a client to the list of clients staying at the hotel
+     * @param client to be added in the list of clients at the hotel
      */
     public void add(Client client) {
         clients.add(client);
     }
 
     /**
-     *
-     * @param employee
+     * Adds an employee to the list of employees staying at the hotel
+     * @param employee to be added to the list of employees at the hotel
      */
     public void add(Employee employee) {
         employees.add(employee);
     }
 
     /**
-     *
-     * @param employee
-     * @param client
-     * @param room
-     * @param numberOfNights
-     * @return
+     * Books a hotel room for the client
+     * @param client that wants to book a room
+     * @param room to be booked for the client
+     * @param numberOfNights number of nights staying at the hotel
+     * @return the boolean to see if a room is available, if available, book it
      */
-    //Instead of having checkIn and checkOut dates, we should stick to only number of nights staying so it's easy to calculate the stay price
-    public static boolean bookRoom(Employee employee, Client client, Room room, int numberOfNights) {
+
+    public static boolean bookRoom(Client client, Room room, int numberOfNights) {
         if (room.getRoomStatus() == Room.RoomStatus.AVAILABLE) {
             room.setRoomStatus(Room.RoomStatus.RESERVED);
             room.setPrice(numberOfNights * room.getPrice());
+            room.setClient(client);
             availableRooms.remove(room);
             bookedRooms.add(room);
             System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName());
@@ -65,9 +57,9 @@ public class HotelSystem {
     }
 
     /**
-     *
-     * @param room
-     * @return
+     * Cancels a hotel room for a customer
+     * @param room to be cancelled
+     * @return the boolean to see if the reserved room is indeed reserved, if true, cancel it
      */
     public static boolean cancelBooking(Room room) {
         if (room.getRoomStatus() == Room.RoomStatus.RESERVED) {
@@ -84,7 +76,7 @@ public class HotelSystem {
 
     /**
      *
-     * @return
+     * @return the lists of all available rooms and booked rooms
      */
     @Override
     public String toString() {

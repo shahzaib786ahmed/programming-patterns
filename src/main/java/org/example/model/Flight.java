@@ -30,7 +30,7 @@ public class Flight extends Services {
     }
 
     /**
-     *
+     * Display details of the flight
      */
     @Override
     public void displayDetails() {
