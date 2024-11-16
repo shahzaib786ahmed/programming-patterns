@@ -1,5 +1,5 @@
-#Travel Agency System (TAS) README
-##Project Overview
+# Travel Agency System (TAS) README
+## Project Overview
 The Travel Agency System (TAS) is designed to streamline booking reservations for flights and hotels while offering comprehensive customer service capabilities. Customers can easily book, cancel, and manage their flight and hotel reservations through the assistance of agency employees. The system stores customer profiles, flight details, hotel reservations, and payment histories in different storage locations. Customers accumulate points with each booking, which can be redeemed for future transactions. Employees can book and cancel reservations for customers and manage their own reservations with unique benefits.
 
 This project leverages the Model-View-Controller (MVC) design paradigm and aims to provide a user-friendly experience for both customers and employees.
