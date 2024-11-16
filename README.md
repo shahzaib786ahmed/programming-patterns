@@ -25,7 +25,7 @@ Additional Output: If no flights match the criteria, a message appears: "No flig
 
 Book a Flight
 
-Action: Agents select a flight and book a seat by entering passenger details (name, age, passport number, phone number, and email).
+Action: Agents select a flight and book a seat by entering passenger details (name, age, passport number, phone number, and email). 
 Expected Output: Confirmation of booking with assigned ticket details, including:
 Booking number
 Flight details
@@ -34,23 +34,23 @@ Total cost
 
 Cancel a Flight
 
-Action: Agents cancel an existing booking by providing the booking reference.
-Expected Output: Confirmation message: "Booking successfully canceled." The system updates the list of booked and canceled tickets.
+Action: Agents cancel an existing booking by providing the booking reference. 
+Expected Output: Confirmation message: "Booking successfully canceled." The system updates the list of booked and canceled tickets. 
 Additional Output: If invalid booking reference is provided, message appears: "Booking not found. Please check your booking number."
 
 View Booking Details
 
-Action: Users can view existing booking details using their booking number.
+Action: Users can view existing booking details using their booking number. 
 Expected Output: Display of booking details, passenger information, flight details, and total price. If booking is not found, an error message is displayed.
 
 Payment and Invoice Generation
 
-Action: Employees handle payment using credit card details. Payment is simulated.
+Action: Employees handle payment using credit card details. Payment is simulated. 
 Expected Output: Generation of an invoice with total amount, payment method, and ticket details.
 
 View Flight Information
 
-Action: Users or agents view general flight information, including upcoming departures and flight status.
+Action: Users or agents view general flight information, including upcoming departures and flight status. 
 Expected Output: Display of flight information without booking.
 
 Error Handling
@@ -60,12 +60,12 @@ Expected Output: Specific error messages for invalid inputs (e.g., wrong dates, 
 ### Hotels
 Search for Available Rooms
 
-Action: Users search for rooms based on availability.
+Action: Users search for rooms based on availability. 
 Expected Output: List of available rooms matching the criteria.
 
 Reserve a Room
 
-Action: Agents book a room by entering client details (name, age, phone number, and email).
+Action: Agents book a room by entering client details (name, age, phone number, and email). 
 Expected Output: Confirmation with booking details:
 Room number
 Booking details (nights, price, meals, arrival and departure times)
@@ -74,22 +74,22 @@ Total cost
 
 Cancel a Hotel Booking
 
-Action: Agents cancel a booking using the room number and client name.
+Action: Agents cancel a booking using the room number and client name. 
 Expected Output: Confirmation message: "Booking successfully canceled." The system updates booked and available rooms.
 
 View Booking Details
 
-Action: Users view booking details.
+Action: Users view booking details. 
 Expected Output: Display of all relevant details.
 
 Payment and Invoice Generation
 
-Action: Employees handle payment using credit card details.
+Action: Employees handle payment using credit card details. 
 Expected Output: Generation of invoice with payment information.
 
 View Hotel Information
 
-Action: Users view hotel information without booking.
+Action: Users view hotel information without booking. 
 Expected Output: Display of hotel information.
 
 Error Handling
