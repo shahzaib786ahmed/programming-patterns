@@ -17,6 +17,9 @@ public class Hotel extends Services {
         this.name = name;
     }
 
+    /**
+     *
+     */
     @Override
     public void displayDetails() {
         String.format(

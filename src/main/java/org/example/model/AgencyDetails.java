@@ -23,6 +23,10 @@ public class AgencyDetails {
         this.customerReviews = new LinkedList<>();
     }
 
+    /**
+     *
+     * @param review
+     */
     public void addReview(Review review) {
         if (review != null) {
             customerReviews.add(review);
@@ -32,6 +36,11 @@ public class AgencyDetails {
         }
     }
 
+    /**
+     *
+     * @param reviewId
+     * @return
+     */
     public boolean deleteReviewById(String reviewId) {
         for (Review review : customerReviews) {
             if (review.getReviewId().equals(reviewId)) {
@@ -44,19 +53,36 @@ public class AgencyDetails {
         return false;
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
     private boolean isValidEmail(String email) {
         return email.contains("@") && email.contains(".com");
     }
 
+    /**
+     *
+     * @param phone
+     * @return
+     */
     private boolean isValidPhone(String phone) {
         return phone.matches("\\d{10}"); // Checks if phone contains exactly 10 digits
     }
 
+    /**
+     *
+     * @param instance
+     */
     public static void setInstance(AgencyDetails instance) {
         AgencyDetails.instance = instance;
     }
 
-
+    /**
+     *
+     * @param agencyName
+     */
     public void setAgencyName(String agencyName) {
         if (agencyName != null && !agencyName.trim().isEmpty()) {
             this.agencyName = agencyName;
@@ -65,7 +91,10 @@ public class AgencyDetails {
         }
     }
 
-
+    /**
+     *
+     * @param agencyPhone
+     */
     public void setAgencyPhone(String agencyPhone) {
         if (isValidPhone(agencyPhone)) {
             this.agencyPhone = agencyPhone;
@@ -74,6 +103,10 @@ public class AgencyDetails {
         }
     }
 
+    /**
+     *
+     * @param agencyEmail
+     */
     public void setAgencyEmail(String agencyEmail) {
         if (isValidEmail(agencyEmail)) {
             this.agencyEmail = agencyEmail;
@@ -82,6 +115,10 @@ public class AgencyDetails {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static AgencyDetails getInstance() {
         if (instance == null) {
             synchronized (AgencyDetails.class) {
@@ -93,6 +130,9 @@ public class AgencyDetails {
         return instance;
     }
 
+    /**
+     *
+     */
     public void displayAgencyDetails() {
         System.out.println("===================================");
         System.out.println("         AGENCY DETAILS           ");
@@ -112,6 +152,4 @@ public class AgencyDetails {
         }
         System.out.println("===================================");
     }
-
-
 }

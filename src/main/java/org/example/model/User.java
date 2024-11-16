@@ -30,13 +30,21 @@ public abstract class User {
         this.emailAddress = validateEmailAddress(emailAddress);
         this.age = age;
     }
-
+    //need to figure out if were still going to use it because in database the id start from 1
+    /**
+     *
+     * @return
+     */
     private static int generateRandomId() {
         Random random = new Random();
         return 1 + random.nextInt(999999);
-
     }
 
+    /**
+     *
+     * @param passportNum
+     * @return
+     */
     private String validatePassportNum(String passportNum) {
         if (isPassportNumValid(passportNum)) {
             return passportNum;
@@ -45,6 +53,11 @@ public abstract class User {
         }
     }
 
+    /**
+     *
+     * @param phoneNumber
+     * @return
+     */
     private String validatePhoneNumber(String phoneNumber) {
         if (isPhoneNumberValid(phoneNumber)) {
             return phoneNumber;
@@ -53,6 +66,11 @@ public abstract class User {
         }
     }
 
+    /**
+     *
+     * @param emailAddress
+     * @return
+     */
     private String validateEmailAddress(String emailAddress) {
         if (isEmailValid(emailAddress)) {
             return emailAddress;
@@ -61,6 +79,11 @@ public abstract class User {
         }
     }
 
+    /**
+     *
+     * @param passportNum
+     * @return
+     */
     public boolean isPassportNumValid(String passportNum) {
         if (passportNum.length() == 9) {
             return true;
@@ -69,6 +92,11 @@ public abstract class User {
         }
     }
 
+    /**
+     *
+     * @param phoneNumber
+     * @return
+     */
     public boolean isPhoneNumberValid(String phoneNumber) {
         if (phoneNumber.length() == 10) {
             return true;
@@ -77,6 +105,11 @@ public abstract class User {
         }
     }
 
+    /**
+     *
+     * @param emailAddress
+     * @return
+     */
     public boolean isEmailValid(String emailAddress) {
         if (emailAddress.contains("@") && emailAddress.contains(".com")) {
             return true;
@@ -89,7 +122,6 @@ public abstract class User {
         generateRandomId();
     }
 
-
     public void setPassportNum(String passportNum) {
         validatePassportNum(passportNum);
     }
@@ -98,13 +130,12 @@ public abstract class User {
         validatePhoneNumber(phoneNumber);
     }
 
-
     public void setEmailAddress(String emailAddress) {
         validateEmailAddress(emailAddress);
     }
 
-
+    /**
+     *
+     */
     public abstract void displayDetails();
-
-
 }

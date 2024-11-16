@@ -29,6 +29,9 @@ public class Flight extends Services {
         this.arrivalTime = arrivalTime;
     }
 
+    /**
+     *
+     */
     @Override
     public void displayDetails() {
         System.out.println("--------------------------------------------------");
@@ -41,5 +44,4 @@ public class Flight extends Services {
         System.out.println("Flight Ticket Purchase Price: " + getPrice());
         System.out.println("--------------------------------------------------");
     }
-
 }

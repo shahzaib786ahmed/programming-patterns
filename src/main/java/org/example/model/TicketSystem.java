@@ -28,6 +28,11 @@ public class TicketSystem {
         this.boughtTickets = boughtTickets;
     }
 
+    /**
+     *
+     * @param keyword
+     * @return
+     */
     public static Ticket search(int keyword) {
         for (Ticket ticket : cancelledTickets) {
             if (ticket.getTicketId() == keyword) {
@@ -42,6 +47,10 @@ public class TicketSystem {
         return null;
     }
 
+    /**
+     *
+     * @param tickets
+     */
     public static void displayAllTickets(List<Ticket> tickets) {
         if (!tickets.isEmpty()) {
             for (Ticket ticket : tickets) {
@@ -52,8 +61,7 @@ public class TicketSystem {
             }
         }
     }
-
-////do we need these and the method in manager ask yi
+////TODO:do we need these and the method in manager ask yi
 //    public static void addClient(Client client) {
 //        clients.add(client);
 //    }

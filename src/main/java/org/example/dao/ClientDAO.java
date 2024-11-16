@@ -12,271 +12,179 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDAO {
-
-        public static final String BASE_PATH = "jdbc:sqlite:./src/main/resources/database/";
-        public static final String DB_PATH = BASE_PATH +  "data.db";
-
-        // sql statement
-        public static final String CREATE_CLIENTS_TABLE_SQL = """
-            CREATE TABLE IF NOT EXISTS clients (
-                id INTEGER PRIMARY KEY,
-                lName TEXT NOT NULL,
-                fName TEXT NOT NULL,
-                passportNumber TEXT NOT NULL,
-                phoneNumber TEXT NOT NULL,
-                emailAddress TEXT NOT NULL,
-                age INTEGER,
-                userName TEXT,
-                password TEXT,
-                loyaltyPoints INTEGER,
-                )
-            """;
-//        public static final String ALTER_STUDENTS_TABLE_ADD_GENDER_COLUMN_SQL = """
-//            ALTER TABLE s ADD COLUMN gender TEXT
-//            """;
-        public static final String DROP_CLIENTS_TABLE = """
-            DROP TABLE IF EXISTS clients
-            """;
-
-
-
-        /**
-         * connects to a local db file
-         * @param path the path of a local db file
-         * @return the connection to the local db file
-         */
-        public static Connection connect(String path) {
-            Connection connection;
-            try {
-                connection = DriverManager.getConnection(path);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            return connection;
-        }
-
-        /**
-         * creates a new table in a local database
-         * @param sql the sql statement to create the new table
-         */
-        public static void createTable(String sql) {
-            if (!sql.toUpperCase().contains("CREATE")) {
-                System.out.println("creating table failed: sql statement must contain keyword CREATE");
-                return;
-            }
-
-            executeDdlAndDml(sql);
-        }
-
-        /**
-         * alter an existing table in a local database
-         * @param sql the sql statement to alter an existing table
-         */
-        public static void alterTable(String sql) {
-            if (!sql.toUpperCase().contains("ALTER")) {
-                System.out.println("altering table failed: sql statement must contain keyword ALTER");
-                return;
-            }
-
-            executeDdlAndDml(sql);
-        }
-
-        /**
-         * drop an existing table in a local database
-         * @param sql the sql statement to drop an existing table
-         */
-        public static void dropTable(String sql) {
-            if (!sql.toUpperCase().contains("DROP")) {
-                System.out.println("dropping table failed: sql statement must contain keyword DROP");
-                return;
-            }
-
-            executeDdlAndDml(sql);
-        }
-
-        /**
-         * inserts record into an existing table in a local database
-         * @param sql the sql statement to insert record to an existing table
-         */
-        public static void insertRecord(String sql) {
-            if (!sql.toUpperCase().contains("INSERT INTO")) {
-                System.out.println("inserting record failed: sql statement must contain keyword INSERT INTO");
-                return;
-            }
-
-            executeDdlAndDml(sql);
-        }
-
-        /**
-         * updates a record in an existing table in a local database
-         * @param sql the sql statement to update a record in an existing table
-         */
-        public static void updateRecord(String sql) {
-            if (!sql.toUpperCase().contains("UPDATE")) {
-                System.out.println("updating record failed: sql statement must contain keyword UPDATE");
-                return;
-            }
-
-            executeDdlAndDml(sql);
-        }
-
-        /**
-         * deletes a record into an existing table in a local database
-         * @param sql the sql statement to delete a record to an existing table
-         */
-        public static void deleteRecord(String sql) {
-            if (!sql.toUpperCase().contains("DELETE")) {
-                System.out.println("deleting record failed: sql statement must contain keyword DELETE");
-                return;
-            }
-
-            executeDdlAndDml(sql);
-        }
-
-        private static void executeDdlAndDml(String sql) {
-            try (Connection connection = connect(DB_PATH);
-                 Statement statement = connection.createStatement()) {
-                statement.executeUpdate(sql);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        /**
-         * generates a sql statement for inserting a record into an existing table in a local database
-         * @param tableName the name of the table to insert into
-         * @param params the values of a record to insert
-         * @return the sql statement for inserting
-         */
-        public static String generateInsertSql(String tableName, Object... params) {
-            StringBuilder sb = new StringBuilder("INSERT INTO ");
-
-            sb.append(tableName).append(" VALUES(");
-
-            for (int i = 0; i < params.length; i++) {
-                Object value = params[i];
-                if (i < params.length - 1) {        // with ", "
-                    if (value instanceof String) {
-                        sb.append("'").append(value).append("', ");
-                    } else {
-                        sb.append(value).append(", ");
-                    }
-                } else {                            // without ", "
-                    if (value instanceof String) {
-                        sb.append("'").append(value).append("'");
-                    } else {
-                        sb.append(value);
-                    }
-                }
-            }
-            sb.append(")");
-            return sb.toString();
-        }
-
-        /**
-         * generates a sql statement for updating a record based on one column
-         * @param tableName the name of the table to be updated
-         * @param params the values of the record
-         * @return the sql statement for updating
-         */
-    /*
-    "name", "mike", "age", 21, "gender", "male", "id", 1
+    /**
+     * Connect to SQLite database
+     * @return the connection
      */
-        public static String generateUpdateRecordSql(String tableName, Object... params) {
-            StringBuilder sb = new StringBuilder("UPDATE ");
-            sb.append(tableName).append(" SET ");
-
-            for (int i = 0; i < params.length; i++) {
-                Object value = params[i];
-                if (i < params.length - 4) {                // appending column=values with ", "
-                    if (i % 2 == 0) {   // appending the column name
-                        sb.append(value).append(" = ");
-                    } else {    // appending the real value
-                        if (value instanceof String) {
-                            sb.append("'").append(value).append("', ");
-                        } else {
-                            sb.append(value).append(", ");
-                        }
-                    }
-                } else if (i < params.length - 2) {         // appending the last column=values without ", "
-                    if (i % 2 == 0) {   // appending the column name
-                        sb.append(value).append(" = ");
-                    } else {    // appending the real value
-                        if (value instanceof String) {
-                            sb.append("'").append(value).append("'");
-                        } else {
-                            sb.append(value);
-                        }
-                    }
-                } else {                                    // appending the condition
-                    if (i % 2 == 0) {   // appending the column name
-                        sb.append(" WHERE ").append(value).append(" = ");
-                    } else {    // appending the real value
-                        if (value instanceof String) {
-                            sb.append("'").append(value).append("'");
-                        } else {
-                            sb.append(value);
-                        }
-                    }
-                }
-            }
-
-            return sb.toString();
-        }
-
-        /**
-         * generates a sql statement for deleting a record based on one column
-         * @param tableName the name of the table at where the record is to be deleted
-         * @param params the values of the record
-         * @return the sql statement for deleting a record
-         */
-        public static String generateDeleteRecordSql(String tableName, Object... params) {
-            StringBuilder sb = new StringBuilder("DELETE FROM ");
-            sb.append(tableName)
-                    .append(" WHERE ")
-                    .append(params[0])      // appending column name for the condition
-                    .append(" = ");
-
-            Object value = params[1];       // appending column value for the condition
-            value = (value instanceof String) ?
-                    "'" + value + "'" :
-                    value;
-            sb.append(value);
-
-            return sb.toString();
-        }
-
-        /**
-         * selects all values of a table
-         * @param tableName the name of the table to be queried
-         * @return a list of Student in this specific case
-         */
-        public static List<Client> selectAll(String tableName) {
-            String sql = "SELECT * FROM " + tableName;
-
-            List<Client> clients = new ArrayList<>();
-            try (Connection connection = connect(DB_PATH);
-                 Statement statement = connection.createStatement();
-                 ResultSet rs = statement.executeQuery(sql)
-            ) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String lName = rs.getString("lName");
-                    String fName = rs.getString("fName");
-                    String passportNumber = rs.getString("passportNumber");
-                    String phoneNumber = rs.getString("phoneNumber");
-                    String emailAddress = rs.getString("emailAddress");
-                    int age = rs.getInt("age");
-                    String userName = rs.getString("userName");
-                    String password = rs.getString("password");
-                    int loyaltyPoints = rs.getInt("loyaltyPoints");
-
-                    clients.add(new Client( lName,  fName,  passportNumber,  phoneNumber, emailAddress,  age, userName, password));
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            return clients;
+    private static Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:./src/main/resources/database/data.db";
+        try {
+            Connection conn = DriverManager.getConnection(url);
+            System.out.println("Connection to SQLite has been established.");
+            return conn;
+        } catch (SQLException e) {
+            System.out.println("Connection failed: " + e.getMessage());
+            return null;
         }
     }
+
+    /**
+     * Create a new table
+     */
+    public static void createNewTableOfClients() {
+        String sql = """
+                
+                    CREATE TABLE IF NOT EXISTS clients (
+                    id INTEGER PRIMARY KEY,
+                    lName TEXT NOT NULL,
+                    fName TEXT NOT NULL,
+                    passportNumber TEXT NOT NULL,
+                    phoneNumber TEXT NOT NULL,
+                    emailAddress TEXT NOT NULL,
+                    age INTEGER,
+                    userName TEXT,
+                    password TEXT,
+                    loyaltyPoints INTEGER
+                )
+                """;
+
+        try (Connection conn = connect();
+             Statement stmt = conn != null ? conn.createStatement() : null) {
+            if (stmt != null) {
+                stmt.execute(sql);
+                System.out.println("Table created successfully.");
+            } else {
+                System.out.println("Table creation failed. Connection is null.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+//ask yi how do i check the validation of phonenumber emailadress id without creating a new client
+    /**
+     * To update a specific client using its id and updating the allowed info
+     * @param id client id
+     * @param newPhoneNumber new phone number that will replaced the old one
+     * @param newEmailAddress new email adress that will replaced the old one
+     */
+    public static void updateClient(int id, String newPhoneNumber, String newEmailAddress) {
+        String sql = "UPDATE clients SET phoneNumber = ?, emailAddress = ? WHERE id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newPhoneNumber);
+            pstmt.setString(2, newEmailAddress);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+            System.out.println("Client information updated successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * to delete a specific client using its id
+     * @param id client id
+     */
+    public static void deleteClient(int id) {
+        String sql = "DELETE FROM clients WHERE id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Client deleted successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * adds a new column to a table
+     * @param columnName the name of the new column
+     * @param columnType the type of the new column
+     */
+    public static void addColumn(String columnName, String columnType) {
+        String sql = "ALTER TABLE clients ADD COLUMN " + columnName + " " + columnType;
+
+        try (Connection conn = connect();
+
+             Statement stmt = conn != null ? conn.createStatement() : null) {
+            if (stmt != null) {
+                // Execute the ALTER TABLE query
+                stmt.executeUpdate(sql);
+                System.out.println("Column " + columnName + " added successfully.");
+            } else {
+                System.out.println("Add column failed. Connection is null.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * drops a table
+     * @param tableName the name of the table to drop
+     */
+    public static void dropTable(String tableName) {
+        // SQL query to drop the table
+        String sql = "DROP TABLE IF EXISTS " + tableName;
+        try (Connection conn = connect();
+             Statement stmt = conn != null ? conn.createStatement() : null) {
+            if (stmt != null) {
+                stmt.executeUpdate(sql);
+                System.out.println("Table " + tableName + " dropped successfully.");
+            } else {
+                System.out.println("Drop table failed. Connection is null.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Insert a new client in table clients
+     * @param lName last name
+     * @param fName fist name
+     * @param passportNumber passport number
+     * @param phoneNumber phone number
+     * @param emailAddress email adress
+     * @param age age
+     * @param userName username for the login
+     * @param password passport for the login
+     * @param loyaltyPoints loyalty points
+     */
+    public static void insertClient(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
+        try {
+            // Create a Client object, which will trigger validation
+            Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+
+            String sql = "INSERT INTO clients(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try (Connection conn = connect();
+                 PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
+                if (pstmt != null) {
+                    pstmt.setString(1, client.getLName());
+                    pstmt.setString(2, client.getFName());
+                    pstmt.setString(3, client.getPassportNum());
+                    pstmt.setString(4, client.getPhoneNumber());
+                    pstmt.setString(5, client.getEmailAddress());
+                    pstmt.setInt(6, client.getAge());
+                    pstmt.setString(7, client.getUserName());
+                    pstmt.setString(8, client.getPassword());
+                    pstmt.setInt(9, client.getLoyaltyPoints());
+                    pstmt.executeUpdate();
+                    System.out.println("Data inserted successfully.");
+                } else {
+                    System.out.println("Insert failed. PreparedStatement is null.");
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (IllegalArgumentException e) {
+            // Catch validation exceptions thrown from the Client constructor
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}

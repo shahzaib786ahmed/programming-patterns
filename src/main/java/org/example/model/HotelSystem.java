@@ -9,8 +9,9 @@ import java.util.List;
 
 @Setter
 public class HotelSystem {
-    private List<Client> clients
-            = new ArrayList<>();
+    @Getter
+    private List<Client> clients = new ArrayList<>();
+    @Getter
     private List<Employee> employees=new ArrayList<>();
     @Getter
     public static List<Room> availableRooms = new ArrayList<>();
@@ -24,22 +25,35 @@ public class HotelSystem {
         this.bookedRooms = bookedRooms;
     }
 
+    /**
+     *
+     * @param client
+     */
     public void add(Client client) {
         clients.add(client);
     }
 
+    /**
+     *
+     * @param employee
+     */
     public void add(Employee employee) {
         employees.add(employee);
     }
 
+    /**
+     *
+     * @param employee
+     * @param client
+     * @param room
+     * @param numberOfNights
+     * @return
+     */
     //Instead of having checkIn and checkOut dates, we should stick to only number of nights staying so it's easy to calculate the stay price
     public static boolean bookRoom(Employee employee, Client client, Room room, int numberOfNights) {
         if (room.getRoomStatus() == Room.RoomStatus.AVAILABLE) {
             room.setRoomStatus(Room.RoomStatus.RESERVED);
-            room.setClientName(client.getFName() + " " + client.getLName());
-            room.setNumberOfNights(numberOfNights);
             room.setPrice(numberOfNights * room.getPrice());
-            room.setBookedBy(employee);
             availableRooms.remove(room);
             bookedRooms.add(room);
             System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName());
@@ -50,11 +64,14 @@ public class HotelSystem {
         }
     }
 
+    /**
+     *
+     * @param room
+     * @return
+     */
     public static boolean cancelBooking(Room room) {
         if (room.getRoomStatus() == Room.RoomStatus.RESERVED) {
             room.setRoomStatus(Room.RoomStatus.AVAILABLE);
-            room.setClientName(null);
-            room.setBookedBy(null);
             bookedRooms.remove(room);
             availableRooms.add(room);
             System.out.println("Room " + room.getRoomNum() + " booking has been canceled.");
@@ -65,6 +82,10 @@ public class HotelSystem {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "Hotel System Overview:\n" +

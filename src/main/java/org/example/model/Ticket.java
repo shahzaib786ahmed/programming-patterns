@@ -21,10 +21,11 @@ public class Ticket {
     private String departureDate;
     private Employee assignedTo;
     private String returnDate;
+    private String paymentType;
 
     private static int idCounter = 0;
 
-    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String returnDate) {
+    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String returnDate, String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
@@ -35,9 +36,10 @@ public class Ticket {
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
         this.returnDate = returnDate;
+        this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate) {
+    public Ticket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate,String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;
@@ -47,9 +49,10 @@ public class Ticket {
         this.operationHistory = new MyQueue<>();
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
+        this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate) {
+    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate,String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.seatNumber = seatNumber;
@@ -59,9 +62,10 @@ public class Ticket {
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
         this.returnDate = returnDate;
+        this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate) {
+    public Ticket(Flight flight, Employee employee, String seatNumber, String departureDate,String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.seatNumber = seatNumber;
@@ -70,8 +74,12 @@ public class Ticket {
         this.operationHistory = new MyQueue<>();
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
+        this.paymentType = paymentType;
     }
 
+    /**
+     *
+     */
     public void displayDetails() {
         System.out.println("--------------------------------------------------");
         System.out.println("Ticket Details:");
@@ -93,6 +101,7 @@ public class Ticket {
             System.out.println("Arrival Date: " + returnDate);
             System.out.println("Price: " + (flight.getPrice()));
         }
+        System.out.println("Payment type: " + paymentType);
         System.out.println("--------------------------------------------------");
     }
 
@@ -101,12 +110,12 @@ public class Ticket {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
-        return ticketId == ticket.ticketId && Objects.equals(flight, ticket.flight) && Objects.equals(client, ticket.client) && Objects.equals(seatNumber, ticket.seatNumber) && ticketStatus == ticket.ticketStatus && Objects.equals(bookedBy, ticket.bookedBy) && Objects.equals(operationHistory, ticket.operationHistory) && Objects.equals(departureDate, ticket.departureDate) && Objects.equals(assignedTo, ticket.assignedTo) && Objects.equals(returnDate, ticket.returnDate);
+        return ticketId == ticket.ticketId && Objects.equals(flight, ticket.flight) && Objects.equals(client, ticket.client) && Objects.equals(seatNumber, ticket.seatNumber) && ticketStatus == ticket.ticketStatus && Objects.equals(bookedBy, ticket.bookedBy) && Objects.equals(operationHistory, ticket.operationHistory) && Objects.equals(departureDate, ticket.departureDate) && Objects.equals(assignedTo, ticket.assignedTo) && Objects.equals(returnDate, ticket.returnDate) && Objects.equals(paymentType, ticket.paymentType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticketId, flight, client, seatNumber, ticketStatus, bookedBy, operationHistory, departureDate, assignedTo, returnDate);
+        return Objects.hash(ticketId, flight, client, seatNumber, ticketStatus, bookedBy, operationHistory, departureDate, assignedTo, returnDate, paymentType);
     }
 
     public static class Operation {

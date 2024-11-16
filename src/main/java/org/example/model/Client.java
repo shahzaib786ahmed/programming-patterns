@@ -19,13 +19,32 @@ public class Client extends User{
         this.password = password;
     }
 
+    /**
+     *
+     * @param loyaltyPoints
+     */
+    public void setLoyaltyPoints(int loyaltyPoints) {
+        this.loyaltyPoints += loyaltyPoints;
+    }
+
+    /**
+     *
+     * @param userName
+     * @param password
+     * @return
+     */
     public boolean isLogin(String userName, String password) {
         if (userName == null || password == null) {
             return false;
         }
         return this.userName.equals(userName) && this.password.equals(password);
     }
-    
+
+    /**
+     *
+     * @param tickets
+     * @param ticketId
+     */
     public void viewTicketDetails(List<Ticket> tickets, int ticketId) {
         for (Ticket ticket : tickets) {
             if (ticket.getTicketId() == ticketId) {
@@ -38,15 +57,20 @@ public class Client extends User{
         }
         System.out.println("Ticket with ID " + ticketId + " not found.");
     }
-    public void pointsAccumulate(int loyaltyPoints) {
-        this.loyaltyPoints += loyaltyPoints;
-    }
+
+    /**
+     *
+     */
     @Override
     public void displayDetails() {
         System.out.println("Client Details:");
         System.out.println(this);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "Client{" +

@@ -20,6 +20,10 @@ public class Review {
         setBody(body);
     }
 
+    /**
+     *
+     * @param email
+     */
     public void setEmail(String email) {
         if (email != null && email.contains("@")) {
             this.email = email;
@@ -28,7 +32,10 @@ public class Review {
         }
     }
 
-
+    /**
+     *
+     * @param title
+     */
     public void setTitle(String title) {
         if (title != null && !title.trim().isEmpty()) {
             this.title = title;
@@ -37,7 +44,10 @@ public class Review {
         }
     }
 
-
+    /**
+     *
+     * @param body
+     */
     public void setBody(String body) {
         if (body != null && !body.trim().isEmpty()) {
             this.body = body;
@@ -46,7 +56,10 @@ public class Review {
         }
     }
 
-
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "\n------------------------------------\n" +
