@@ -4,14 +4,14 @@ The Travel Agency System (TAS) is designed to streamline booking reservations fo
 
 This project leverages the Model-View-Controller (MVC) design paradigm and aims to provide a user-friendly experience for both customers and employees.
 
-##Design Paradigm
+## Design Paradigm
 Model-View-Controller (MVC)
 Model: Represents data, such as customer profiles, flight details, booking statuses, etc.
 View: Provides user interfaces to interact with the system (e.g., booking forms, search results).
 Controller: Manages logic and user input, processing requests, updating the view, and interacting with the model.
 
-##Expected Features and Outcomes
-###Flights
+## Expected Features and Outcomes
+### Flights
 
 Search for Flights
 
@@ -57,7 +57,7 @@ Error Handling
 
 Expected Output: Specific error messages for invalid inputs (e.g., wrong dates, incomplete passenger details, invalid booking numbers).
 
-###Hotels
+### Hotels
 Search for Available Rooms
 
 Action: Users search for rooms based on availability.
@@ -96,12 +96,12 @@ Error Handling
 
 Expected Output: Specific error messages for invalid inputs (e.g., wrong dates, incomplete client details, invalid user IDs).
 
-##Additional System Behavior
+## Additional System Behavior
 Admin-Specific Features: Restricted to certain users with password protection.
 Data Integrity: Prevents overbooking, double bookings, and incorrect flight/hotel details.
 Responsive User Interface: Provides clear, concise feedback for actions and errors.
 
-##Expected Results Summary
+## Expected Results Summary
 Search for Flights and Rooms
 Displays a list of matching results or a "not found" message.
 Book a Flight or Room
@@ -115,5 +115,5 @@ Displays booking, flight, and hotel information.
 Error Handling
 Provides detailed error messages for invalid inputs.
 
-##Conclusion
+## Conclusion
 The Travel Agency System (TAS) will streamline booking, cancellation, and customer service processes with an easy-to-use interface while maintaining data integrity and security. This system will enhance customer experience and simplify agency operations.
