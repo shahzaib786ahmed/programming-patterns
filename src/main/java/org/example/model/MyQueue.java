@@ -54,6 +54,10 @@ public class MyQueue<E> implements Iterable<E> {
         return value;
     }
 
+    /**
+     * Prints the string of the queue
+     * @return the string
+     */
     @Override
     public String toString() {
         if (size == 0) {
@@ -70,6 +74,10 @@ public class MyQueue<E> implements Iterable<E> {
         return sb.toString();
     }
 
+    /**
+     * Iterates through the queue
+     * @return the iterator
+     */
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {

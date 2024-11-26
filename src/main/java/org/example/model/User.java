@@ -118,18 +118,34 @@ public abstract class User {
         }
     }
 
+    /**
+     * Sets the userId
+     * @param userId of the user
+     */
     public void setUserId(String userId) {
         generateRandomId();
     }
 
+    /**
+     * Sets the passport number
+     * @param passportNum of the passport
+     */
     public void setPassportNum(String passportNum) {
         validatePassportNum(passportNum);
     }
 
+    /**
+     * Sets the phone number
+     * @param phoneNumber of the passenger
+     */
     public void setPhoneNumber(String phoneNumber) {
         validatePhoneNumber(phoneNumber);
     }
 
+    /**
+     * Sets the email address
+     * @param emailAddress of the passenger
+     */
     public void setEmailAddress(String emailAddress) {
         validateEmailAddress(emailAddress);
     }

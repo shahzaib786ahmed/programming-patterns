@@ -1,13 +1,8 @@
 package org.example.dao;
 
-import org.example.model.Client;
-import org.example.model.Employee;
+import org.example.controller.Employee;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.example.model.TicketSystem.employees;
 
 public class EmployeDAO {
 
@@ -59,17 +54,16 @@ public class EmployeDAO {
     }
     /**
      * Insert new employee
-     * @param lName
-     * @param fName
-     * @param passportNumber
-     * @param phoneNumber
-     * @param emailAddress
-     * @param age
-     * @param discountRate
+     * @param lName last name of the employee
+     * @param fName first name of the employee
+     * @param passportNumber of the employee
+     * @param phoneNumber of the employee
+     * @param emailAddress of the employee
+     * @param age of the employee
+     * @param discountRate for the employee
      */
     public static void insertEmployee(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age,double discountRate) {
         try {
-            // Validate Employee details
             Employee employee = new Employee(lName, fName, passportNumber, phoneNumber, emailAddress, age, discountRate);
 
             String sql = "INSERT INTO employees(lName, fName, passportNumber, phoneNumber, emailAddress, age, discountRate) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -98,9 +92,9 @@ public class EmployeDAO {
     }
     /**
      * Update Employee info
-     * @param id
-     * @param newPhoneNumber
-     * @param newEmailAddress
+     * @param id of the employee
+     * @param newPhoneNumber of the employee
+     * @param newEmailAddress of the employee
      */
     public static void updateEmployee(int id, String newPhoneNumber, String newEmailAddress) {
         String sql = "UPDATE employees SET phoneNumber = ?, emailAddress = ? WHERE id = ?";
@@ -118,7 +112,7 @@ public class EmployeDAO {
     }
     /**
      * Delete an Employee by ID
-     * @param id
+     * @param id of the employee
      */
     public static void deleteEmployee(int id) {
         String sql = "DELETE FROM employees WHERE id = ?";
@@ -134,8 +128,8 @@ public class EmployeDAO {
     }
     /**
      * Add column to employee table
-     * @param columnName
-     * @param columnType
+     * @param columnName of the column
+     * @param columnType of the column
      */
     public static void addColumn(String columnName, String columnType) {
         String sql = "ALTER TABLE employees ADD COLUMN " + columnName + " " + columnType;
@@ -154,7 +148,7 @@ public class EmployeDAO {
     }
     /**
      * Drop Employee Table
-     * @param tableName
+     * @param tableName of the employee
      */
     public static void dropTable(String tableName) {
         String sql = "DROP TABLE IF EXISTS " + tableName;

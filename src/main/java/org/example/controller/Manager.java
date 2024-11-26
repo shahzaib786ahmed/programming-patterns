@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.controller;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.util.List;
 @Setter
 @Getter
-public class Manager extends Employee{
+public class Manager extends Employee {
 
     private static List<Employee> employees;
 

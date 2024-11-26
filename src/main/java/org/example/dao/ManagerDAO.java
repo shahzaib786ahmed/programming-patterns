@@ -1,6 +1,6 @@
 package org.example.dao;
 
-import org.example.model.Manager;
+import org.example.controller.Manager;
 
 import java.sql.*;
 
@@ -51,13 +51,13 @@ public class ManagerDAO {
     }
     /**
      * Insert new manager
-     * @param lName
-     * @param fName
-     * @param passportNumber
-     * @param phoneNumber
-     * @param emailAddress
-     * @param age
-     * @param discountRate
+     * @param lName last name of the manager
+     * @param fName first name of the manager
+     * @param passportNumber of the manager
+     * @param phoneNumber of the manager
+     * @param emailAddress of the manager
+     * @param age of the manager
+     * @param discountRate for the manager
      */
     public static void insertManager(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, double discountRate) {
         try {
@@ -90,9 +90,9 @@ public class ManagerDAO {
     }
     /**
      * Update Manager info
-     * @param id
-     * @param newPhoneNumber
-     * @param newEmailAddress
+     * @param id of the manager
+     * @param newPhoneNumber of the manager
+     * @param newEmailAddress of the manager
      */
     public static void updateManager(int id, String newPhoneNumber, String newEmailAddress) {
         String sql = "UPDATE managers SET phoneNumber = ?, emailAddress = ? WHERE id = ?";
@@ -110,7 +110,7 @@ public class ManagerDAO {
     }
     /**
      * Delete a Manager by ID
-     * @param id
+     * @param id of the manager
      */
     public static void deleteManager(int id) {
         String sql = "DELETE FROM managers WHERE id = ?";
@@ -126,8 +126,8 @@ public class ManagerDAO {
     }
     /**
      * Add column to Manager table
-     * @param columnName
-     * @param columnType
+     * @param columnName of the column
+     * @param columnType of the column
      */
     public static void addColumn(String columnName, String columnType) {
         String sql = "ALTER TABLE managers ADD COLUMN " + columnName + " " + columnType;
@@ -146,7 +146,7 @@ public class ManagerDAO {
     }
     /**
      * Drop Manager Table
-     * @param tableName
+     * @param tableName of the manager
      */
     public static void dropTable(String tableName) {
         String sql = "DROP TABLE IF EXISTS " + tableName;

@@ -50,14 +50,14 @@ public class FlightDAO {
     }
     /**
      * Insert new Flight
-     * @param flightNumber
-     * @param airline
-     * @param price
-     * @param flightSeatNumber
-     * @param departureLocation
-     * @param arrivalLocation
-     * @param departureTime
-     * @param arrivalTime
+     * @param flightNumber of the flight
+     * @param airline name of the flight
+     * @param price of the flight
+     * @param flightSeatNumber of the flight
+     * @param departureLocation of the flight departing from
+     * @param arrivalLocation of the flight arriving to
+     * @param departureTime of the flight
+     * @param arrivalTime of the flight
      */
     public static void insertFlight(String flightNumber, String airline, double price, int flightSeatNumber, String departureLocation, String arrivalLocation, String departureTime, String arrivalTime) {
         String sql = "INSERT INTO flights(flightNumber, airline, price, flightSeatNumber, departureLocation, arrivalLocation, departureTime, arrivalTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -84,11 +84,11 @@ public class FlightDAO {
     }
     /**
      * Update Flight info
-     * @param id
-     * @param newDepartureLocation
-     * @param newArrivalLocation
-     * @param newDepartureTime
-     * @param newArrivalTime
+     * @param id of the flight
+     * @param newDepartureLocation of the flight departing from
+     * @param newArrivalLocation of the flight arriving to
+     * @param newDepartureTime of the flight
+     * @param newArrivalTime of the flight
      */
     public static void updateFlight(int id, String newDepartureLocation, String newArrivalLocation, String newDepartureTime, String newArrivalTime) {
         String sql = "UPDATE flights SET departureLocation = ?, arrivalLocation = ?, departureTime = ?, arrivalTime = ? WHERE id = ?";
@@ -108,7 +108,7 @@ public class FlightDAO {
     }
     /**
      * Delete a Flight by ID
-     * @param id
+     * @param id of the flight
      */
     public static void deleteFlight(int id) {
         String sql = "DELETE FROM flights WHERE id = ?";
@@ -124,8 +124,8 @@ public class FlightDAO {
     }
     /**
      * Add column to Flight table
-     * @param columnName
-     * @param columnType
+     * @param columnName of the column
+     * @param columnType of the column
      */
     public static void addColumn(String columnName, String columnType) {
         String sql = "ALTER TABLE flights ADD COLUMN " + columnName + " " + columnType;
@@ -144,7 +144,7 @@ public class FlightDAO {
     }
     /**
      * Drop Flight Table
-     * @param tableName
+     * @param tableName of the flight
      */
     public static void dropTable(String tableName) {
         String sql = "DROP TABLE IF EXISTS " + tableName;

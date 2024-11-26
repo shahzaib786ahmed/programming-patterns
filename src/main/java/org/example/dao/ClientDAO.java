@@ -65,8 +65,8 @@ public class ClientDAO {
     /**
      * To update a specific client using its id and updating the allowed info
      * @param id client id
-     * @param newPhoneNumber new phone number that will replaced the old one
-     * @param newEmailAddress new email adress that will replaced the old one
+     * @param newPhoneNumber new phone number that will replace the old one
+     * @param newEmailAddress new email adress that will replace the old one
      */
     public static void updateClient(int id, String newPhoneNumber, String newEmailAddress) {
         String sql = "UPDATE clients SET phoneNumber = ?, emailAddress = ? WHERE id = ?";
@@ -145,19 +145,18 @@ public class ClientDAO {
 
     /**
      * Insert a new client in table clients
-     * @param lName last name
-     * @param fName fist name
-     * @param passportNumber passport number
-     * @param phoneNumber phone number
-     * @param emailAddress email adress
-     * @param age age
-     * @param userName username for the login
-     * @param password passport for the login
-     * @param loyaltyPoints loyalty points
+     * @param lName last name of the client
+     * @param fName first name of the client
+     * @param passportNumber passport number of the client
+     * @param phoneNumber phone number of the client
+     * @param emailAddress email address of the client
+     * @param age age of the client
+     * @param userName username for the login of the client
+     * @param password passport for the login of the client
+     * @param loyaltyPoints loyalty points of the client
      */
     public static void insertClient(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
         try {
-            // Create a Client object, which will trigger validation
             Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
 
             String sql = "INSERT INTO clients(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -183,7 +182,6 @@ public class ClientDAO {
                 System.out.println(e.getMessage());
             }
         } catch (IllegalArgumentException e) {
-            // Catch validation exceptions thrown from the Client constructor
             System.out.println("Error: " + e.getMessage());
         }
     }

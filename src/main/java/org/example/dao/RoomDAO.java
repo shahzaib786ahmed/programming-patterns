@@ -46,9 +46,9 @@ public class RoomDAO {
     }
     /**
      * Insert new Room
-     * @param roomNum
-     * @param capacity
-     * @param price
+     * @param roomNum of the room to be booked
+     * @param capacity of the room
+     * @param price of the room
      */
     public static void insertRoom(String roomNum, int capacity, double price) {
         String sql = "INSERT INTO rooms(roomNum, capacity, roomStatus, price) VALUES(?, ?, ?, ?)";
@@ -71,9 +71,9 @@ public class RoomDAO {
     }
     /**
      * Update Room info
-     * @param id
-     * @param newRoomStatus
-     * @param newPrice
+     * @param id of the client
+     * @param newRoomStatus status of the new room
+     * @param newPrice of the new room
      */
     public static void updateRoom(int id, String newRoomStatus, double newPrice) {
         String sql = "UPDATE rooms SET roomStatus = ?, price = ? WHERE id = ?";
@@ -91,7 +91,7 @@ public class RoomDAO {
     }
     /**
      * Delete a Room by ID
-     * @param id
+     * @param id of the client
      */
     public static void deleteRoom(int id) {
         String sql = "DELETE FROM rooms WHERE id = ?";
@@ -107,8 +107,8 @@ public class RoomDAO {
     }
     /**
      * Add column to Room table
-     * @param columnName
-     * @param columnType
+     * @param columnName of the column
+     * @param columnType of the column
      */
     public static void addColumn(String columnName, String columnType) {
         String sql = "ALTER TABLE rooms ADD COLUMN " + columnName + " " + columnType;
@@ -127,7 +127,7 @@ public class RoomDAO {
     }
     /**
      * Drop Room Table
-     * @param tableName
+     * @param tableName of the room
      */
     public static void dropTable(String tableName) {
         String sql = "DROP TABLE IF EXISTS " + tableName;

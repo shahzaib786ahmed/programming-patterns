@@ -1,7 +1,9 @@
-package org.example.model;
+package org.example.controller;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.Client;
+import org.example.model.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +77,6 @@ public class HotelSystem {
     }
 
     /**
-     *
      * @return the lists of all available rooms and booked rooms
      */
     @Override

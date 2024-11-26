@@ -1,12 +1,12 @@
-package org.example.model;
+package org.example.controller;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.Client;
+import org.example.model.Ticket;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 @Setter
 public class TicketSystem {

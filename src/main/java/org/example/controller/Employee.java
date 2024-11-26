@@ -1,14 +1,16 @@
-package org.example.model;
+package org.example.controller;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.*;
 
 import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class Employee extends User{
+
+public class Employee extends User {
     private List<Ticket> requestedBookings;
     @Setter
     private double discountRate;
