@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ public class Manager extends Employee {
     public Manager(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, double discountRate) {
         super(lName, fName, passportNum, phoneNumber, emailAddress, age, discountRate);
     }
-
+//TODO: ADD/REMOVE METHOD IN CONTROLLER
     /**
      * Adds a new employee to the agency
      * @param newEmployee to be added at the agency

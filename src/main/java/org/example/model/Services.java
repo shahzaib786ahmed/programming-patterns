@@ -1,11 +1,11 @@
 package org.example.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Setter
 @Getter
+@EqualsAndHashCode
+@NoArgsConstructor
 public abstract class Services {
     private String serviceName;
     private String description;

@@ -17,8 +17,8 @@ public class Flight extends Services {
     private String departureTime;
     private String arrivalTime;
 
-    public Flight(String serviceName, String description, String flightNumber, String airline, double price, int flightSeatNumber,String departureLocation, String arrivalLocation, String departureTime, String arrivalTime) {
-        super(serviceName, description);
+    public Flight(String flightNumber, String airline, double price, int flightSeatNumber,String departureLocation, String arrivalLocation, String departureTime, String arrivalTime) {
+        super();
         this.flightNumber = flightNumber;
         this.airline = airline;
         this.price = price;

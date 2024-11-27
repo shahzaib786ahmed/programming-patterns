@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ClientTest {
+class ClientModelTest {
     //TODO:ADD MORE TESTS
     @Test
     void isLogin() {

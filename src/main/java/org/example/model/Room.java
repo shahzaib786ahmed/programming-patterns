@@ -3,8 +3,6 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Setter
 @Getter
 public class Room {
@@ -18,8 +16,8 @@ public class Room {
         AVAILABLE, RESERVED;
     }
 
-    public Room(Client client, String roomNum, int capacity, double price) {
-        this.client = client;
+    public Room(String roomNum, int capacity, RoomStatus roomStatus, double price) {
+        //this.client = client;
         this.roomNum = roomNum;
         this.capacity = capacity;
         this.roomStatus = RoomStatus.AVAILABLE;

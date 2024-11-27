@@ -26,7 +26,7 @@ public class Client extends User{
     public void setLoyaltyPoints(int loyaltyPoints) {
         this.loyaltyPoints += loyaltyPoints;
     }
-
+//TODO:LES 2 PROCHAINE METHODES DOIVENT ETRE DANS CONTROLLER JCROIS
     /**
      * Checks to see if the correct user is logging in
      * @param userName of the client

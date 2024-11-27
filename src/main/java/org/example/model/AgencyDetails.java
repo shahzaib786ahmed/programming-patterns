@@ -22,7 +22,7 @@ public class AgencyDetails {
         this.agencyEmail = "";
         this.customerReviews = new LinkedList<>();
     }
-
+//TODO:ADD AND REMOVE SHOULD BE IN CONTROLLER
     /**
      * Adds a review of the customer to the list of customer reviews
      * @param review to be added from the client

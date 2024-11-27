@@ -21,23 +21,16 @@ public abstract class User {
     private String emailAddress;
     private int age;
 
+    private static int nextId=1;
+
     public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age) {
-        this.id = generateRandomId();
+        this.id = nextId++;
         this.lName = lName;
         this.fName = fName;
         this.passportNum = validatePassportNum(passportNum);
         this.phoneNumber = validatePhoneNumber(phoneNumber);
         this.emailAddress = validateEmailAddress(emailAddress);
         this.age = age;
-    }
-
-    /**
-     * Generates a random ID for the user
-     * @return an int containing a random ID for the user
-     */
-    private static int generateRandomId() {
-        Random random = new Random();
-        return (1 + random.nextInt(999999));
     }
 
     /**
@@ -116,14 +109,6 @@ public abstract class User {
         } else {
             throw new IllegalArgumentException("Email address is invalid! Should include '@'");
         }
-    }
-
-    /**
-     * Sets the userId
-     * @param userId of the user
-     */
-    public void setUserId(String userId) {
-        generateRandomId();
     }
 
     /**

@@ -3,7 +3,6 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.example.controller.Employee;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -24,10 +23,10 @@ public class Ticket {
     private String returnDate;
     private String paymentType;
 
-    private static int idCounter = 0;
+    private static int idCounter = 1;
 
     public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String returnDate, String paymentType) {
-        this.ticketId = ++idCounter;
+        this.ticketId = idCounter++;
         this.flight = flight;
         this.client = client;
         this.seatNumber = seatNumber;
@@ -40,7 +39,7 @@ public class Ticket {
         this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, Client client, String seatNumber, String departureDate,String paymentType) {
+    public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.client = client;

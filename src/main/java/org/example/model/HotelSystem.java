@@ -1,9 +1,7 @@
-package org.example.controller;
+package org.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.model.Client;
-import org.example.model.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,7 @@ public class HotelSystem {
     public static List<Room> availableRooms = new ArrayList<>();
     @Getter
     public static List<Room> bookedRooms = new ArrayList<>();
-
+//TODO:IN CONSTRUCTOR
     /**
      * Adds a client to the list of clients staying at the hotel
      * @param client to be added in the list of clients at the hotel

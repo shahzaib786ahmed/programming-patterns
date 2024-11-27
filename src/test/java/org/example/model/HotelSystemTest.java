@@ -1,7 +1,5 @@
 package org.example.model;
 
-import org.example.controller.Employee;
-import org.example.controller.HotelSystem;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

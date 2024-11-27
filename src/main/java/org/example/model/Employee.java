@@ -1,9 +1,8 @@
-package org.example.controller;
+package org.example.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.model.*;
 
 import java.util.List;
 @Setter

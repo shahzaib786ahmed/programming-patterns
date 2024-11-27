@@ -1,9 +1,8 @@
-package org.example.controller;
+package org.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.model.Client;
-import org.example.model.Ticket;
+import org.example.controller.DatabaseController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,18 @@ public class TicketSystem {
     @Getter
     public static List<Ticket> boughtTickets = new ArrayList<>();
 
+    private static TicketSystem ticketSystem;
+
+    public TicketSystem() {
+        this.clients = DatabaseController.queryAllClients();
+        this.employees = DatabaseController.queryAllEmployees();
+        this.managers = DatabaseController.queryAllManagers();
+        this.cancelledTickets = DatabaseController.queryAllCanceledTickets();
+        this.boughtTickets = DatabaseController.queryAllBoughtsTickets();
+
+    }
+
+    //TODO:PUT IN CONTROLLER THE 2 FOLLOWING
     /**
      * Searches for a specific ticket using ticketID to find a ticket
      * @param keyword the ticketID to be used to search for the ticket
@@ -57,5 +68,19 @@ public class TicketSystem {
                 System.out.println("--------------------------------------------------");
             }
         }
+    }
+    /**
+     * If an instance of AgencyDetails is not created, it's created
+     * @return using singleton, to see if there's one instance created only, if not, create one
+     */
+    public static TicketSystem getInstance() {
+        if (ticketSystem == null) {
+            synchronized (AgencyDetails.class) {
+                if (ticketSystem == null) {
+                    ticketSystem = new TicketSystem();
+                }
+            }
+        }
+        return ticketSystem;
     }
 }
