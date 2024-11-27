@@ -1,10 +1,12 @@
 package org.example.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
 public class Hotel extends Services {
     private int hotel_id;
     private String name;
@@ -14,6 +16,14 @@ public class Hotel extends Services {
     private static int nextId=1;
 
     public Hotel(int totalRooms, String address, String name) {
+        super();
+        this.hotel_id = nextId++;
+        this.totalRooms = totalRooms;
+        this.address = address;
+        this.name = name;
+    }
+
+    public Hotel(int hotel_id, int totalRooms, String address, String name) {
         super();
         this.hotel_id = nextId++;
         this.totalRooms = totalRooms;

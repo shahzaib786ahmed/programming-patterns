@@ -56,6 +56,7 @@ public class DatabaseController {
             System.out.println(e.getMessage());
         }
     }
+
 //ask yi how do i check the validation of phonenumber emailadress id without creating a new client
     /**
      * To update a specific client using its id and updating the allowed info
@@ -100,6 +101,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     /**
      * Insert a new client in table clients
      * @param lName last name of the client
@@ -138,7 +140,6 @@ public class DatabaseController {
             }
         }
 
-
     public static void insertClient(Client client){
         String lName = client.getLName();
         String fName = client.getFName();
@@ -152,6 +153,7 @@ public class DatabaseController {
 
         insertClient(lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
     }
+
     public static List<Client> queryAllClients(){
        READ_LOCK.lock();
 
@@ -212,6 +214,7 @@ public class DatabaseController {
             System.out.println(e.getMessage());
         }
     }
+
     /**
      * Insert new employee
      * @param lName last name of the employee
@@ -254,6 +257,7 @@ public class DatabaseController {
 
         insertEmployee(lName, fName,passportNumber,phoneNumber,emailAddress,age,discountRate);
     }
+
     /**
      * Update Employee info
      * @param id of the employee
@@ -277,6 +281,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     /**
      * Delete an Employee by ID
      * @param id of the employee
@@ -325,6 +330,7 @@ public class DatabaseController {
         }
         return employees;
     }
+
     //ABOUT FLIGHTS
     /**
      *  Create Flight Table
@@ -356,6 +362,7 @@ public class DatabaseController {
             System.out.println(e.getMessage());
         }
     }
+
     /**
      * Insert new Flight
      * @param flightNumber of the flight
@@ -394,6 +401,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     public static void insertFlight(Flight flight){
      String flightNumber = flight.getFlightNumber();
      String airline = flight.getAirline();
@@ -406,6 +414,7 @@ public class DatabaseController {
 
      insertFlight(flightNumber,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
     }
+
     /**
      * Update Flight info
      * @param id of the flight
@@ -433,6 +442,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     /**
      * Delete a Flight by ID
      * @param id of the flight
@@ -485,6 +495,7 @@ public class DatabaseController {
         }
         return flights;
     }
+
     /**
      * Create Manager Table
      */
@@ -514,6 +525,7 @@ public class DatabaseController {
             System.out.println(e.getMessage());
         }
     }
+
     /**
      * Insert new manager
      * @param lName last name of the manager
@@ -546,6 +558,7 @@ public class DatabaseController {
                 WRITE_LOCK.unlock();
             }
     }
+
     public static void insertManager(Manager manager){
            String lName = manager.getLName();
            String fName = manager.getFName();
@@ -557,6 +570,7 @@ public class DatabaseController {
 
            insertManager(lName,fName,passportNumber,phoneNumber,emailAddress,age,discountRate);
     }
+
     /**
      * Update Manager info
      * @param id of the manager
@@ -580,6 +594,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     /**
      * Delete a Manager by ID
      * @param id of the manager
@@ -629,6 +644,7 @@ public class DatabaseController {
         }
         return managers;
     }
+
     /**
      * Create Room Table
      */
@@ -655,6 +671,7 @@ public class DatabaseController {
             System.out.println(e.getMessage());
         }
     }
+
     /**
      * Insert new Room
      * @param roomNum of the room to be booked
@@ -683,6 +700,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     public static void insertRoom(Room room){
           String roomNum = room.getRoomNum();
           int capacity = room.getCapacity();
@@ -691,6 +709,7 @@ public class DatabaseController {
 
           insertRoom(roomNum,capacity,roomStatus,price);
     }
+
     /**
      * Update Room info
      * @param id of the client
@@ -714,6 +733,7 @@ public class DatabaseController {
             WRITE_LOCK.unlock();
         }
     }
+
     /**
      * Delete a Room by ID
      * @param id of the client
@@ -760,6 +780,7 @@ public class DatabaseController {
         }
         return rooms;
     }
+
     public static void createHotel(){
                String sql = """
                        CREATE TABLE IF NOT EXISTS hotels
@@ -776,18 +797,122 @@ public class DatabaseController {
               }
     }
 
+    /**
+     * Insert Hotel record in a hotel table.
+     * @param hotel_id
+     * @param totalRooms
+     * @param address
+     * @param name
+     */
     public static void insertHotel(int hotel_id, int totalRooms, String address, String name){
           WRITE_LOCK.lock();
           String sql = """
-                  INSERT INTO hotels (hotel_id, totalRooms, address, name) VALUES (?,?,?,?)
+                  INSERT INTO hotels(hotel_id, totalRooms, address, name) VALUES(?,?,?,?)
                   """;
 
-
-          
-
-
-
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
+            if (pstmt != null) {
+                pstmt.setInt(1, hotel_id);
+                pstmt.setInt(2, totalRooms);
+                pstmt.setString(3, address);
+                pstmt.setString(4, name);
+                pstmt.executeUpdate();
+                System.out.println("Hotel data inserted successfully.");
+            } else {
+                System.out.println("Insert failed. PreparedStatement is null.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
     }
 
+    public static void deleteHotel(int id) {
+        WRITE_LOCK.lock();
+        String sql = "DELETE FROM hotels WHERE id = ?";
 
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Hotel deleted successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }finally{
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static List<Hotel> queryAllHotels(){
+        READ_LOCK.lock();
+        String sql ="SELECT * FROM hotels";
+
+        List<Hotel> hotels = new ArrayList<>();
+        try(Connection conn = connect();
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql)){
+            while(resultSet.next()){
+                int hotelId = resultSet.getInt("hotel_id");
+                int totalRooms = resultSet.getInt("totalRooms");
+                String address = resultSet.getString("address");
+                String name = resultSet.getString("name");
+                hotels.add(new Hotel(hotelId, totalRooms, address, name));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            READ_LOCK.unlock();
+        }
+        return hotels;
+    }
+
+    public static void createReviewTable() {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS reviews (
+                id INTEGER PRIMARY KEY,
+                email TEXT NOT NULL,
+                title TEXT NOT NULL,
+                body TEXT NOT NULL,
+            )
+        """;
+
+        try (Connection conn = connect();
+             Statement stmt = conn != null ? conn.createStatement() : null) {
+            if (stmt != null) {
+                stmt.execute(sql);
+                System.out.println("Review table created successfully.");
+            } else {
+                System.out.println("Table creation failed. Connection is null.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void insertReview(int review_id, String email, String title, String body){
+        WRITE_LOCK.lock();
+        String sql = """
+                  INSERT INTO reviews(revieww_id, email, title, body) VALUES(?,?,?,?)
+                  """;
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
+            if (pstmt != null) {
+                pstmt.setInt(1, review_id);
+                pstmt.setString(2, email);
+                pstmt.setString(3, title);
+                pstmt.setString(4, body);
+                pstmt.executeUpdate();
+                System.out.println("Review data inserted successfully.");
+            } else {
+                System.out.println("Insert failed. PreparedStatement is null.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
 }
