@@ -29,7 +29,6 @@ public class DatabaseController {
      */
     public static void createNewTableOfClients() {
         String sql = """
-                
                     CREATE TABLE IF NOT EXISTS clients (
                     id INTEGER PRIMARY KEY,
                     lName TEXT NOT NULL,
@@ -114,22 +113,22 @@ public class DatabaseController {
      * @param password passport for the login of the client
      * @param loyaltyPoints loyalty points of the client
      */
-    public static void insertClient(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
+    public static void insertClient(int id, String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
     WRITE_LOCK.lock();
-            String sql = "INSERT INTO clients(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO clients(id, lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (Connection conn = connect();
                  PreparedStatement pstmt =  conn.prepareStatement(sql) ) {
-
-                    pstmt.setString(1, lName);
-                    pstmt.setString(2, fName);
-                    pstmt.setString(3, passportNumber);
-                    pstmt.setString(4, phoneNumber);
-                    pstmt.setString(5, emailAddress);
-                    pstmt.setInt(6, age);
-                    pstmt.setString(7, userName);
-                    pstmt.setString(8, password);
-                    pstmt.setInt(9, loyaltyPoints);
+                    pstmt.setInt(1, id);
+                    pstmt.setString(2, lName);
+                    pstmt.setString(3, fName);
+                    pstmt.setString(4, passportNumber);
+                    pstmt.setString(5, phoneNumber);
+                    pstmt.setString(6, emailAddress);
+                    pstmt.setInt(7, age);
+                    pstmt.setString(8, userName);
+                    pstmt.setString(9, password);
+                    pstmt.setInt(10, loyaltyPoints);
                     pstmt.executeUpdate();
                     System.out.println("Data inserted successfully.");
 
@@ -141,6 +140,7 @@ public class DatabaseController {
         }
 
     public static void insertClient(Client client){
+        int client_id = client.getId();
         String lName = client.getLName();
         String fName = client.getFName();
         String passportNumber = client.getPassportNum();
@@ -151,7 +151,7 @@ public class DatabaseController {
         String password = client.getPassword();
         int loyaltyPoints = client.getLoyaltyPoints();
 
-        insertClient(lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
+        insertClient(client_id, lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
     }
 
     public static List<Client> queryAllClients(){
@@ -165,6 +165,7 @@ public class DatabaseController {
        Statement statement = connection.createStatement();
        ResultSet resultSet = statement.executeQuery(sql)){
            while(resultSet.next()){
+               int clientId = resultSet.getInt("id");
                String lName = resultSet.getString("lName");
                String fName = resultSet.getString("fName");
                String passportNumber = resultSet.getString("passportNumber");
@@ -338,8 +339,7 @@ public class DatabaseController {
     public static void createFlightTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS flights (
-                id INTEGER PRIMARY KEY,
-                flightNumber TEXT NOT NULL,
+                flightNumber TEXT PRIMARY KEY NOT NULL,
                 airline TEXT NOT NULL,
                 price DOUBLE,
                 flightSeatNumber INTEGER,
@@ -783,11 +783,12 @@ public class DatabaseController {
 
     public static void createHotel(){
                String sql = """
-                       CREATE TABLE IF NOT EXISTS hotels
+                       CREATE TABLE IF NOT EXISTS hotels(
                        hotel_id INTEGER PRIMARY KEY,
                        totalRooms INTEGER NOT NULL,
                        address TEXT NOT NULL,
                        name TEXT NOT NULL
+                       )
                        """;
       try (Connection conn = connect();
                       Statement stmt = conn.createStatement()) {
@@ -858,7 +859,7 @@ public class DatabaseController {
                 int totalRooms = resultSet.getInt("totalRooms");
                 String address = resultSet.getString("address");
                 String name = resultSet.getString("name");
-                hotels.add(new Hotel(hotelId, totalRooms, address, name));
+                hotels.add(new Hotel(hotelId, name, address, totalRooms));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -871,12 +872,12 @@ public class DatabaseController {
     public static void createReviewTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS reviews (
-                id INTEGER PRIMARY KEY,
+                id TEXT PRIMARY KEY,
                 email TEXT NOT NULL,
                 title TEXT NOT NULL,
                 body TEXT NOT NULL,
             )
-        """;
+            """;
 
         try (Connection conn = connect();
              Statement stmt = conn != null ? conn.createStatement() : null) {
@@ -891,16 +892,16 @@ public class DatabaseController {
         }
     }
 
-    public static void insertReview(int review_id, String email, String title, String body){
+    public static void insertReview(String review_id, String email, String title, String body){
         WRITE_LOCK.lock();
         String sql = """
-                  INSERT INTO reviews(revieww_id, email, title, body) VALUES(?,?,?,?)
+                  INSERT INTO reviews(review_id, email, title, body) VALUES(?,?,?,?)
                   """;
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
             if (pstmt != null) {
-                pstmt.setInt(1, review_id);
+                pstmt.setString(1, review_id);
                 pstmt.setString(2, email);
                 pstmt.setString(3, title);
                 pstmt.setString(4, body);
@@ -914,5 +915,178 @@ public class DatabaseController {
         } finally {
             WRITE_LOCK.unlock();
         }
+    }
+
+    public static void deleteReview(String id) {
+        WRITE_LOCK.lock();
+        String sql = "DELETE FROM reviews WHERE id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Review deleted successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }finally{
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static List<Review> queryAllReviews(){
+        READ_LOCK.lock();
+        String sql ="SELECT * FROM reviews";
+
+        List<Review> reviews = new ArrayList<>();
+        try(Connection conn = connect();
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql)){
+            while(resultSet.next()){
+                String reviewId = resultSet.getString("review_id");
+                String email = resultSet.getString("email");
+                String title = resultSet.getString("title");
+                String body = resultSet.getString("body");
+                reviews.add(new Review(reviewId, email, title, body));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            READ_LOCK.unlock();
+        }
+        return reviews;
+    }
+
+    public static void createTicketTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS tickets(
+                ticket_id INT PRIMARY KEY,
+                flight_num TEXT NOT NULL,
+                client_id INT,
+                seat_number VARCHAR(4) NOT NULL,
+                departure_date DATE NOT NULL,
+                return_date DATE,
+                payment_type VARCHAR(50) NOT NULL,
+                assigned_to INT,
+                ticket_status VARCHAR(20) NOT NULL DEFAULT 'CREATED',
+                FOREIGN KEY (flight_num) REFERENCES flights(flightNumber),
+                FOREIGN KEY (client_id) REFERENCES clients(client_id)
+                )
+                """;
+
+        try (Connection connection = connect();
+            Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void insertTicket(Ticket ticket) {
+        WRITE_LOCK.lock();
+        String sql = """
+                INSERT INTO tickets(ticket_id, flight_num, client_id, seat_number, departure_date, return_date, payment_type, assigned_to, ticket_status)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+                """;
+
+        try (Connection connection = connect();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+            if (statement != null) {
+                statement.setInt(1, ticket.getTicketId());
+                statement.setString(2,ticket.getFlight().getFlightNumber());
+                statement.setObject(2, ticket.getClient() != null ? ticket.getClient().getId() : null);
+                statement.setString(3, ticket.getSeatNumber());
+                statement.setString(4, ticket.getDepartureDate());
+                statement.setObject(5, ticket.getReturnDate() != null ? ticket.getReturnDate() : null);
+                statement.setString(6, ticket.getPaymentType());
+                statement.setObject(7, ticket.getAssignedTo() != null ? ticket.getAssignedTo() : null);
+                statement.setString(8, ticket.getTicketStatus().name());
+                System.out.println("Ticket data inserted successfully.");
+            } else {
+                System.out.println("Insert failed. Statement is null.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static void deleteTicket(int id) {
+        WRITE_LOCK.lock();
+        String sql = "DELETE FROM tickets WHERE id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Ticket deleted successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }finally{
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static List<Ticket> queryAllTickets(){
+        READ_LOCK.lock();
+        String sql ="SELECT * FROM tickets";
+
+        List<Ticket> tickets = new ArrayList<>();
+        try(Connection conn = connect();
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql)){
+            while(resultSet.next()){
+                int ticketId = resultSet.getInt("ticket_id");
+                String flightNum = resultSet.getString("flight_num");
+                int clientId = resultSet.getInt("client_id");
+                String seatNumber = resultSet.getString("seat_number");
+                String departureDate = resultSet.getString("departure_date");
+                String returnDate = resultSet.getString("return_date");
+                String paymentType = resultSet.getString("payment_type");
+                String ticketStatus = resultSet.getString("ticket_status");
+                int assignedTo = resultSet.getInt("assigned_to");
+
+                String airline = resultSet.getString("airline");
+                double price = resultSet.getDouble("price");
+                int flightSeatNumber = resultSet.getInt("flightSeatNumber");
+                String departureLocation = resultSet.getString("departureLocation");
+                String arrivalLocation = resultSet.getString("arrivalLocation");
+                String departureTime = resultSet.getString("departureTime");
+                String arrivalTime = resultSet.getString("arrivalTime");
+
+                int clientid = resultSet.getInt("id");
+                String lName = resultSet.getString("lName");
+                String fName = resultSet.getString("fName");
+                String passportNumber = resultSet.getString("passportNumber");
+                String phoneNumber = resultSet.getString("phoneNumber");
+                String emailAddress = resultSet.getString("emailAddress");
+                int age = resultSet.getInt("age");
+                String userName = resultSet.getString("userName");
+                String password = resultSet.getString("password");
+                int loyaltyPoints = resultSet.getInt("loyaltyPoints");
+
+                Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+
+                Ticket ticket;
+                if (client != null && returnDate != null) {
+                    ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+                } else if (client != null) {
+                    ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
+                } else if (returnDate != null) {
+                    ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
+                } else {
+                    ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
+                }
+
+                ticket.setTicketStatus(Status.valueOf(ticketStatus));
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            READ_LOCK.unlock();
+        }
+        return tickets;
     }
 }

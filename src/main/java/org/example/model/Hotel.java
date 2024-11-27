@@ -23,14 +23,6 @@ public class Hotel extends Services {
         this.name = name;
     }
 
-    public Hotel(int hotel_id, int totalRooms, String address, String name) {
-        super();
-        this.hotel_id = nextId++;
-        this.totalRooms = totalRooms;
-        this.address = address;
-        this.name = name;
-    }
-
     /**
      * Display details of the hotel
      */
