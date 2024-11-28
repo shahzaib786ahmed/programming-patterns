@@ -27,7 +27,7 @@ public class TicketSystem {
         this.employees = DatabaseController.queryAllEmployees();
         this.managers = DatabaseController.queryAllManagers();
         this.cancelledTickets = DatabaseController.queryAllCanceledTickets();
-        this.boughtTickets = DatabaseController.queryAllBoughtsTickets();
+        this.boughtTickets = DatabaseController.queryAllBoughtTickets();
 
     }
 

@@ -1089,4 +1089,134 @@ public class DatabaseController {
         }
         return tickets;
     }
+
+    public static List<Ticket> queryAllCanceledTickets() {
+        READ_LOCK.lock();
+        String sql = """
+                SELECT * FROM tickets
+                WHERE ticket_status = "CANCELLED"
+                """;
+
+        List<Ticket> tickets = new ArrayList<>();
+        try (Connection connection = connect();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int ticketId = resultSet.getInt("ticket_id");
+                String flightNum = resultSet.getString("flight_num");
+                int clientId = resultSet.getInt("client_id");
+                String seatNumber = resultSet.getString("seat_number");
+                String departureDate = resultSet.getString("departure_date");
+                String returnDate = resultSet.getString("return_date");
+                String paymentType = resultSet.getString("payment_type");
+                String ticketStatus = resultSet.getString("ticket_status");
+                int assignedTo = resultSet.getInt("assigned_to");
+
+                String airline = resultSet.getString("airline");
+                double price = resultSet.getDouble("price");
+                int flightSeatNumber = resultSet.getInt("flightSeatNumber");
+                String departureLocation = resultSet.getString("departureLocation");
+                String arrivalLocation = resultSet.getString("arrivalLocation");
+                String departureTime = resultSet.getString("departureTime");
+                String arrivalTime = resultSet.getString("arrivalTime");
+
+                int clientid = resultSet.getInt("id");
+                String lName = resultSet.getString("lName");
+                String fName = resultSet.getString("fName");
+                String passportNumber = resultSet.getString("passportNumber");
+                String phoneNumber = resultSet.getString("phoneNumber");
+                String emailAddress = resultSet.getString("emailAddress");
+                int age = resultSet.getInt("age");
+                String userName = resultSet.getString("userName");
+                String password = resultSet.getString("password");
+                int loyaltyPoints = resultSet.getInt("loyaltyPoints");
+
+                Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+
+                Ticket ticket;
+                if (client != null && returnDate != null) {
+                    ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+                } else if (client != null) {
+                    ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
+                } else if (returnDate != null) {
+                    ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
+                } else {
+                    ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
+                }
+
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return tickets;
+    }
+
+    public static List<Ticket> queryAllBoughtTickets() {
+        READ_LOCK.lock();
+        String sql = """
+                SELECT * FROM tickets
+                WHERE ticket_status = "PURCHASED"
+                """;
+
+        List<Ticket> tickets = new ArrayList<>();
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int ticketId = resultSet.getInt("ticket_id");
+                String flightNum = resultSet.getString("flight_num");
+                int clientId = resultSet.getInt("client_id");
+                String seatNumber = resultSet.getString("seat_number");
+                String departureDate = resultSet.getString("departure_date");
+                String returnDate = resultSet.getString("return_date");
+                String paymentType = resultSet.getString("payment_type");
+                String ticketStatus = resultSet.getString("ticket_status");
+                int assignedTo = resultSet.getInt("assigned_to");
+
+                String airline = resultSet.getString("airline");
+                double price = resultSet.getDouble("price");
+                int flightSeatNumber = resultSet.getInt("flightSeatNumber");
+                String departureLocation = resultSet.getString("departureLocation");
+                String arrivalLocation = resultSet.getString("arrivalLocation");
+                String departureTime = resultSet.getString("departureTime");
+                String arrivalTime = resultSet.getString("arrivalTime");
+
+                int clientid = resultSet.getInt("id");
+                String lName = resultSet.getString("lName");
+                String fName = resultSet.getString("fName");
+                String passportNumber = resultSet.getString("passportNumber");
+                String phoneNumber = resultSet.getString("phoneNumber");
+                String emailAddress = resultSet.getString("emailAddress");
+                int age = resultSet.getInt("age");
+                String userName = resultSet.getString("userName");
+                String password = resultSet.getString("password");
+                int loyaltyPoints = resultSet.getInt("loyaltyPoints");
+
+                Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+
+                Ticket ticket;
+                if (client != null && returnDate != null) {
+                    ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+                } else if (client != null) {
+                    ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
+                } else if (returnDate != null) {
+                    ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
+                } else {
+                    ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
+                }
+
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return tickets;
+    }
 }
