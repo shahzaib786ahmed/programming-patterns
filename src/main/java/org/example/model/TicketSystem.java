@@ -22,7 +22,7 @@ public class TicketSystem {
 
     private static TicketSystem ticketSystem;
 
-    public TicketSystem() {
+    private TicketSystem() {
         this.clients = DatabaseController.queryAllClients();
         this.employees = DatabaseController.queryAllEmployees();
         this.managers = DatabaseController.queryAllManagers();

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 public class Room {
     private Client client;
-    private String roomNum;
+    private int roomNum;
     private int capacity;
     private RoomStatus roomStatus;
     private double price;
@@ -16,7 +16,7 @@ public class Room {
         AVAILABLE, RESERVED;
     }
 
-    public Room(String roomNum, int capacity, RoomStatus roomStatus, double price) {
+    public Room(int roomNum, int capacity, RoomStatus roomStatus, double price) {
         //this.client = client;
         this.roomNum = roomNum;
         this.capacity = capacity;

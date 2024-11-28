@@ -1,9 +1,6 @@
 package org.example.controller;
 
-import org.example.model.Client;
-import org.example.model.CompanySystem;
-import org.example.model.Employee;
-import org.example.model.Manager;
+import org.example.model.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +8,7 @@ import java.util.concurrent.ForkJoinPool;
 
 public class CompanySystemController {
     private CompanySystem companySystem;
+    private Review review;
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
     public CompanySystemController() {
@@ -73,9 +71,22 @@ public class CompanySystemController {
             companySystem.getEmployees().forEach(System.out::println);
         });
     }
+
     public void displayManagers() {
         threadPool.submit(() -> {
             companySystem.getManagers().forEach(System.out::println);
+        });
+    }
+
+    public void addReview(Review review) {
+        threadPool.submit(() -> {
+           DatabaseController.insertReview(review);
+        });
+    }
+
+    public void deleteReview(String id) {
+        threadPool.submit(() -> {
+            DatabaseController.deleteReview(id);
         });
     }
 }

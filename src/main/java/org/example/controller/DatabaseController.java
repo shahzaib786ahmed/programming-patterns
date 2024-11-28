@@ -651,8 +651,7 @@ public class DatabaseController {
     public static void createRoomTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS rooms (
-                id INTEGER PRIMARY KEY,
-                roomNum TEXT NOT NULL,
+                roomNum TEXT PRIMARY KEY,
                 capacity INTEGER NOT NULL,
                 roomStatus TEXT NOT NULL,
                 price DOUBLE NOT NULL
@@ -678,14 +677,14 @@ public class DatabaseController {
      * @param capacity of the room
      * @param price of the room
      */
-    public static void insertRoom(String roomNum, int capacity, Room.RoomStatus roomStatus, double price) {
+    public static void insertRoom(int roomNum, int capacity, Room.RoomStatus roomStatus, double price) {
      WRITE_LOCK.lock();
         String sql = "INSERT INTO rooms(roomNum, capacity, roomStatus, price) VALUES(?, ?, ?, ?)";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
             if (pstmt != null) {
-                pstmt.setString(1, roomNum);
+                pstmt.setInt(1, roomNum);
                 pstmt.setInt(2, capacity);
                 pstmt.setString(3, roomStatus.name());
                 pstmt.setDouble(4, price);
@@ -702,7 +701,7 @@ public class DatabaseController {
     }
 
     public static void insertRoom(Room room){
-          String roomNum = room.getRoomNum();
+          int roomNum = room.getRoomNum();
           int capacity = room.getCapacity();
           Room.RoomStatus roomStatus = room.getRoomStatus();
           double price = room.getPrice();
@@ -712,11 +711,11 @@ public class DatabaseController {
 
     /**
      * Update Room info
-     * @param id of the client
+     * @param roomNum of the client
      * @param newRoomStatus status of the new room
      * @param newPrice of the new room
      */
-    public static void updateRoom(int id,Room.RoomStatus newRoomStatus, double newPrice) {
+    public static void updateRoom(int roomNum,Room.RoomStatus newRoomStatus, double newPrice) {
         WRITE_LOCK.lock();
         String sql = "UPDATE rooms SET roomStatus = ?, price = ? WHERE id = ?";
 
@@ -724,7 +723,7 @@ public class DatabaseController {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, newRoomStatus.name());
             pstmt.setDouble(2, newPrice);
-            pstmt.setInt(3, id);
+            pstmt.setInt(3, roomNum);
             pstmt.executeUpdate();
             System.out.println("Room information updated successfully.");
         } catch (SQLException e) {
@@ -736,15 +735,15 @@ public class DatabaseController {
 
     /**
      * Delete a Room by ID
-     * @param id of the client
+     * @param roomNum of the client
      */
-    public static void deleteRoom(int id) {
+    public static void deleteRoom(int roomNum) {
      WRITE_LOCK.lock();
         String sql = "DELETE FROM rooms WHERE id = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, roomNum);
             pstmt.executeUpdate();
             System.out.println("Room deleted successfully.");
         } catch (SQLException e) {
@@ -766,7 +765,7 @@ public class DatabaseController {
         Statement statement = conn.createStatement();
         ResultSet resultSet = statement.executeQuery(sql)){
             while(resultSet.next()){
-                    String roomNum= resultSet.getString("roomNum");
+                    int roomNum = resultSet.getInt("roomNum");
                     int capacity = resultSet.getInt("capacity");
                      String roomStatusStr = resultSet.getString("roomStatus");
                     Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);
@@ -781,7 +780,7 @@ public class DatabaseController {
         return rooms;
     }
 
-    public static void createHotel(){
+    public static void createHotelTable(){
                String sql = """
                        CREATE TABLE IF NOT EXISTS hotels(
                        hotel_id INTEGER PRIMARY KEY,
@@ -828,6 +827,15 @@ public class DatabaseController {
         } finally {
             WRITE_LOCK.unlock();
         }
+    }
+
+    public static void insertHotel(Hotel hotel){
+        int hotelId = hotel.getHotel_id();
+        int totalRooms = hotel.getTotalRooms();
+        String address = hotel.getAddress();
+        String name = hotel.getName();
+
+        insertHotel(hotelId, totalRooms, address, name);
     }
 
     public static void deleteHotel(int id) {
@@ -915,6 +923,15 @@ public class DatabaseController {
         } finally {
             WRITE_LOCK.unlock();
         }
+    }
+
+    public static void insertReview(Review review) {
+        String reviewId = review.getReviewId();
+        String email = review.getEmail();
+        String title = review.getTitle();
+        String body = review.getBody();
+
+        insertReview(reviewId, email, title, body);
     }
 
     public static void deleteReview(String id) {
@@ -1218,5 +1235,102 @@ public class DatabaseController {
             READ_LOCK.unlock();
         }
         return tickets;
+    }
+
+    public static void createAccountTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS accounts(
+                username TEXT PRIMARY KEY,
+                password TEXT NOT NULL
+                )
+                """;
+
+        try (Connection connection = connect();
+            Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void insertAccount(String username, String password) {
+        WRITE_LOCK.lock();
+        String sql = """
+                  INSERT INTO accounts(username, password) VALUES(?,?)
+                  """;
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
+            if (pstmt != null) {
+                pstmt.setString(1, username);
+                pstmt.setString(2, password);
+                pstmt.executeUpdate();
+                System.out.println("Account data inserted successfully.");
+            } else {
+                System.out.println("Insert failed. PreparedStatement is null.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static void updateUsername(String newUsername, String oldUsername, String password) {
+        WRITE_LOCK.lock();
+        String sql = """
+                UPDATE accounts SET username = ? WHERE username = ? AND password = ?
+                """;
+
+        try (Connection connection = connect();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newUsername);
+            statement.setString(2, oldUsername);
+            statement.setString(3, password);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static void updatePassword(String username, String oldPassword, String newPassword) {
+        WRITE_LOCK.lock();
+        String sql = """
+                UPDATE accounts SET password = ? WHERE username = ? AND password = ?
+                """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newPassword);
+            statement.setString(2, username);
+            statement.setString(3, oldPassword);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static List<String> queryAllAccounts() {
+        READ_LOCK.lock();
+        String sql = "SELECT * FROM accounts";
+
+        List<String> accounts = new ArrayList<>();
+        try (Connection connection = connect();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+
+                accounts.add(String.valueOf(new ArrayList<>(List.of(username, password))));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return accounts;
     }
 }

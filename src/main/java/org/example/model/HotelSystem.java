@@ -9,14 +9,21 @@ import java.util.List;
 @Setter
 public class HotelSystem {
     @Getter
-    private static List<Client> clients = new ArrayList<>();
+    public static List<Client> clients = new ArrayList<>();
     @Getter
-    private static List<Employee> employees = new ArrayList<>();
+    public static List<Employee> employees = new ArrayList<>();
+    @Getter
+    public static List<Hotel> hotels = new ArrayList<>();
     @Getter
     public static List<Room> availableRooms = new ArrayList<>();
     @Getter
     public static List<Room> bookedRooms = new ArrayList<>();
-//TODO:IN CONSTRUCTOR
+
+    private static HotelSystem hotelSystem;
+
+    private HotelSystem() {
+    }
+
     /**
      * Adds a client to the list of clients staying at the hotel
      * @param client to be added in the list of clients at the hotel
@@ -72,6 +79,17 @@ public class HotelSystem {
             System.out.println("Room " + room.getRoomNum() + " is not currently reserved.");
             return false;
         }
+    }
+
+    public static HotelSystem getInstance() {
+        if (hotelSystem == null) {
+            synchronized (HotelSystem.class) {
+                if (hotelSystem == null) {
+                    hotelSystem = new HotelSystem();
+                }
+            }
+        }
+        return hotelSystem;
     }
 
     /**
