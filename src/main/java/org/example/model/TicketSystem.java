@@ -20,6 +20,9 @@ public class TicketSystem {
     @Getter
     public static List<Ticket> boughtTickets = new ArrayList<>();
 
+    @Getter
+    public static MyQueue<String> paymentHistory = new MyQueue<>();
+
     private static TicketSystem ticketSystem;
 
     /**
@@ -34,7 +37,6 @@ public class TicketSystem {
         this.managers = DatabaseController.queryAllManagers();
         this.cancelledTickets = DatabaseController.queryAllCanceledTickets();
         this.boughtTickets = DatabaseController.queryAllBoughtTickets();
-
     }
 
     /**

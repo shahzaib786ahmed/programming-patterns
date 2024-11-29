@@ -154,7 +154,7 @@ public class BookingHotelController {
 
                     System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName());
                 } else {
-                    System.out.println("Payment failed for client " + client.getFName() + " " + client.getLName() + ". Booking not confirmed.");
+                    System.out.println("Payment failed for client " + client.getFName() + " " + client.getLName() + ". Booking not confirmed!");
                 }
             } else {
                 System.out.println("Room " + room.getRoomNum() + " is not available for booking.");
@@ -190,7 +190,7 @@ public class BookingHotelController {
         String cleanedCardNumber = creditCardNumber.replaceAll("[^0-9]", "");
 
         // Check if the cleaned card number contains only digits and has a length between 13 and 19
-        return cleanedCardNumber.matches("[0-9]+") && cleanedCardNumber.length() >= 13 && cleanedCardNumber.length() <= 19;
+        return cleanedCardNumber.matches("[0-9]+") && cleanedCardNumber.length() >= 15 && cleanedCardNumber.length() <= 19;
 
     }
 

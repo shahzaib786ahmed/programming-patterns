@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static org.example.model.Room.RoomStatus.AVAILABLE;
-
 public class DatabaseController {
     //TODO:ADD THE INSERT METHOD WITH THE OBJECTS
     private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data.db";
@@ -1390,7 +1388,7 @@ public class DatabaseController {
     }
 
     /**
-     *    TODO: JSP PK C ERREUR PARTOUT
+     *
      *    displays specific ticket by id
      * @param ticket_id id of ticket
      */
@@ -1405,7 +1403,7 @@ public class DatabaseController {
                stmt.setInt(1,ticket_id);
                try(ResultSet rs = stmt.executeQuery()){
                    if(rs.next()){
-                        int ticket_id = rs.getInt("ticket_id");
+                        int ticketId = rs.getInt("ticket_id");
                         int flight_num = rs.getInt("flight_num");
                         int client_id = rs.getInt("client_id");
                         String seat_number = rs.getString("seat_number");
@@ -1415,7 +1413,7 @@ public class DatabaseController {
                         int assignTo = rs.getInt("assigned_to");
                         String ticketStatus = rs.getString("ticket_status");
 
-                       System.out.println("Ticket ID: "+ticket_id);
+                       System.out.println("Ticket ID: "+ ticketId);
                        System.out.println("Flight Number: "+flight_num);
                        System.out.println("Client ID: "+client_id);
                        System.out.println("Seat Number: "+seat_number);
@@ -1553,4 +1551,6 @@ public class DatabaseController {
         }
         return accounts;
     }
+
+
 }

@@ -48,9 +48,10 @@ public class AgencyDetails {
      *
      * @param instance of a single agencyDetail
      */
-    public static void setInstance(AgencyDetails instance) {
-        AgencyDetails.instance = instance;
-    }
+    //Don't think we need this as there's no usage to this
+//    public static void setInstance(AgencyDetails instance) {
+//        AgencyDetails.instance = instance;
+//    }
 
     /**
      * Sets the name of the agency

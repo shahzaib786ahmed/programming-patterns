@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BookingFlightController {
-    private TicketSystem ticketSystem;
+    private static TicketSystem ticketSystem;
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     public BookingFlightController() {
@@ -175,7 +175,13 @@ public class BookingFlightController {
                     System.out.println("Invalid credit card number format. Payment failed.");
                     return;
                 }
-                System.out.println("Payment of $" + totalCost + " made successfully via credit card.");
+                System.out.println("Payment of $" + totalCost + " made successfully via credit card ending with " + creditCardNumber.substring(creditCardNumber.length() - 4));
+
+                if (ticket.getClient() != null) {
+                    TicketSystem.paymentHistory.add(ticket.getClient().getLName() + ", " + ticket.getClient().getFName() + " | Amount Paid: " + totalCost + " | Payment type: " + paymentType + " | Credit card used: " + creditCardNumber);
+                } else {
+                    TicketSystem.paymentHistory.add("Employee Ticket | Amount Paid: " + totalCost + " | Payment type: " + paymentType + " | Credit card used: " + creditCardNumber);
+                }
             } else if ("LOYALTY".equalsIgnoreCase(paymentType)) {
                 Client client = ticket.getClient();
                 int loyaltyPoints = client.getLoyaltyPoints();
@@ -183,8 +189,11 @@ public class BookingFlightController {
                     System.out.println("Insufficient loyalty points. Payment failed.");
                     return;
                 }
-                client.setLoyaltyPoints(loyaltyPoints - (int) totalCost);
+
+                int pointsLeft = loyaltyPoints - (int) totalCost;
+                client.setLoyaltyPoints(pointsLeft);
                 System.out.println("Payment of $" + totalCost + " made successfully with loyalty points.");
+                TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Payment type: " + paymentType + " | Points remaining: " + pointsLeft);
             } else {
                 System.out.println("Invalid payment type.");
                 return;
@@ -226,7 +235,6 @@ public class BookingFlightController {
      * Purchases a two-way (round-trip) flight ticket for the client
      *
      * @param flight           to be booked for the passenger
-     * @param employee         that is booking the ticket
      * @param client           that is purchasing the ticket
      * @param seatNumber       of the passenger where they will be assigned
      * @param departureDate    of the flight selected
@@ -235,7 +243,7 @@ public class BookingFlightController {
      * @param recipientEmail   of the passenger to send email of confirmation
      * @param creditCardNumber of the passenger to be used if paid by credit card
      */
-    public static void purchaseFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
+    public static void purchaseFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
         threadPool.submit(() -> {
             validateAndReserveSeat(flight);
 
@@ -249,7 +257,16 @@ public class BookingFlightController {
             System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
                     " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
             System.out.println("Here's your ticket: ");
+
+            if (paymentType.equalsIgnoreCase("CREDIT")) {
+                TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Amount Paid: "+ " | Payment type: " + paymentType + " | Credit card used: " + creditCardNumber);
+            } else if (paymentType.equalsIgnoreCase("LOYALTY")) {
+                TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Payment type: " + paymentType + " | Points: " + client.getLoyaltyPoints());
+            }
             //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
+
+            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
+            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
         });
     }
@@ -281,6 +298,9 @@ public class BookingFlightController {
                     " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
             System.out.println("Here's your ticket: ");
             //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
+
+            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
+            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
         });
     }
@@ -289,7 +309,6 @@ public class BookingFlightController {
      * Purchases a one-way flight ticket for the client
      *
      * @param flight           to be booked for the passenger
-     * @param employee         that is booking the ticket
      * @param client           that is purchasing the ticket
      * @param seatNumber       of the passenger where they will be assigned
      * @param departureDate    of the flight selected
@@ -298,7 +317,7 @@ public class BookingFlightController {
      * @param creditCardNumber of the passenger to be used if paid by credit card
      * @return a new ticket for the passenger
      */
-    public static void purchaseOneWayFlightTicket(Flight flight, Employee employee, Client client, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
+    public static void purchaseOneWayFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
         threadPool.submit(() -> {
             validateAndReserveSeat(flight);
 
@@ -312,6 +331,9 @@ public class BookingFlightController {
                     " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
             System.out.println("Here's your ticket: ");
             //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
+
+            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
+            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
 
         });
@@ -342,6 +364,9 @@ public class BookingFlightController {
                     " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
             System.out.println("Here's your ticket: ");
             //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
+
+            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
+            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
 
         });
@@ -353,7 +378,6 @@ public class BookingFlightController {
      * @param ticket of the passenger that wants/needs a refund
      */
     public static void refund(Ticket ticket) {
-
         threadPool.submit(() -> {
             Client client = ticket.getClient();
             String paymentType = ticket.getPaymentType();
@@ -371,6 +395,11 @@ public class BookingFlightController {
             }
             if ("CREDIT".equalsIgnoreCase(paymentType)) {
                 System.out.println("Refund processed to credit card for ticket " + ticket.getTicketId());
+                if (ticket.getClient() != null) {
+                    TicketSystem.paymentHistory.add("Ticket refunded for: " + ticket.getClient().getLName() + ", " + ticket.getClient().getFName() + " | Amount refunded to billed person: " + TicketSystem.paymentHistory.poll());
+                } else {
+                    TicketSystem.paymentHistory.add("Amount refunded to employee: " + TicketSystem.paymentHistory.poll());
+                }
             } else if ("LOYALTY".equalsIgnoreCase(paymentType)) {
                 client.setLoyaltyPoints(client.getLoyaltyPoints() + (int) ticket.getFlight().getPrice());
                 System.out.println("Refund processed using loyalty points for ticket " + ticket.getTicketId());
@@ -384,13 +413,16 @@ public class BookingFlightController {
      *
      * @param ticket of the passenger that wants/needs to cancel their flight
      */
-    public static void cancelFlightTicket(Employee employee, Ticket ticket) {
+    public static void cancelFlightTicket(Ticket ticket) {
         threadPool.submit(() -> {
             ticket.setTicketStatus(Status.CANCELLED);
             cancelTicket(ticket);
             ticket.getFlight().setFlightSeatNumber(ticket.getFlight().getFlightSeatNumber() + 1);
             refund(ticket);
             //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
+
+            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
+            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
         });
     }

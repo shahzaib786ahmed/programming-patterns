@@ -78,7 +78,7 @@ public class Ticket {
         this.departureDate = departureDate;
         this.paymentType = paymentType;
     }
-//TODO: DO WE NEED IT NOW?
+
     /**
      * Details of the flight ticket
      */
