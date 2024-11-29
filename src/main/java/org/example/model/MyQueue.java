@@ -10,6 +10,7 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * Appends a new value at the tail of the queue
+     *
      * @param value the value of the new element
      * @return if the element is appended successfully
      */
@@ -28,6 +29,7 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * gets the element of the head
+     *
      * @return the value of the head element
      */
     public E peek() {
@@ -39,6 +41,7 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * removes an element of the head
+     *
      * @return the value of the removed head element
      */
     public E poll() {
@@ -56,6 +59,7 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * Prints the string of the queue
+     *
      * @return the string
      */
     @Override
@@ -76,6 +80,7 @@ public class MyQueue<E> implements Iterable<E> {
 
     /**
      * Iterates through the queue
+     *
      * @return the iterator
      */
     @Override
@@ -97,13 +102,23 @@ public class MyQueue<E> implements Iterable<E> {
         };
     }
 
+    /**
+     * Represents a node in a linked list.
+     * This class holds a value of type E and a reference to the next node in the list.
+     * The node is used as a building block for creating linked data structures.
+     */
     private class Node {
         E value;
         Node next;
 
+        /**
+         * Constructor to create a new node with a specified value.
+         * The next reference is initialized to null by default.
+         *
+         * @param value the value to be stored in this node.
+         */
         public Node(E value) {
             this.value = value;
         }
     }
 }
-

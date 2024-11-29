@@ -24,6 +24,7 @@ public class Review {
 
     /**
      * Sets the email to be used for the review
+     *
      * @param email to be used for the review and checks if it contains @
      */
     public void setEmail(String email) {
@@ -36,6 +37,7 @@ public class Review {
 
     /**
      * Sets the main title of the review
+     *
      * @param title of the review
      */
     public void setTitle(String title) {
@@ -48,6 +50,7 @@ public class Review {
 
     /**
      * Sets the body description of the review
+     *
      * @param body of the review with description
      */
     public void setBody(String body) {
@@ -60,6 +63,7 @@ public class Review {
 
     /**
      * Displays the details of the review
+     *
      * @return the details of the review
      */
     @Override

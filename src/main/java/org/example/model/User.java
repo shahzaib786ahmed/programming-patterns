@@ -21,7 +21,7 @@ public abstract class User {
     private String emailAddress;
     private int age;
 
-    private static int nextId=1;
+    private static int nextId = 1;
 
     public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age) {
         this.id = nextId++;
@@ -35,6 +35,7 @@ public abstract class User {
 
     /**
      * Validates the format of the passport number
+     *
      * @param passportNum to be used to verify the format
      * @return the string to return the passport number or error message
      */
@@ -48,6 +49,7 @@ public abstract class User {
 
     /**
      * Validates the format of the phone number
+     *
      * @param phoneNumber to be used to verify the format
      * @return the string to return the phone number or error message
      */
@@ -61,6 +63,7 @@ public abstract class User {
 
     /**
      * Validates the format of the phone number
+     *
      * @param emailAddress to be used to verify the format
      * @return the string to return the email address or error message
      */
@@ -74,6 +77,7 @@ public abstract class User {
 
     /**
      * Checks if the passport number has the proper format
+     *
      * @param passportNum to be used to verify the format
      * @return the boolean to see if it has the correct format, if not, throw an exception
      */
@@ -87,6 +91,7 @@ public abstract class User {
 
     /**
      * Checks if the phone number has the proper format
+     *
      * @param phoneNumber to be used to verify the format
      * @return the boolean to see if it has the correct format, if not, throw an exception
      */
@@ -100,6 +105,7 @@ public abstract class User {
 
     /**
      * Checks if the email address has the proper format
+     *
      * @param emailAddress to be used to verify the format
      * @return the boolean to see if it has the correct format, if not, throw an exception
      */
@@ -113,6 +119,7 @@ public abstract class User {
 
     /**
      * Sets the passport number
+     *
      * @param passportNum of the passport
      */
     public void setPassportNum(String passportNum) {
@@ -121,6 +128,7 @@ public abstract class User {
 
     /**
      * Sets the phone number
+     *
      * @param phoneNumber of the passenger
      */
     public void setPhoneNumber(String phoneNumber) {
@@ -129,6 +137,7 @@ public abstract class User {
 
     /**
      * Sets the email address
+     *
      * @param emailAddress of the passenger
      */
     public void setEmailAddress(String emailAddress) {

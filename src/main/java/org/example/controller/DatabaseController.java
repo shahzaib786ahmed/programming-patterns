@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static org.example.model.Room.RoomStatus.AVAILABLE;
+
 public class DatabaseController {
     //TODO:ADD THE INSERT METHOD WITH THE OBJECTS
     private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data.db";
@@ -20,9 +22,8 @@ public class DatabaseController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+
     //ABOUT CLIENTS
     /**
      * Create a new table
@@ -139,6 +140,10 @@ public class DatabaseController {
             }
         }
 
+    /**
+     * Insert a client record
+     * @param client  the client that will be inserted
+     */
     public static void insertClient(Client client){
         int client_id = client.getId();
         String lName = client.getLName();
@@ -154,6 +159,10 @@ public class DatabaseController {
         insertClient(client_id, lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
     }
 
+    /**
+     * displays all the clients records
+     * @return the list of all clients
+     */
     public static List<Client> queryAllClients(){
        READ_LOCK.lock();
 
@@ -247,6 +256,11 @@ public class DatabaseController {
                 WRITE_LOCK.unlock();
             }
     }
+
+    /**
+     * insert a new employee with employee object
+     * @param employee the employee that will be inserted into the table
+     */
     public static void insertEmployee(Employee employee){
         String lName = employee.getLName();
         String fName = employee.getFName();
@@ -303,6 +317,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * displays all employees
+     * @return a list of employees
+     */
     public static List<Employee> queryAllEmployees() {
         READ_LOCK.lock();
 
@@ -402,6 +420,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert a flight using a flight object
+     * @param flight the flight to be inserted
+     */
     public static void insertFlight(Flight flight){
      String flightNumber = flight.getFlightNumber();
      String airline = flight.getAirline();
@@ -464,8 +486,8 @@ public class DatabaseController {
     }
 
     /**
-     *
-     * @return
+     *  displays all flights
+     * @return the list of flights
      */
     public static List<Flight> queryAllFlight(){
         READ_LOCK.lock();
@@ -559,6 +581,10 @@ public class DatabaseController {
             }
     }
 
+    /**
+     * insert a manager record using a manager object
+     * @param manager the manager to be inserted
+     */
     public static void insertManager(Manager manager){
            String lName = manager.getLName();
            String fName = manager.getFName();
@@ -616,8 +642,8 @@ public class DatabaseController {
     }
 
     /**
-     *
-     * @return
+     *  displays all managers
+     * @return a list of all managers
      */
     public static List<Manager> queryAllManagers(){
         READ_LOCK.lock();
@@ -700,6 +726,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert a room record using a room object
+     * @param room   the room that will be inserted
+     */
     public static void insertRoom(Room room){
           int roomNum = room.getRoomNum();
           int capacity = room.getCapacity();
@@ -754,8 +784,8 @@ public class DatabaseController {
     }
 
     /**
-     *
-     * @return
+     * displays all rooms
+     * @return a list of rooms
      */
     public static List<Room> queryAllRooms(){
         READ_LOCK.lock();
@@ -780,6 +810,71 @@ public class DatabaseController {
         return rooms;
     }
 
+    /**
+     * displays all availablerooms
+     * @return a list of the available rooms
+     */
+       public static List<Room> queryAllAvailableRooms(){                                              
+           READ_LOCK.lock();                                                                 
+           String sql ="""
+                SELECT * 
+                FROM rooms 
+                WHERE roomStatus = "AVAILABLE"
+                """;
+           List<Room> rooms = new ArrayList<>();                                             
+           try(Connection conn = connect();                                                  
+           Statement statement = conn.createStatement();                                     
+           ResultSet resultSet = statement.executeQuery(sql)){                               
+               while(resultSet.next()){                                                      
+                       int roomNum = resultSet.getInt("roomNum");                            
+                       int capacity = resultSet.getInt("capacity");                          
+                        String roomStatusStr = resultSet.getString("roomStatus");            
+                       Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);  
+                       double price = resultSet.getDouble("price");                          
+                       rooms.add(new Room(roomNum,capacity,roomStatus,price));               
+               }                                                                             
+           } catch (SQLException e) {                                                        
+               throw new RuntimeException(e);                                                
+           } finally{                                                                        
+               READ_LOCK.unlock();                                                           
+           }                                                                                 
+           return rooms;                                                                     
+       }
+
+    /**
+     * displays all reserved rooms
+     * @return a list of reserved rooms
+     */
+    public static List<Room> queryAllReservedRooms(){
+              READ_LOCK.lock();
+              String sql ="""                                                                                      
+                   SELECT *                                                                                        
+                   FROM rooms                                                                                      
+                   WHERE roomStatus = "RESERVED"                                                                  
+                   """;
+              List<Room> rooms = new ArrayList<>();
+              try(Connection conn = connect();
+              Statement statement = conn.createStatement();
+              ResultSet resultSet = statement.executeQuery(sql)){
+                  while(resultSet.next()){
+                          int roomNum = resultSet.getInt("roomNum");
+                          int capacity = resultSet.getInt("capacity");
+                           String roomStatusStr = resultSet.getString("roomStatus");
+                          Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);
+                          double price = resultSet.getDouble("price");
+                          rooms.add(new Room(roomNum,capacity,roomStatus,price));
+                  }
+              } catch (SQLException e) {
+                  throw new RuntimeException(e);
+              } finally{
+                  READ_LOCK.unlock();
+              }
+              return rooms;
+          }
+
+    /**
+     * creates hotel table
+     */
     public static void createHotelTable(){
                String sql = """
                        CREATE TABLE IF NOT EXISTS hotels(
@@ -829,6 +924,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert hotel record using a hotel object
+     * @param hotel the hotel to be inserted
+     */
     public static void insertHotel(Hotel hotel){
         int hotelId = hotel.getHotel_id();
         int totalRooms = hotel.getTotalRooms();
@@ -838,6 +937,10 @@ public class DatabaseController {
         insertHotel(hotelId, totalRooms, address, name);
     }
 
+    /**
+     * deletes a specific hotel by id
+     * @param id the id of the hotel to be deleted
+     */
     public static void deleteHotel(int id) {
         WRITE_LOCK.lock();
         String sql = "DELETE FROM hotels WHERE id = ?";
@@ -854,6 +957,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * displays all hotels
+     * @return list of all hotels
+     */
     public static List<Hotel> queryAllHotels(){
         READ_LOCK.lock();
         String sql ="SELECT * FROM hotels";
@@ -877,6 +984,9 @@ public class DatabaseController {
         return hotels;
     }
 
+    /**
+     * create a review table where customers will be able to insert reviews
+     */
     public static void createReviewTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS reviews (
@@ -900,6 +1010,13 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert a review record
+     * @param review_id   the id of the review
+     * @param email      the email of the client
+     * @param title       the title of the review
+     * @param body        the description of the review
+     */
     public static void insertReview(String review_id, String email, String title, String body){
         WRITE_LOCK.lock();
         String sql = """
@@ -925,6 +1042,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert a review record using the review object
+     * @param review  the review object to be inserted
+     */
     public static void insertReview(Review review) {
         String reviewId = review.getReviewId();
         String email = review.getEmail();
@@ -934,6 +1055,10 @@ public class DatabaseController {
         insertReview(reviewId, email, title, body);
     }
 
+    /**
+     * delete a review record
+     * @param id the id of the review to delete
+     */
     public static void deleteReview(String id) {
         WRITE_LOCK.lock();
         String sql = "DELETE FROM reviews WHERE id = ?";
@@ -950,6 +1075,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * displays all the reviews
+     * @return the list of reviews
+     */
     public static List<Review> queryAllReviews(){
         READ_LOCK.lock();
         String sql ="SELECT * FROM reviews";
@@ -973,6 +1102,9 @@ public class DatabaseController {
         return reviews;
     }
 
+    /**
+     * creates a ticket table
+     */
     public static void createTicketTable() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS tickets(
@@ -998,6 +1130,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert a ticket record using a ticket object
+     * @param ticket the ticket object
+     */
     public static void insertTicket(Ticket ticket) {
         WRITE_LOCK.lock();
         String sql = """
@@ -1028,6 +1164,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * deletes the specific ticket by id
+     * @param id the id of the ticket
+     */
     public static void deleteTicket(int id) {
         WRITE_LOCK.lock();
         String sql = "DELETE FROM tickets WHERE id = ?";
@@ -1044,6 +1184,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * displays all the tickets
+     * @return the list of tickets
+     */
     public static List<Ticket> queryAllTickets(){
         READ_LOCK.lock();
         String sql ="SELECT * FROM tickets";
@@ -1107,6 +1251,10 @@ public class DatabaseController {
         return tickets;
     }
 
+    /**
+     * displays all canceled tickets
+     * @return  the list of canceled tickets
+     */
     public static List<Ticket> queryAllCanceledTickets() {
         READ_LOCK.lock();
         String sql = """
@@ -1172,6 +1320,10 @@ public class DatabaseController {
         return tickets;
     }
 
+    /**
+     * display all bought tickets
+     * @return  list of tickets that are bought
+     */
     public static List<Ticket> queryAllBoughtTickets() {
         READ_LOCK.lock();
         String sql = """
@@ -1237,6 +1389,53 @@ public class DatabaseController {
         return tickets;
     }
 
+    /**
+     *    TODO: JSP PK C ERREUR PARTOUT
+     *    displays specific ticket by id
+     * @param ticket_id id of ticket
+     */
+    public static void querySpecificTicket (int ticket_id){
+           String sql = """
+                   SELECT *
+                   FROM tickets
+                   WHERE ticket_id = ?
+                   """  ;
+           try ( Connection connection = connect();
+           PreparedStatement stmt = connection.prepareStatement(sql)){
+               stmt.setInt(1,ticket_id);
+               try(ResultSet rs = stmt.executeQuery()){
+                   if(rs.next()){
+                        int ticket_id = rs.getInt("ticket_id");
+                        int flight_num = rs.getInt("flight_num");
+                        int client_id = rs.getInt("client_id");
+                        String seat_number = rs.getString("seat_number");
+                        Date departureDate = rs.getDate("departure_date");
+                        Date returnDate = rs.getDate("return_date");
+                        String paymentType = rs.getString("payment_type");
+                        int assignTo = rs.getInt("assigned_to");
+                        String ticketStatus = rs.getString("ticket_status");
+
+                       System.out.println("Ticket ID: "+ticket_id);
+                       System.out.println("Flight Number: "+flight_num);
+                       System.out.println("Client ID: "+client_id);
+                       System.out.println("Seat Number: "+seat_number);
+                       System.out.println("Departure Date: "+departureDate);
+                       System.out.println("Return Date: "+returnDate);
+                       System.out.println("Payment Type: "+paymentType);
+                       System.out.println("Assigned to: "+(assignTo == 0 ? "Not Assigned" : assignTo));
+                       System.out.println("Ticket Status: "+ticketStatus);
+                   }    else{
+                       System.out.println("No ticket found with ID: "+ticket_id);
+                   }
+               }
+           } catch (SQLException e) {
+               throw new RuntimeException(e);
+           }
+    }
+
+    /**
+     * creates an account table
+     */
     public static void createAccountTable() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS accounts(
@@ -1253,6 +1452,11 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * insert an account record
+     * @param username  the username of the user
+     * @param password  the password of the user
+     */
     public static void insertAccount(String username, String password) {
         WRITE_LOCK.lock();
         String sql = """
@@ -1276,6 +1480,12 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * update the username of the user
+     * @param newUsername  new username to update
+     * @param oldUsername   the old username that will be replaced
+     * @param password    the password of the account
+     */
     public static void updateUsername(String newUsername, String oldUsername, String password) {
         WRITE_LOCK.lock();
         String sql = """
@@ -1295,6 +1505,12 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * updates the password of an user account
+     * @param username   username of user account
+     * @param oldPassword  oldpassword of user account that will be replaced
+     * @param newPassword   new password of user account
+     */
     public static void updatePassword(String username, String oldPassword, String newPassword) {
         WRITE_LOCK.lock();
         String sql = """
@@ -1314,6 +1530,10 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * displays all users accounts
+     * @return a list of accounts
+     */
     public static List<String> queryAllAccounts() {
         READ_LOCK.lock();
         String sql = "SELECT * FROM accounts";

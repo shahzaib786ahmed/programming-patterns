@@ -22,39 +22,10 @@ public class AgencyDetails {
         this.agencyEmail = "";
         this.customerReviews = new LinkedList<>();
     }
-//TODO:ADD AND REMOVE SHOULD BE IN CONTROLLER
-    /**
-     * Adds a review of the customer to the list of customer reviews
-     * @param review to be added from the client
-     */
-    public void addReview(Review review) {
-        if (review != null) {
-            customerReviews.add(review);
-            System.out.println("Review added successfully!");
-        } else {
-            System.out.println("Invalid review. Cannot add null review.");
-        }
-    }
-
-    /**
-     * Deletes a review of the customer
-     * @param reviewId of the review to be deleted
-     * @return the boolean to see if the review is found by reviewId, if it is, delete it
-     */
-    public boolean deleteReviewById(String reviewId) {
-        for (Review review : customerReviews) {
-            if (review.getReviewId().equals(reviewId)) {
-                customerReviews.remove(review);
-                System.out.println("Review removed successfully.");
-                return true;
-            }
-        }
-        System.out.println("Review not found with the provided ID.");
-        return false;
-    }
 
     /**
      * Checks if email address format is valid
+     *
      * @param email to be checked to see if it's valid
      * @return the boolean that checks if it contains @ and .com
      */
@@ -64,6 +35,7 @@ public class AgencyDetails {
 
     /**
      * Checks if phone number format is valid
+     *
      * @param phone to be checked to see if it's valid
      * @return the boolean that checks if it contains 10 digits and not more or less
      */
@@ -73,6 +45,7 @@ public class AgencyDetails {
 
     /**
      * Sets an instance of agencyDetails
+     *
      * @param instance of a single agencyDetail
      */
     public static void setInstance(AgencyDetails instance) {
@@ -81,6 +54,7 @@ public class AgencyDetails {
 
     /**
      * Sets the name of the agency
+     *
      * @param agencyName of the agency
      */
     public void setAgencyName(String agencyName) {
@@ -93,6 +67,7 @@ public class AgencyDetails {
 
     /**
      * Sets the phone number of the agency
+     *
      * @param agencyPhone of the agency
      */
     public void setAgencyPhone(String agencyPhone) {
@@ -105,6 +80,7 @@ public class AgencyDetails {
 
     /**
      * Sets the email address of the agency
+     *
      * @param agencyEmail of the agency
      */
     public void setAgencyEmail(String agencyEmail) {
@@ -117,6 +93,7 @@ public class AgencyDetails {
 
     /**
      * If an instance of AgencyDetails is not created, it's created
+     *
      * @return using singleton, to see if there's one instance created only, if not, create one
      */
     public static AgencyDetails getInstance() {

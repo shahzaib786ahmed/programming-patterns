@@ -8,4 +8,3 @@ public enum Status {
     PURCHASED,
     CANCELLED
 }
-

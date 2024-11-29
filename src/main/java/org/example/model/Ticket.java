@@ -1,5 +1,6 @@
 package org.example.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Ticket {
     private int ticketId;
     private Flight flight;
@@ -76,7 +78,7 @@ public class Ticket {
         this.departureDate = departureDate;
         this.paymentType = paymentType;
     }
-
+//TODO: DO WE NEED IT NOW?
     /**
      * Details of the flight ticket
      */
@@ -102,28 +104,6 @@ public class Ticket {
         }
         System.out.println("Payment type: " + paymentType);
         System.out.println("--------------------------------------------------");
-    }
-
-    /**
-     * Checks if a ticket equals to another ticket
-     * @param o of the ticket
-     * @return the boolean to see if it matches another ticket
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ticket ticket = (Ticket) o;
-        return ticketId == ticket.ticketId && Objects.equals(flight, ticket.flight) && Objects.equals(client, ticket.client) && Objects.equals(seatNumber, ticket.seatNumber) && ticketStatus == ticket.ticketStatus && Objects.equals(bookedBy, ticket.bookedBy) && Objects.equals(operationHistory, ticket.operationHistory) && Objects.equals(departureDate, ticket.departureDate) && Objects.equals(assignedTo, ticket.assignedTo) && Objects.equals(returnDate, ticket.returnDate) && Objects.equals(paymentType, ticket.paymentType);
-    }
-
-    /**
-     * Checks if a ticket equals to another ticket using hashcode
-     * @return a hashcode number that's specific to a ticket
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(ticketId, flight, client, seatNumber, ticketStatus, bookedBy, operationHistory, departureDate, assignedTo, returnDate, paymentType);
     }
 
     public static class Operation {

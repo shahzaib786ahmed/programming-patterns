@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.example.controller.DatabaseController;
 
 import java.util.List;
+
 @Getter
 @Setter
 public class CompanySystem {
@@ -14,13 +15,22 @@ public class CompanySystem {
 
     private static CompanySystem companySystem;
 
+    /**
+     * Private constructor for initializing the CompanySystem.
+     * This constructor initializes the lists of employees, managers, and clients by querying the database.
+     * It ensures that only one instance of the CompanySystem is created.
+     */
     private CompanySystem() {
         this.employees = DatabaseController.queryAllEmployees();
         this.managers = DatabaseController.queryAllManagers();
         this.clients = DatabaseController.queryAllClients();
-
     }
 
+    /**
+     * Returns the singleton instance of the CompanySystem.
+     * If the instance does not already exist, it creates a new one.
+     * @return the singleton instance of the CompanySystem.
+     */
     public static CompanySystem getInstance() {
         if (companySystem == null) {
             synchronized (CompanySystem.class) {
