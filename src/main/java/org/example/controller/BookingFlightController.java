@@ -257,12 +257,6 @@ public class BookingFlightController {
             System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
                     " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
             System.out.println("Here's your ticket: ");
-
-            if (paymentType.equalsIgnoreCase("CREDIT")) {
-                TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Amount Paid: "+ " | Payment type: " + paymentType + " | Credit card used: " + creditCardNumber);
-            } else if (paymentType.equalsIgnoreCase("LOYALTY")) {
-                TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Payment type: " + paymentType + " | Points: " + client.getLoyaltyPoints());
-            }
             //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
 
             //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
@@ -396,9 +390,9 @@ public class BookingFlightController {
             if ("CREDIT".equalsIgnoreCase(paymentType)) {
                 System.out.println("Refund processed to credit card for ticket " + ticket.getTicketId());
                 if (ticket.getClient() != null) {
-                    TicketSystem.paymentHistory.add("Ticket refunded for: " + ticket.getClient().getLName() + ", " + ticket.getClient().getFName() + " | Amount refunded to billed person: " + TicketSystem.paymentHistory.poll());
+                    TicketSystem.paymentHistory.add("Ticket refunded for: " + ticket.getClient().getLName() + ", " + ticket.getClient().getFName() + " with Ticket ID: " + ticket.getTicketId() + " using: " + ticket.getPaymentType());
                 } else {
-                    TicketSystem.paymentHistory.add("Amount refunded to employee: " + TicketSystem.paymentHistory.poll());
+                    TicketSystem.paymentHistory.add("Amount refunded to employee with Ticket ID: " + ticket.getTicketId());
                 }
             } else if ("LOYALTY".equalsIgnoreCase(paymentType)) {
                 client.setLoyaltyPoints(client.getLoyaltyPoints() + (int) ticket.getFlight().getPrice());

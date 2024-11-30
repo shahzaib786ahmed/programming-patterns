@@ -25,7 +25,7 @@ public class HotelSystem {
      */
     private HotelSystem() {
         this.hotels = DatabaseController.queryAllHotels();
-        this.availableRooms =DatabaseController.queryAllAvailableRooms();
+        this.availableRooms = DatabaseController.queryAllAvailableRooms();
         this.reservedRooms = DatabaseController.queryAllReservedRooms();
 
     }
@@ -33,6 +33,7 @@ public class HotelSystem {
     /**
      * Returns the singleton instance of the HotelSystem.
      * If the instance does not already exist, it creates a new one.
+     *
      * @return the singleton instance of the HotelSystem.
      */
     public static HotelSystem getInstance() {

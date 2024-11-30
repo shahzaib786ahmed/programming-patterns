@@ -41,6 +41,7 @@ public class TicketSystem {
 
     /**
      * If an instance of AgencyDetails is not created, it's created
+     *
      * @return using singleton, to see if there's one instance created only, if not, create one
      */
     public static TicketSystem getInstance() {

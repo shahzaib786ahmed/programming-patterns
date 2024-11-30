@@ -2,11 +2,9 @@ package org.example.model;
 
 import lombok.*;
 
-import java.util.List;
-
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
 public class Manager extends Employee {
     public Manager(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, double discountRate) {

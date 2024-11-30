@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Objects;
-import java.util.Random;
-
 @Setter
 @Getter
 @ToString

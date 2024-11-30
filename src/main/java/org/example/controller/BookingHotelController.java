@@ -115,10 +115,9 @@ public class BookingHotelController {
         threadPool.submit(() -> {
             Client client = room.getClient();
             double refundAmount = room.getPrice();
-            //TODO:SHOULD WE KEEP TRACK OF PAYMENTS AND THEN GO BACK AND CHECK THE PAYMENT WAS PAYED WITH WHICH CREDITCARD NUMBER TO COMPARE FOR THE REFUND
-            // If payment was made with good format of credit card
             if (isValidCreditCardFormat(creditCardNumber)) {
                 System.out.println("Refund of $" + refundAmount + " processed to credit card for client: " + client.getFName() + " " + client.getLName());
+                TicketSystem.getPaymentHistory().add("Refund processed for: " + client.getLName() + ", " + client.getFName() + " for the amount of: " + refundAmount + " with credit card: " + creditCardNumber);
             } else {
                 System.out.println("Refund failed: Invalid payment type.");
             }
@@ -152,7 +151,8 @@ public class BookingHotelController {
                     HotelSystem.getAvailableRooms().remove(room);
                     HotelSystem.getReservedRooms().add(room);
 
-                    System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName());
+                    System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName() + " with credit card ending with: " + creditCardNumber.substring(creditCardNumber.length() - 4));
+                    TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Amount Paid: " + totalPrice + " | Credit card used: " + creditCardNumber);
                 } else {
                     System.out.println("Payment failed for client " + client.getFName() + " " + client.getLName() + ". Booking not confirmed!");
                 }

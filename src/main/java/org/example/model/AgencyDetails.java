@@ -43,11 +43,11 @@ public class AgencyDetails {
         return phone.matches("\\d{10}");
     }
 
-    /**
-     * Sets an instance of agencyDetails
-     *
-     * @param instance of a single agencyDetail
-     */
+//    /**
+//     * Sets an instance of agencyDetails
+//     *
+//     * @param instance of a single agencyDetail
+//     */
     //Don't think we need this as there's no usage to this
 //    public static void setInstance(AgencyDetails instance) {
 //        AgencyDetails.instance = instance;

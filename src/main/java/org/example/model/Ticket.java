@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -54,7 +53,7 @@ public class Ticket {
         this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, String seatNumber, String departureDate, String returnDate,String paymentType) {
+    public Ticket(Flight flight, String seatNumber, String departureDate, String returnDate, String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.seatNumber = seatNumber;
@@ -67,7 +66,7 @@ public class Ticket {
         this.paymentType = paymentType;
     }
 
-    public Ticket(Flight flight, String seatNumber, String departureDate,String paymentType) {
+    public Ticket(Flight flight, String seatNumber, String departureDate, String paymentType) {
         this.ticketId = ++idCounter;
         this.flight = flight;
         this.seatNumber = seatNumber;
@@ -119,6 +118,7 @@ public class Ticket {
 
         /**
          * Displays the operation time of the ticket
+         *
          * @return a string containing the info of the operation
          */
         @Override

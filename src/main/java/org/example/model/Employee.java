@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = false)
