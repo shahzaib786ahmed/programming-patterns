@@ -20,11 +20,13 @@ public class CompanySystemController {
     /**
      * Initializes the database tables needed for the system, including tables for clients, employees, managers, and reviews.
      */
-    private void initTables() {
+    public void initTables() {
+        System.out.println("Initializing database tables...");
         DatabaseController.createNewTableOfClients();
         DatabaseController.createEmployeeTable();
         DatabaseController.createManagerTable();
         DatabaseController.createReviewTable();
+        System.out.println("All tables initialized.");
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DatabaseController {
     //TODO:ADD THE INSERT METHOD WITH THE OBJECTS
-    private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data2.db";
     private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
     private static final ReentrantReadWriteLock.WriteLock WRITE_LOCK = LOCK.writeLock();
     private static final ReentrantReadWriteLock.ReadLock READ_LOCK = LOCK.readLock();
@@ -43,13 +43,10 @@ public class DatabaseController {
                 """;
 
         try (Connection conn = connect();
-             Statement stmt = conn != null ? conn.createStatement() : null) {
-            if (stmt != null) {
+             Statement stmt = conn.createStatement()) {
+
                 stmt.execute(sql);
                 System.out.println("Table created successfully.");
-            } else {
-                System.out.println("Table creation failed. Connection is null.");
-            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -112,13 +109,13 @@ public class DatabaseController {
      * @param password passport for the login of the client
      * @param loyaltyPoints loyalty points of the client
      */
-    public static void insertClient(int id, String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
+    public static void insertClient( String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
     WRITE_LOCK.lock();
-            String sql = "INSERT INTO clients(id, lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO clients( lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (Connection conn = connect();
                  PreparedStatement pstmt =  conn.prepareStatement(sql) ) {
-                    pstmt.setInt(1, id);
+
                     pstmt.setString(2, lName);
                     pstmt.setString(3, fName);
                     pstmt.setString(4, passportNumber);
@@ -143,7 +140,6 @@ public class DatabaseController {
      * @param client  the client that will be inserted
      */
     public static void insertClient(Client client){
-        int client_id = client.getId();
         String lName = client.getLName();
         String fName = client.getFName();
         String passportNumber = client.getPassportNum();
@@ -154,7 +150,7 @@ public class DatabaseController {
         String password = client.getPassword();
         int loyaltyPoints = client.getLoyaltyPoints();
 
-        insertClient(client_id, lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
+        insertClient(lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
     }
 
     /**
@@ -183,7 +179,7 @@ public class DatabaseController {
                String password = resultSet.getString("password");
                int loyaltyPoints = resultSet.getInt("loyaltyPoints");
 
-               clients.add(new Client(lName,fName, passportNumber, phoneNumber, emailAddress, age, userName, password));
+               clients.add(new Client(lName,fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints));
            }
        } catch (SQLException e) {
            throw new RuntimeException(e);
@@ -991,7 +987,7 @@ public class DatabaseController {
                 id TEXT PRIMARY KEY,
                 email TEXT NOT NULL,
                 title TEXT NOT NULL,
-                body TEXT NOT NULL,
+                body TEXT NOT NULL
             )
             """;
 
@@ -1225,7 +1221,7 @@ public class DatabaseController {
                 int loyaltyPoints = resultSet.getInt("loyaltyPoints");
 
                 Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
-                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
 
                 Ticket ticket;
                 if (client != null && returnDate != null) {
@@ -1295,7 +1291,7 @@ public class DatabaseController {
                 int loyaltyPoints = resultSet.getInt("loyaltyPoints");
 
                 Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
-                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
 
                 Ticket ticket;
                 if (client != null && returnDate != null) {
@@ -1364,7 +1360,7 @@ public class DatabaseController {
                 int loyaltyPoints = resultSet.getInt("loyaltyPoints");
 
                 Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
-                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
 
                 Ticket ticket;
                 if (client != null && returnDate != null) {
@@ -1551,6 +1547,4 @@ public class DatabaseController {
         }
         return accounts;
     }
-
-
 }

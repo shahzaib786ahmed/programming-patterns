@@ -12,12 +12,14 @@ public class Client extends User {
     private String userName;
     private String password;
     private int loyaltyPoints;
+    //do we add them to constructor
     private List<Double> paymentHistory = new ArrayList<>();
 
-    public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String userName, String password) {
+    public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String userName, String password,int loyaltyPoints) {
         super(lName, fName, passportNum, phoneNumber, emailAddress, age);
         this.userName = userName;
         this.password = password;
+        this.loyaltyPoints = loyaltyPoints;
     }
 
     /**
