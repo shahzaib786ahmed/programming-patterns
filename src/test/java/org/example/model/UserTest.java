@@ -8,7 +8,7 @@ class UserTest {
     //TODO:ADD MORE TESTS
     @Test
     void isPassportNumValid() {
-        User user = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123");
+        User user = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123", 0);
         String passportNum = "B34984281";
         boolean expResult = true;
         boolean result = user.isPassportNumValid(passportNum);
@@ -17,7 +17,7 @@ class UserTest {
 
     @Test
     void isPhoneNumberValid() {
-        User user = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123");
+        User user = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123", 0);
         String phoneNumber = "5533257543";
         boolean expResult = true;
         boolean result = user.isPhoneNumberValid(phoneNumber);
@@ -26,10 +26,10 @@ class UserTest {
 
     @Test
     void isEmailValid() {
-        User user = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123");
+        User user = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123", 0);
         String email = "shahzaib@gmail.com";
         boolean expResult = true;
-        boolean result = user.isEmailValid("shahzaib@gmail.com");
+        boolean result = user.isEmailValid(email);
         assertEquals(expResult, result);
     }
 }

@@ -39,9 +39,8 @@ public abstract class User {
     private String validatePassportNum(String passportNum) {
         if (isPassportNumValid(passportNum)) {
             return passportNum;
-        } else {
-            throw new IllegalArgumentException("Invalid passport number!");
         }
+        throw new IllegalArgumentException("Invalid passport number!");
     }
 
     /**
@@ -79,11 +78,7 @@ public abstract class User {
      * @return the boolean to see if it has the correct format, if not, throw an exception
      */
     public boolean isPassportNumValid(String passportNum) {
-        if (passportNum.length() == 9) {
-            return true;
-        } else {
-            throw new IllegalArgumentException("Passport Number should contain 9 characters");
-        }
+        return passportNum != null && passportNum.matches("[A-Za-z0-9]{9}");
     }
 
     /**

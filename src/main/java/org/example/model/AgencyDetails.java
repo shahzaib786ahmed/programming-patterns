@@ -2,8 +2,10 @@ package org.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.controller.DatabaseController;
 
 import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,14 +15,14 @@ public class AgencyDetails {
     private String agencyAddress;
     private String agencyPhone;
     private String agencyEmail;
-    private LinkedList<Review> customerReviews;
+    private List<Review> customerReviews;
 
     private AgencyDetails() {
         this.agencyName = "";
         this.agencyAddress = "";
         this.agencyPhone = "";
         this.agencyEmail = "";
-        this.customerReviews = new LinkedList<>();
+        this.customerReviews = DatabaseController.queryAllReviews();
     }
 
     /**

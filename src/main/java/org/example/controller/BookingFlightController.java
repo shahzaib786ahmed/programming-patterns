@@ -11,8 +11,8 @@ public class BookingFlightController {
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     public BookingFlightController() {
-        this.ticketSystem = TicketSystem.getInstance();
         initTables();
+        this.ticketSystem = TicketSystem.getInstance();
     }
 
     /**

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.DatabaseController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,9 +22,9 @@ public class CompanySystem {
      * It ensures that only one instance of the CompanySystem is created.
      */
     private CompanySystem() {
-        this.employees = DatabaseController.queryAllEmployees();
-        this.managers = DatabaseController.queryAllManagers();
-        this.clients = DatabaseController.queryAllClients();
+        this.employees = new ArrayList<>();
+        this.managers = new ArrayList<>();
+        this.clients = new ArrayList<>();
     }
 
     /**

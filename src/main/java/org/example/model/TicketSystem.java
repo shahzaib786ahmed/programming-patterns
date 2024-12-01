@@ -32,11 +32,11 @@ public class TicketSystem {
      * It is used for setting up the system's data when the TicketSystem instance is created.
      */
     private TicketSystem() {
-        this.clients = DatabaseController.queryAllClients();
-        this.employees = DatabaseController.queryAllEmployees();
-        this.managers = DatabaseController.queryAllManagers();
-        this.cancelledTickets = DatabaseController.queryAllCanceledTickets();
-        this.boughtTickets = DatabaseController.queryAllBoughtTickets();
+        this.clients = new ArrayList<>();
+        this.employees = new ArrayList<>();
+        this.managers = new ArrayList<>();
+        this.cancelledTickets = new ArrayList<>();
+        this.boughtTickets = new ArrayList<>();
     }
 
     /**

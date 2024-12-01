@@ -59,7 +59,7 @@ public class AuthentificationController {
             // Find client by old username
             Client client = null;
             for (Client c : companySystem.getClients()) {
-                if (c.getUserName().equals(oldUsername)) {
+                if (c.getUsername().equals(oldUsername)) {
                     client = c;
                     break;
                 }
@@ -67,7 +67,7 @@ public class AuthentificationController {
 
             if (client != null && client.getPassword().equals(password)) {
                 // Update the username in memory and database
-                client.setUserName(newUsername);
+                client.setUsername(newUsername);
                 DatabaseController.updateUsername(newUsername, oldUsername, password);  // Update in DB
             } else {
                 System.out.println("Invalid username or password");
@@ -89,7 +89,7 @@ public class AuthentificationController {
             // Find client by username
             Client client = null;
             for (Client c : companySystem.getClients()) {
-                if (c.getUserName().equals(username)) {
+                if (c.getUsername().equals(username)) {
                     client = c;
                     break;
                 }
@@ -120,7 +120,7 @@ public class AuthentificationController {
 
         // Synchronously check client credentials
         for (Client client : companySystem.getClients()) {
-            if (client.getUserName().equals(userName) && client.getPassword().equals(password)) {
+            if (client.getUsername().equals(userName) && client.getPassword().equals(password)) {
                 return true;
             }
         }

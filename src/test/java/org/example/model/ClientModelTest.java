@@ -8,9 +8,9 @@ class ClientModelTest {
     //TODO:ADD MORE TESTS
 //    @Test
 //    void isLogin() {
-//        Client client = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Aya<3");
+//        Client client = new Client("Ahmed", "Shahzaib","A53145631","5533257543","shahzaib@gmail.com",20,"ShahzaibisAStar","Shahzaib123");
 //        String userName = "ShahzaibisAStar";
-//        String password = "Aya<3";
+//        String password = "Shahzaib123";
 //
 //        boolean expectResult = true;
 //        boolean result = client.isLogin(userName,password);

@@ -4,7 +4,6 @@ import org.example.model.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 
 public class CompanySystemController {
     private CompanySystem companySystem;
@@ -13,8 +12,8 @@ public class CompanySystemController {
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
     public CompanySystemController() {
-        this.companySystem = CompanySystem.getInstance();
         initTables();
+        this.companySystem = CompanySystem.getInstance();
     }
 
     /**
@@ -22,7 +21,7 @@ public class CompanySystemController {
      */
     public void initTables() {
         System.out.println("Initializing database tables...");
-        DatabaseController.createNewTableOfClients();
+        DatabaseController.createClientTable();
         DatabaseController.createEmployeeTable();
         DatabaseController.createManagerTable();
         DatabaseController.createReviewTable();
@@ -135,8 +134,8 @@ public class CompanySystemController {
      */
     public void addReview(Review review) {
         threadPool.submit(() -> {
-            DatabaseController.insertReview(review);
             agencyDetails.getCustomerReviews().add(review);
+            DatabaseController.insertReview(review);
         });
     }
 
@@ -147,8 +146,8 @@ public class CompanySystemController {
      */
     public void deleteReview(String id) {
         threadPool.submit(() -> {
+            agencyDetails.getCustomerReviews().remove(id);
             DatabaseController.deleteReview(id);
-            agencyDetails.getCustomerReviews().remove(review.getReviewId());
         });
     }
 

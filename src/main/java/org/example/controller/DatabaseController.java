@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DatabaseController {
-    //TODO:ADD THE INSERT METHOD WITH THE OBJECTS
-    private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data2.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data3.db";
     private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
     private static final ReentrantReadWriteLock.WriteLock WRITE_LOCK = LOCK.writeLock();
     private static final ReentrantReadWriteLock.ReadLock READ_LOCK = LOCK.readLock();
@@ -26,7 +25,7 @@ public class DatabaseController {
     /**
      * Create a new table
      */
-    public static void createNewTableOfClients() {
+    public static void createClientTable() {
         String sql = """
                     CREATE TABLE IF NOT EXISTS clients (
                     id INTEGER PRIMARY KEY,
@@ -36,7 +35,7 @@ public class DatabaseController {
                     phoneNumber TEXT NOT NULL,
                     emailAddress TEXT NOT NULL,
                     age INTEGER,
-                    userName TEXT,
+                    username TEXT,
                     password TEXT,
                     loyaltyPoints INTEGER
                 )
@@ -105,28 +104,28 @@ public class DatabaseController {
      * @param phoneNumber phone number of the client
      * @param emailAddress email address of the client
      * @param age age of the client
-     * @param userName username for the login of the client
+     * @param username username for the login of the client
      * @param password passport for the login of the client
      * @param loyaltyPoints loyalty points of the client
      */
-    public static void insertClient( String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String userName, String password, int loyaltyPoints) {
+    public static void insertClient(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String username, String password, int loyaltyPoints) {
     WRITE_LOCK.lock();
-            String sql = "INSERT INTO clients( lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO clients( lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (Connection conn = connect();
-                 PreparedStatement pstmt =  conn.prepareStatement(sql) ) {
+                 PreparedStatement pstmt =  conn.prepareStatement(sql)) {
 
-                    pstmt.setString(2, lName);
-                    pstmt.setString(3, fName);
-                    pstmt.setString(4, passportNumber);
-                    pstmt.setString(5, phoneNumber);
-                    pstmt.setString(6, emailAddress);
-                    pstmt.setInt(7, age);
-                    pstmt.setString(8, userName);
-                    pstmt.setString(9, password);
-                    pstmt.setInt(10, loyaltyPoints);
+                    pstmt.setString(1, lName);
+                    pstmt.setString(2, fName);
+                    pstmt.setString(3, passportNumber);
+                    pstmt.setString(4, phoneNumber);
+                    pstmt.setString(5, emailAddress);
+                    pstmt.setInt(6, age);
+                    pstmt.setString(7, username);
+                    pstmt.setString(8, password);
+                    pstmt.setInt(9, loyaltyPoints);
                     pstmt.executeUpdate();
-                    System.out.println("Data inserted successfully.");
+                    System.out.println("Client data inserted successfully.");
 
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
@@ -146,7 +145,7 @@ public class DatabaseController {
         String phoneNumber = client.getPhoneNumber();
         String emailAddress = client.getEmailAddress();
         int age = client.getAge();
-        String userName = client.getUserName();
+        String userName = client.getUsername();
         String password = client.getPassword();
         int loyaltyPoints = client.getLoyaltyPoints();
 
@@ -168,18 +167,17 @@ public class DatabaseController {
        Statement statement = connection.createStatement();
        ResultSet resultSet = statement.executeQuery(sql)){
            while(resultSet.next()){
-               int clientId = resultSet.getInt("id");
                String lName = resultSet.getString("lName");
                String fName = resultSet.getString("fName");
                String passportNumber = resultSet.getString("passportNumber");
                String phoneNumber = resultSet.getString("phoneNumber");
                String emailAddress = resultSet.getString("emailAddress");
                int age = resultSet.getInt("age");
-               String userName = resultSet.getString("userName");
+               String username = resultSet.getString("username");
                String password = resultSet.getString("password");
                int loyaltyPoints = resultSet.getInt("loyaltyPoints");
 
-               clients.add(new Client(lName,fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints));
+               clients.add(new Client(lName,fName, passportNumber, phoneNumber, emailAddress, age, username, password,loyaltyPoints));
            }
        } catch (SQLException e) {
            throw new RuntimeException(e);
@@ -317,10 +315,10 @@ public class DatabaseController {
      */
     public static List<Employee> queryAllEmployees() {
         READ_LOCK.lock();
-
         String sql = """
                SELECT * FROM employees
                """;
+
         List<Employee> employees = new ArrayList<>();
         try(Connection connection = connect();
             Statement statement = connection.createStatement();
@@ -351,7 +349,7 @@ public class DatabaseController {
     public static void createFlightTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS flights (
-                flightNumber TEXT PRIMARY KEY NOT NULL,
+                flightNumber TEXT PRIMARY KEY,
                 airline TEXT NOT NULL,
                 price DOUBLE,
                 flightSeatNumber INTEGER,
@@ -363,13 +361,9 @@ public class DatabaseController {
         """;
 
         try (Connection conn = connect();
-             Statement stmt = conn != null ? conn.createStatement() : null) {
-            if (stmt != null) {
+             Statement stmt = conn.createStatement()) {
                 stmt.execute(sql);
                 System.out.println("Flight table created successfully.");
-            } else {
-                System.out.println("Table creation failed. Connection is null.");
-            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -641,10 +635,10 @@ public class DatabaseController {
      */
     public static List<Manager> queryAllManagers(){
         READ_LOCK.lock();
-
         String sql ="SELECT * FROM managers";
         List<Manager> managers = new ArrayList<>();
-        try(Connection connection = connect();
+
+        try (Connection connection = connect();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql)){
             while(resultSet.next()){
@@ -652,9 +646,10 @@ public class DatabaseController {
                 String fName = resultSet.getString("fName");
                 String passportNumber = resultSet.getString("passportNumber");
                 String phoneNumber = resultSet.getString("phoneNumber");
-                String emailAddress =resultSet.getString("emailAddress");
-                int age =resultSet.getInt("age");
+                String emailAddress = resultSet.getString("emailAddress");
+                int age = resultSet.getInt("age");
                 double discountRate = resultSet.getDouble("discountRate");
+
                 managers.add(new Manager(lName,fName,passportNumber,phoneNumber,emailAddress,age,discountRate));
             }
         } catch (SQLException e) {
@@ -1013,22 +1008,16 @@ public class DatabaseController {
      */
     public static void insertReview(String review_id, String email, String title, String body){
         WRITE_LOCK.lock();
-        String sql = """
-                  INSERT INTO reviews(review_id, email, title, body) VALUES(?,?,?,?)
-                  """;
+        String sql = "INSERT INTO reviews(review_id, email, title, body) VALUES(?,?,?,?)";
 
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
-            if (pstmt != null) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, review_id);
                 pstmt.setString(2, email);
                 pstmt.setString(3, title);
                 pstmt.setString(4, body);
                 pstmt.executeUpdate();
                 System.out.println("Review data inserted successfully.");
-            } else {
-                System.out.println("Insert failed. PreparedStatement is null.");
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -1086,6 +1075,7 @@ public class DatabaseController {
                 String email = resultSet.getString("email");
                 String title = resultSet.getString("title");
                 String body = resultSet.getString("body");
+
                 reviews.add(new Review(reviewId, email, title, body));
             }
         } catch (SQLException e) {
