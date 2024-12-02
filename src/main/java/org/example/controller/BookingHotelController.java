@@ -150,6 +150,7 @@ public class BookingHotelController {
                     room.setClient(client);
                     HotelSystem.getAvailableRooms().remove(room);
                     HotelSystem.getReservedRooms().add(room);
+                    DatabaseController.insertRoom(room);
 
                     System.out.println("Room " + room.getRoomNum() + " booked successfully for " + client.getFName() + " " + client.getLName() + " with credit card ending with: " + creditCardNumber.substring(creditCardNumber.length() - 4));
                     TicketSystem.paymentHistory.add(client.getLName() + ", " + client.getFName() + " | Amount Paid: " + totalPrice + " | Credit card used: " + creditCardNumber);

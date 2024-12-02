@@ -24,9 +24,9 @@ public class HotelSystem {
      * This constructor loads the data for hotels, available rooms, and reserved rooms from the database.
      */
     private HotelSystem() {
-        this.hotels = DatabaseController.queryAllHotels();
-        this.availableRooms = DatabaseController.queryAllAvailableRooms();
-        this.reservedRooms = DatabaseController.queryAllReservedRooms();
+        this.hotels = new ArrayList<>();
+        this.availableRooms = new ArrayList<>();
+        this.reservedRooms = new ArrayList<>();
 
     }
 

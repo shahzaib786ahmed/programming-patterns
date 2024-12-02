@@ -41,7 +41,7 @@ public class Ticket {
     }
 
     public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType) {
-        this.ticketId = ++idCounter;
+        this.ticketId = idCounter++;
         this.flight = flight;
         this.client = client;
         this.seatNumber = seatNumber;
@@ -54,7 +54,7 @@ public class Ticket {
     }
 
     public Ticket(Flight flight, String seatNumber, String departureDate, String returnDate, String paymentType) {
-        this.ticketId = ++idCounter;
+        this.ticketId = idCounter++;
         this.flight = flight;
         this.seatNumber = seatNumber;
         this.assignedTo = null;
@@ -67,7 +67,7 @@ public class Ticket {
     }
 
     public Ticket(Flight flight, String seatNumber, String departureDate, String paymentType) {
-        this.ticketId = ++idCounter;
+        this.ticketId = idCounter++;
         this.flight = flight;
         this.seatNumber = seatNumber;
         this.assignedTo = null;

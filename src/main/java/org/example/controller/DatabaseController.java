@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DatabaseController {
-    private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data3.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:./src/main/resources/database/data.db";
     private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
     private static final ReentrantReadWriteLock.WriteLock WRITE_LOCK = LOCK.writeLock();
     private static final ReentrantReadWriteLock.ReadLock READ_LOCK = LOCK.readLock();
@@ -427,15 +427,15 @@ public class DatabaseController {
 
     /**
      * Update Flight info
-     * @param id of the flight
+     * @param flightNumber of the flight
      * @param newDepartureLocation of the flight departing from
      * @param newArrivalLocation of the flight arriving to
      * @param newDepartureTime of the flight
      * @param newArrivalTime of the flight
      */
-    public static void updateFlight(int id, String newDepartureLocation, String newArrivalLocation, String newDepartureTime, String newArrivalTime) {
+    public static void updateFlight(String flightNumber, String newDepartureLocation, String newArrivalLocation, String newDepartureTime, String newArrivalTime) {
     WRITE_LOCK.lock();
-        String sql = "UPDATE flights SET departureLocation = ?, arrivalLocation = ?, departureTime = ?, arrivalTime = ? WHERE id = ?";
+        String sql = "UPDATE flights SET departureLocation = ?, arrivalLocation = ?, departureTime = ?, arrivalTime = ? WHERE flightNumber = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -443,7 +443,7 @@ public class DatabaseController {
             pstmt.setString(2, newArrivalLocation);
             pstmt.setString(3, newDepartureTime);
             pstmt.setString(4, newArrivalTime);
-            pstmt.setInt(5, id);
+            pstmt.setString(5, flightNumber);
             pstmt.executeUpdate();
             System.out.println("Flight information updated successfully.");
         } catch (SQLException e) {
@@ -455,15 +455,15 @@ public class DatabaseController {
 
     /**
      * Delete a Flight by ID
-     * @param id of the flight
+     * @param flightNumber of the flight
      */
-    public static void deleteFlight(int id) {
+    public static void deleteFlight(String flightNumber) {
         WRITE_LOCK.lock();
-        String sql = "DELETE FROM flights WHERE id = ?";
+        String sql = "DELETE FROM flights WHERE flightNumber = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setString(1, flightNumber);
             pstmt.executeUpdate();
             System.out.println("Flight deleted successfully.");
         } catch (SQLException e) {
@@ -963,7 +963,7 @@ public class DatabaseController {
                 int totalRooms = resultSet.getInt("totalRooms");
                 String address = resultSet.getString("address");
                 String name = resultSet.getString("name");
-                hotels.add(new Hotel(hotelId, name, address, totalRooms));
+                hotels.add(new Hotel(totalRooms, name, address));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -1008,16 +1008,22 @@ public class DatabaseController {
      */
     public static void insertReview(String review_id, String email, String title, String body){
         WRITE_LOCK.lock();
-        String sql = "INSERT INTO reviews(review_id, email, title, body) VALUES(?,?,?,?)";
+        String sql = """
+                INSERT INTO reviews(review_id, email, title, body) VALUES(?,?,?,?)
+                """;
 
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
+            if (pstmt != null) {
                 pstmt.setString(1, review_id);
                 pstmt.setString(2, email);
                 pstmt.setString(3, title);
                 pstmt.setString(4, body);
                 pstmt.executeUpdate();
                 System.out.println("Review data inserted successfully.");
+            } else {
+                System.out.println("Insert failed. PreparedStatement is null.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -1109,6 +1115,7 @@ public class DatabaseController {
         try (Connection connection = connect();
             Statement statement = connection.createStatement()) {
             statement.execute(sql);
+            System.out.println("Ticket table created successfully.");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -1130,17 +1137,36 @@ public class DatabaseController {
             if (statement != null) {
                 statement.setInt(1, ticket.getTicketId());
                 statement.setString(2,ticket.getFlight().getFlightNumber());
-                statement.setObject(2, ticket.getClient() != null ? ticket.getClient().getId() : null);
-                statement.setString(3, ticket.getSeatNumber());
-                statement.setString(4, ticket.getDepartureDate());
-                statement.setObject(5, ticket.getReturnDate() != null ? ticket.getReturnDate() : null);
-                statement.setString(6, ticket.getPaymentType());
-                statement.setObject(7, ticket.getAssignedTo() != null ? ticket.getAssignedTo() : null);
-                statement.setString(8, ticket.getTicketStatus().name());
+                statement.setObject(3, ticket.getClient() != null ? ticket.getClient().getId() : null);
+                statement.setString(4, ticket.getSeatNumber());
+                statement.setString(5, ticket.getDepartureDate());
+                statement.setObject(6, ticket.getReturnDate() != null ? ticket.getReturnDate() : null);
+                statement.setString(7, ticket.getPaymentType());
+                statement.setObject(8, ticket.getAssignedTo() != null ? ticket.getAssignedTo() : null);
+                statement.setString(9, ticket.getTicketStatus().name());
+                statement.executeUpdate();
                 System.out.println("Ticket data inserted successfully.");
             } else {
                 System.out.println("Insert failed. Statement is null.");
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static void updateTicketStatus(Status newStatus, int id) {
+        WRITE_LOCK.lock();
+        String sql = """
+                UPDATE tickets SET ticket_status = ? WHERE id = ?
+                """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newStatus.name());
+            statement.setInt(2, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

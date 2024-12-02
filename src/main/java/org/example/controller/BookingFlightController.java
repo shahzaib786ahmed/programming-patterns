@@ -73,11 +73,11 @@ public class BookingFlightController {
     /**
      * Removes a flight from the system and database by its ID.
      *
-     * @param id the ID of the flight to be removed
+     * @param flightNum the ID of the flight to be removed
      */
-    public void removeFlight(int id) {
+    public void removeFlight(String flightNum) {
         threadPool.submit(() -> {
-            DatabaseController.deleteFlight(id);
+            DatabaseController.deleteFlight(flightNum);
         });
     }
 
@@ -95,23 +95,10 @@ public class BookingFlightController {
      *
      * @param ticket the ticket to be added
      */
-    public static void addTicket(Ticket ticket) {
+    public void addTicket(Ticket ticket) {
         threadPool.submit(() -> {
             DatabaseController.insertTicket(ticket);
             TicketSystem.getBoughtTickets().add(ticket);
-        });
-    }
-
-    /**
-     * Cancels a ticket and removes it from the system and database.
-     *
-     * @param ticket the ticket to be cancelled
-     */
-    public static void cancelTicket(Ticket ticket) {
-        threadPool.submit(() -> {
-            TicketSystem.getBoughtTickets().remove(ticket);
-            DatabaseController.deleteTicket(ticket.getTicketId());
-            TicketSystem.getCancelledTickets().add(ticket);
         });
     }
 
@@ -147,7 +134,7 @@ public class BookingFlightController {
      *
      * @param ticket_id the ticket ID to search for
      */
-    public static void search(int ticket_id) {
+    public void search(int ticket_id) {
         threadPool.submit(() -> {
             DatabaseController.querySpecificTicket(ticket_id);
         });
@@ -161,7 +148,7 @@ public class BookingFlightController {
      * @param recipientEmail   the email address to send payment confirmation
      * @param creditCardNumber the credit card number for payment (if applicable)
      */
-    public static void makePayment(Ticket ticket, String paymentType, String recipientEmail, String creditCardNumber) {
+    private void makePayment(Ticket ticket, String paymentType, String recipientEmail, String creditCardNumber) {
         threadPool.submit(() -> {
             double flightPrice = ticket.getFlight().getPrice();
             double serviceFee = 100.00;
@@ -186,7 +173,7 @@ public class BookingFlightController {
                 Client client = ticket.getClient();
                 int loyaltyPoints = client.getLoyaltyPoints();
                 if (loyaltyPoints < totalCost) {
-                    System.out.println("Insufficient loyalty points. Payment failed.");
+                    System.out.println("Insufficient loyalty points. Credit Card used for purchase.");
                     return;
                 }
 
@@ -210,7 +197,7 @@ public class BookingFlightController {
      * @param subject        the subject of the email
      * @param messageBody    the body of the email
      */
-    public static void sendConfirmationEmail(String recipientEmail, String subject, String messageBody) {
+    private void sendConfirmationEmail(String recipientEmail, String subject, String messageBody) {
         threadPool.submit(() -> {
             System.out.println("Sending email to: " + recipientEmail);
             System.out.println("Subject: " + subject);
@@ -224,7 +211,7 @@ public class BookingFlightController {
      *
      * @param flight the flight to check for seat availability
      */
-    private static void validateAndReserveSeat(Flight flight) {
+    private void validateAndReserveSeat(Flight flight) {
         if (flight.getFlightSeatNumber() == 0) {
             throw new IllegalArgumentException("Flight is fully booked!");
         }
@@ -243,11 +230,11 @@ public class BookingFlightController {
      * @param recipientEmail   of the passenger to send email of confirmation
      * @param creditCardNumber of the passenger to be used if paid by credit card
      */
-    public static void purchaseFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
+    public Ticket purchaseFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
+        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
         threadPool.submit(() -> {
             validateAndReserveSeat(flight);
 
-            Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
             makePayment(ticket, paymentType, recipientEmail, creditCardNumber);
             addTicket(ticket);
 
@@ -263,6 +250,8 @@ public class BookingFlightController {
             //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
         });
+
+        return ticket;
     }
 
     /**
@@ -278,14 +267,15 @@ public class BookingFlightController {
      * @param creditCardNumber of the passenger to be used to make the payment
      * @return a new ticket for the passenger
      */
-    public static void purchaseEmployeeFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
+    public Ticket purchaseEmployeeFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
+        Ticket ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
         threadPool.submit(() -> {
             validateAndReserveSeat(flight);
 
-            Ticket ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
             flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.getDiscountRate() / 100)));
             makePayment(ticket, paymentType, recipientEmail, creditCardNumber);
             addTicket(ticket);
+
             ticket.setTicketStatus(Status.PURCHASED);
 
             System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
@@ -297,6 +287,8 @@ public class BookingFlightController {
             //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
         });
+
+        return ticket;
     }
 
     /**
@@ -311,11 +303,11 @@ public class BookingFlightController {
      * @param creditCardNumber of the passenger to be used if paid by credit card
      * @return a new ticket for the passenger
      */
-    public static void purchaseOneWayFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
+    public Ticket purchaseOneWayFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
+        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
         threadPool.submit(() -> {
             validateAndReserveSeat(flight);
 
-            Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
             makePayment(ticket, paymentType, recipientEmail, creditCardNumber);
             addTicket(ticket);
             ticket.setTicketStatus(Status.PURCHASED);
@@ -331,6 +323,8 @@ public class BookingFlightController {
             ticket.displayDetails();
 
         });
+
+        return ticket;
     }
 
     /**
@@ -345,10 +339,12 @@ public class BookingFlightController {
      * @param creditCardNumber of the passenger to be used to make the payment
      * @return a new ticket for the passenger
      */
-    public static void purchaseEmployeeOneWayFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
+    public Ticket purchaseEmployeeOneWayFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
+
+        Ticket ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
         threadPool.submit(() -> {
             validateAndReserveSeat(flight);
-            Ticket ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
+
             flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.getDiscountRate() / 100)));
             ticket.setTicketStatus(Status.PURCHASED);
             addTicket(ticket);
@@ -364,6 +360,8 @@ public class BookingFlightController {
             ticket.displayDetails();
 
         });
+
+        return ticket;
     }
 
     /**
@@ -371,7 +369,7 @@ public class BookingFlightController {
      *
      * @param ticket of the passenger that wants/needs a refund
      */
-    public static void refund(Ticket ticket) {
+    private void refund(Ticket ticket) {
         threadPool.submit(() -> {
             Client client = ticket.getClient();
             String paymentType = ticket.getPaymentType();
@@ -398,7 +396,21 @@ public class BookingFlightController {
                 client.setLoyaltyPoints(client.getLoyaltyPoints() + (int) ticket.getFlight().getPrice());
                 System.out.println("Refund processed using loyalty points for ticket " + ticket.getTicketId());
             }
+
             sendConfirmationEmail(client.getEmailAddress(), "Cancellation Confirmation", "Your ticket " + ticket.getTicketId() + " has been cancelled and a refund has been processed.");
+        });
+    }
+
+    /**
+     * Cancels a ticket and removes it from the system and database.
+     *
+     * @param ticket the ticket to be cancelled
+     */
+    private void cancelTicket(Ticket ticket) {
+        threadPool.submit(() -> {
+            TicketSystem.getBoughtTickets().remove(ticket);
+            //DatabaseController.deleteTicket(ticket.getTicketId());
+            TicketSystem.getCancelledTickets().add(ticket);
         });
     }
 
@@ -407,9 +419,10 @@ public class BookingFlightController {
      *
      * @param ticket of the passenger that wants/needs to cancel their flight
      */
-    public static void cancelFlightTicket(Ticket ticket) {
+    public void cancelFlightTicket(Ticket ticket) {
         threadPool.submit(() -> {
             ticket.setTicketStatus(Status.CANCELLED);
+            DatabaseController.updateTicketStatus(ticket.getTicketStatus(), ticket.getTicketId());
             cancelTicket(ticket);
             ticket.getFlight().setFlightSeatNumber(ticket.getFlight().getFlightSeatNumber() + 1);
             refund(ticket);

@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
 public class Hotel extends Services {
     private int hotel_id;
     private String name;

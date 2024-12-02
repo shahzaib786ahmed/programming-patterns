@@ -4,12 +4,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @EqualsAndHashCode
 
 public class Employee extends User {
-  //  private List<Ticket> requestedBookings;
+  //private List<Ticket> requestedBookings;
     @Setter
     private double discountRate;
 

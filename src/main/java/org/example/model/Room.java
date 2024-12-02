@@ -17,7 +17,6 @@ public class Room {
     }
 
     public Room(int roomNum, int capacity, RoomStatus roomStatus, double price) {
-        this.client = client;
         this.roomNum = roomNum;
         this.capacity = capacity;
         this.roomStatus = RoomStatus.AVAILABLE;
