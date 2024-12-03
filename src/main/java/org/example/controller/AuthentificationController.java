@@ -19,11 +19,10 @@ public class AuthentificationController {
      * Constructs an instance of the AuthenticationController with the given CompanySystem.
      * Initializes necessary tables for account management.
      *
-     * @param companySystem the CompanySystem instance used to manage clients and other users
      */
-    public AuthentificationController(CompanySystem companySystem) {
-        this.companySystem = companySystem;
+    public AuthentificationController() {
         initTable();
+        this.companySystem = CompanySystem.getInstance();
     }
 
     /**

@@ -35,8 +35,8 @@ public class DatabaseController {
                     phoneNumber TEXT NOT NULL,
                     emailAddress TEXT NOT NULL,
                     age INTEGER,
-                    username TEXT,
-                    password TEXT,
+                    username TEXT NOT NULL,
+                    password TEXT NOT NULL,
                     loyaltyPoints INTEGER
                 )
                 """;
@@ -201,8 +201,8 @@ public class DatabaseController {
                 phoneNumber TEXT NOT NULL,
                 emailAddress TEXT NOT NULL,
                 age INTEGER,
-                userName TEXT,
-                password TEXT,
+                username TEXT NOT NULL,
+                password TEXT NOT NULL,
                 discountRate DOUBLE
             )
         """;
@@ -227,9 +227,9 @@ public class DatabaseController {
      * @param age of the employee
      * @param discountRate for the employee
      */
-    public static void insertEmployee(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age,double discountRate) {
+    public static void insertEmployee(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String username, String password, double discountRate) {
         WRITE_LOCK.lock();
-            String sql = "INSERT INTO employees(lName, fName, passportNumber, phoneNumber, emailAddress, age, discountRate) VALUES(?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO employees(lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password, discountRate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (Connection conn = connect();
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -239,7 +239,9 @@ public class DatabaseController {
                     pstmt.setString(4, phoneNumber);
                     pstmt.setString(5, emailAddress);
                     pstmt.setInt(6, age);
-                    pstmt.setDouble(7, discountRate);
+                    pstmt.setString(7, username);
+                    pstmt.setString(8, password);
+                    pstmt.setDouble(9, discountRate);
                     pstmt.executeUpdate();
                     System.out.println("Employee data inserted successfully.");
             } catch (SQLException e) {
@@ -259,10 +261,12 @@ public class DatabaseController {
         String passportNumber = employee.getPassportNum();
         String phoneNumber = employee.getPhoneNumber();
         String emailAddress = employee.getEmailAddress();
+        String username = employee.getUsername();
+        String password = employee.getPassword();
         int age = employee.getAge();
         double discountRate = employee.getDiscountRate();
 
-        insertEmployee(lName, fName,passportNumber,phoneNumber,emailAddress,age,discountRate);
+        insertEmployee(lName, fName,passportNumber,phoneNumber,emailAddress,age, username, password, discountRate);
     }
 
     /**
@@ -330,9 +334,11 @@ public class DatabaseController {
                 String phoneNumber = resultSet.getString("phoneNumber");
                 String emailAddress = resultSet.getString("emailAddress");
                 int age = resultSet.getInt("age");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
                 double discountRate = resultSet.getDouble("discountRate");
 
-                employees.add(new Employee(lName, fName, passportNumber, phoneNumber, emailAddress, age, discountRate));
+                employees.add(new Employee(lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password,discountRate));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -518,6 +524,8 @@ public class DatabaseController {
                 passportNumber TEXT NOT NULL,
                 phoneNumber TEXT NOT NULL,
                 emailAddress TEXT NOT NULL,
+                username TEXT NOT NULL,
+                password TEXT NOT NULL,
                 age INTEGER,
                 discountRate DOUBLE
             )
@@ -546,10 +554,10 @@ public class DatabaseController {
      * @param age of the manager
      * @param discountRate for the manager
      */
-    public static void insertManager(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, double discountRate) {
+    public static void insertManager(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String username, String password, double discountRate) {
       WRITE_LOCK.lock();
             // Validate Manager details
-            String sql = "INSERT INTO managers(lName, fName, passportNumber, phoneNumber, emailAddress, age, discountRate) VALUES(?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO managers(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, discountRate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = connect();
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
                     pstmt.setString(1, lName);
@@ -558,7 +566,9 @@ public class DatabaseController {
                     pstmt.setString(4, phoneNumber);
                     pstmt.setString(5, emailAddress);
                     pstmt.setInt(6, age);
-                    pstmt.setDouble(7, discountRate);
+                    pstmt.setString(7, username);
+                    pstmt.setString(8, password);
+                    pstmt.setDouble(9, discountRate);
                     pstmt.executeUpdate();
                     System.out.println("Manager data inserted successfully.");
 
@@ -580,9 +590,11 @@ public class DatabaseController {
            String phoneNumber = manager.getPhoneNumber();
            String emailAddress = manager.getEmailAddress();
            int age = manager.getAge();
+           String username = manager.getUsername();
+           String password = manager.getPassword();
            double discountRate = manager.getDiscountRate();
 
-           insertManager(lName,fName,passportNumber,phoneNumber,emailAddress,age,discountRate);
+           insertManager(lName,fName,passportNumber,phoneNumber,emailAddress,age, username, password,discountRate);
     }
 
     /**
@@ -648,9 +660,11 @@ public class DatabaseController {
                 String phoneNumber = resultSet.getString("phoneNumber");
                 String emailAddress = resultSet.getString("emailAddress");
                 int age = resultSet.getInt("age");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
                 double discountRate = resultSet.getDouble("discountRate");
 
-                managers.add(new Manager(lName,fName,passportNumber,phoneNumber,emailAddress,age,discountRate));
+                managers.add(new Manager(lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password, discountRate));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -789,7 +803,7 @@ public class DatabaseController {
                      String roomStatusStr = resultSet.getString("roomStatus");
                     Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);
                     double price = resultSet.getDouble("price");
-                    rooms.add(new Room(roomNum,capacity,roomStatus,price));
+                    rooms.add(new Room(roomNum, capacity, roomStatus, price));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -820,7 +834,7 @@ public class DatabaseController {
                         String roomStatusStr = resultSet.getString("roomStatus");            
                        Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);  
                        double price = resultSet.getDouble("price");                          
-                       rooms.add(new Room(roomNum,capacity,roomStatus,price));               
+                       rooms.add(new Room(roomNum, capacity, roomStatus, price));
                }                                                                             
            } catch (SQLException e) {                                                        
                throw new RuntimeException(e);                                                
@@ -851,7 +865,7 @@ public class DatabaseController {
                            String roomStatusStr = resultSet.getString("roomStatus");
                           Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);
                           double price = resultSet.getDouble("price");
-                          rooms.add(new Room(roomNum,capacity,roomStatus,price));
+                          rooms.add(new Room(roomNum, capacity, roomStatus, price));
                   }
               } catch (SQLException e) {
                   throw new RuntimeException(e);
@@ -979,7 +993,7 @@ public class DatabaseController {
     public static void createReviewTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS reviews (
-                id TEXT PRIMARY KEY,
+                id INT PRIMARY KEY,
                 email TEXT NOT NULL,
                 title TEXT NOT NULL,
                 body TEXT NOT NULL
@@ -1001,21 +1015,21 @@ public class DatabaseController {
 
     /**
      * insert a review record
-     * @param review_id   the id of the review
+     * @param id   the id of the review
      * @param email      the email of the client
      * @param title       the title of the review
      * @param body        the description of the review
      */
-    public static void insertReview(String review_id, String email, String title, String body){
+    public static void insertReview(int id, String email, String title, String body){
         WRITE_LOCK.lock();
         String sql = """
-                INSERT INTO reviews(review_id, email, title, body) VALUES(?,?,?,?)
+                INSERT INTO reviews(id, email, title, body) VALUES(?,?,?,?)
                 """;
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
             if (pstmt != null) {
-                pstmt.setString(1, review_id);
+                pstmt.setInt(1, id);
                 pstmt.setString(2, email);
                 pstmt.setString(3, title);
                 pstmt.setString(4, body);
@@ -1036,7 +1050,7 @@ public class DatabaseController {
      * @param review  the review object to be inserted
      */
     public static void insertReview(Review review) {
-        String reviewId = review.getReviewId();
+        int reviewId = review.getReviewId();
         String email = review.getEmail();
         String title = review.getTitle();
         String body = review.getBody();
@@ -1048,13 +1062,13 @@ public class DatabaseController {
      * delete a review record
      * @param id the id of the review to delete
      */
-    public static void deleteReview(String id) {
+    public static void deleteReview(int id) {
         WRITE_LOCK.lock();
         String sql = "DELETE FROM reviews WHERE id = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, id);
+            pstmt.setInt(1, id);
             pstmt.executeUpdate();
             System.out.println("Review deleted successfully.");
         } catch (SQLException e) {
@@ -1077,7 +1091,7 @@ public class DatabaseController {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(sql)){
             while(resultSet.next()){
-                String reviewId = resultSet.getString("review_id");
+                int reviewId = resultSet.getInt("id");
                 String email = resultSet.getString("email");
                 String title = resultSet.getString("title");
                 String body = resultSet.getString("body");
@@ -1457,6 +1471,7 @@ public class DatabaseController {
         try (Connection connection = connect();
             Statement statement = connection.createStatement()) {
             statement.execute(sql);
+            System.out.println("Account table created successfully.");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -1536,6 +1551,22 @@ public class DatabaseController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
+            WRITE_LOCK.unlock();
+        }
+    }
+
+    public static void deleteAccount(int id) {
+        WRITE_LOCK.lock();
+        String sql = "DELETE FROM accounts WHERE id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Account deleted successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }finally{
             WRITE_LOCK.unlock();
         }
     }

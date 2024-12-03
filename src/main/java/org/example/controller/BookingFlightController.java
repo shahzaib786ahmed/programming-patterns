@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BookingFlightController {
-    private static TicketSystem ticketSystem;
+    private TicketSystem ticketSystem;
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     public BookingFlightController() {

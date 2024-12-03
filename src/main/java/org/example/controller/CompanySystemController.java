@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.model.*;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,6 +38,7 @@ public class CompanySystemController {
         threadPool.submit(() -> {
             companySystem.getClients().add(client);
             DatabaseController.insertClient(client);
+            DatabaseController.insertAccount(client.getUsername(), client.getPassword());
         });
     }
 
@@ -49,6 +51,7 @@ public class CompanySystemController {
         threadPool.submit(() -> {
             companySystem.getEmployees().add(employee);
             DatabaseController.insertEmployee(employee);
+            DatabaseController.insertAccount(employee.getUsername(), employee.getPassword());
         });
     }
 
@@ -61,6 +64,7 @@ public class CompanySystemController {
         threadPool.submit(() -> {
             companySystem.getManagers().add(manager);
             DatabaseController.insertManager(manager);
+            DatabaseController.insertAccount(manager.getUsername(), manager.getPassword());
         });
     }
 
@@ -73,6 +77,7 @@ public class CompanySystemController {
         threadPool.submit(() -> {
             companySystem.getClients().remove(client);
             DatabaseController.deleteClient(client.getId());
+            DatabaseController.deleteAccount(client.getId());
         });
     }
 
@@ -85,6 +90,7 @@ public class CompanySystemController {
         threadPool.submit(() -> {
             companySystem.getEmployees().remove(employee);
             DatabaseController.deleteEmployee(employee.getId());
+            DatabaseController.deleteAccount(employee.getId());
         });
     }
 
@@ -97,6 +103,25 @@ public class CompanySystemController {
         threadPool.submit(() -> {
             companySystem.getManagers().remove(manager);
             DatabaseController.deleteManager(manager.getId());
+            DatabaseController.deleteAccount(manager.getId());
+        });
+    }
+
+    public void updateClient(Client client, String phoneNumber, String emailAddress) {
+        threadPool.submit(() -> {
+            DatabaseController.updateClient(client.getId(), phoneNumber, emailAddress);
+        });
+    }
+
+    public void updateEmployee(Employee employee, String phoneNumber, String emailAddress) {
+        threadPool.submit(() -> {
+            DatabaseController.updateEmployee(employee.getId(), phoneNumber, emailAddress);
+        });
+    }
+
+    public void updateManager(Manager manager, String phoneNumber, String emailAddress) {
+        threadPool.submit(() -> {
+            DatabaseController.updateManager(manager.getId(), phoneNumber, emailAddress);
         });
     }
 
@@ -142,12 +167,12 @@ public class CompanySystemController {
     /**
      * Deletes a review from the system and the database asynchronously by its ID.
      *
-     * @param id the ID of the review to be deleted
+     * @param review the ID of the review to be deleted
      */
-    public void deleteReview(String id) {
+    public void deleteReview(Review review) {
         threadPool.submit(() -> {
-            agencyDetails.getCustomerReviews().remove(id);
-            DatabaseController.deleteReview(id);
+            agencyDetails.getCustomerReviews().remove(review);
+            DatabaseController.deleteReview(review.getReviewId());
         });
     }
 

@@ -186,7 +186,7 @@ public class BookingHotelController {
      * @param creditCardNumber the credit card number to validate
      * @return true if the card number is valid, false otherwise
      */
-    public static boolean isValidCreditCardFormat(String creditCardNumber) {
+    private static boolean isValidCreditCardFormat(String creditCardNumber) {
         // Remove spaces or hyphens from the credit card number
         String cleanedCardNumber = creditCardNumber.replaceAll("[^0-9]", "");
 
@@ -202,7 +202,7 @@ public class BookingHotelController {
      * @param amount           the amount to be charged to the credit card
      * @return true if payment was successful, false otherwise
      */
-    public boolean processCreditCardPayment(String creditCardNumber, double amount) {
+    private boolean processCreditCardPayment(String creditCardNumber, double amount) {
         // Check if the credit card format is valid
         if (!isValidCreditCardFormat(creditCardNumber)) {
             System.out.println("Invalid credit card format. Payment failed.");

@@ -10,13 +10,15 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 public class Review {
-    private String reviewId;
+    private int reviewId;
     private String email;
     private String title;
     private String body;
 
+    private static int nextId = 1;
+
     public Review(String email, String title, String body) {
-        this.reviewId = UUID.randomUUID().toString();
+        this.reviewId = nextId++;
         setEmail(email);
         setTitle(title);
         setBody(body);

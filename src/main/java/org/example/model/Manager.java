@@ -7,8 +7,8 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 public class Manager extends Employee {
-    public Manager(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, double discountRate) {
-        super(lName, fName, passportNum, phoneNumber, emailAddress, age, discountRate);
+    public Manager(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String username, String password, double discountRate) {
+        super(lName, fName, passportNum, phoneNumber, emailAddress, age, username, password, discountRate);
     }
 
     /**

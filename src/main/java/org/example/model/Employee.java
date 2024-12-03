@@ -4,8 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @EqualsAndHashCode
@@ -15,8 +13,8 @@ public class Employee extends User {
     @Setter
     private double discountRate;
 
-    public Employee(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, double discountRate) {
-        super(lName, fName, passportNum, phoneNumber, emailAddress, age);
+    public Employee(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String username, String password, double discountRate) {
+        super(lName, fName, passportNum, phoneNumber, emailAddress, age, username, password);
         this.discountRate = discountRate;
     }
 

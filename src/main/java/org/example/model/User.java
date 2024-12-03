@@ -16,11 +16,13 @@ public abstract class User {
     private String passportNum;
     private String phoneNumber;
     private String emailAddress;
+    private String username;
+    private String password;
     private int age;
 
     private static int nextId = 1;
 
-    public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age) {
+    public User(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String username, String password) {
         this.id = nextId++;
         this.lName = lName;
         this.fName = fName;
@@ -28,6 +30,8 @@ public abstract class User {
         this.phoneNumber = validatePhoneNumber(phoneNumber);
         this.emailAddress = validateEmailAddress(emailAddress);
         this.age = age;
+        this.username = username;
+        this.password = password;
     }
 
     /**

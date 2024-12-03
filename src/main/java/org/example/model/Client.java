@@ -9,16 +9,11 @@ import java.util.List;
 @Setter
 @Getter
 public class Client extends User {
-    private String username;
-    private String password;
     private int loyaltyPoints;
-    //do we add them to constructor
     private List<Double> paymentHistory = new ArrayList<>();
 
-    public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String username, String password,int loyaltyPoints) {
-        super(lName, fName, passportNum, phoneNumber, emailAddress, age);
-        this.username = username;
-        this.password = password;
+    public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String username, String password, int loyaltyPoints) {
+        super(lName, fName, passportNum, phoneNumber, emailAddress, age, username , password);
         this.loyaltyPoints = loyaltyPoints;
     }
 
