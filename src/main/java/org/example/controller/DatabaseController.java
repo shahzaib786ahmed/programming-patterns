@@ -108,7 +108,7 @@ public class DatabaseController {
      * @param password passport for the login of the client
      * @param loyaltyPoints loyalty points of the client
      */
-    public static void insertClient(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String username, String password, int loyaltyPoints) {
+    public static boolean insertClient(String lName, String fName, String passportNumber, String phoneNumber, String emailAddress, int age, String username, String password, int loyaltyPoints) {
     WRITE_LOCK.lock();
             String sql = "INSERT INTO clients( lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password, loyaltyPoints) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -126,9 +126,10 @@ public class DatabaseController {
                     pstmt.setInt(9, loyaltyPoints);
                     pstmt.executeUpdate();
                     System.out.println("Client data inserted successfully.");
-
+return true;
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+                return false;
             }finally{
                 WRITE_LOCK.unlock();
             }
@@ -138,7 +139,7 @@ public class DatabaseController {
      * Insert a client record
      * @param client  the client that will be inserted
      */
-    public static void insertClient(Client client){
+    public static boolean insertClient(Client client){
         String lName = client.getLName();
         String fName = client.getFName();
         String passportNumber = client.getPassportNum();
@@ -149,7 +150,7 @@ public class DatabaseController {
         String password = client.getPassword();
         int loyaltyPoints = client.getLoyaltyPoints();
 
-        insertClient(lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
+        return insertClient(lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
     }
 
     /**
@@ -993,7 +994,7 @@ public class DatabaseController {
     public static void createReviewTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS reviews (
-                id INT PRIMARY KEY,
+                id INT AUTO_INCREMENT PRIMARY KEY,
                 email TEXT NOT NULL,
                 title TEXT NOT NULL,
                 body TEXT NOT NULL
@@ -1013,49 +1014,45 @@ public class DatabaseController {
         }
     }
 
-    /**
-     * insert a review record
-     * @param id   the id of the review
-     * @param email      the email of the client
-     * @param title       the title of the review
-     * @param body        the description of the review
-     */
-    public static void insertReview(int id, String email, String title, String body){
+    public static boolean insertReview(String email, String title, String body) {
         WRITE_LOCK.lock();
         String sql = """
-                INSERT INTO reviews(id, email, title, body) VALUES(?,?,?,?)
-                """;
+        INSERT INTO reviews(email, title, body) VALUES(?, ?, ?)
+        """;
 
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn != null ? conn.prepareStatement(sql) : null) {
-            if (pstmt != null) {
-                pstmt.setInt(1, id);
-                pstmt.setString(2, email);
-                pstmt.setString(3, title);
-                pstmt.setString(4, body);
-                pstmt.executeUpdate();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            pstmt.setString(2, title);
+            pstmt.setString(3, body);
+            int rowsAffected = pstmt.executeUpdate(); // Returns the number of affected rows
+
+            if (rowsAffected > 0) {
                 System.out.println("Review data inserted successfully.");
+                return true;
             } else {
-                System.out.println("Insert failed. PreparedStatement is null.");
+                System.out.println("Insert failed. No rows affected.");
+                return false;
             }
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error occurred while inserting review: " + e.getMessage());
+            return false;
         } finally {
             WRITE_LOCK.unlock();
         }
     }
-
     /**
      * insert a review record using the review object
      * @param review  the review object to be inserted
      */
-    public static void insertReview(Review review) {
-        int reviewId = review.getReviewId();
+    public static boolean insertReview(Review review) {
         String email = review.getEmail();
         String title = review.getTitle();
         String body = review.getBody();
 
-        insertReview(reviewId, email, title, body);
+        return insertReview(email, title, body);
     }
 
     /**
@@ -1412,7 +1409,65 @@ public class DatabaseController {
         }
         return tickets;
     }
+    public static List<Ticket> queryAllBoughtTicketsClient(String fName, String lName) {
+        READ_LOCK.lock();
+        String sql = """
+        SELECT * FROM tickets
+        WHERE ticket_status = "PURCHASED" AND fName = ? AND lName = ?
+        """;
 
+        List<Ticket> tickets = new ArrayList<>();
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            // Set the fName and lName in the prepared statement
+            statement.setString(1, fName);
+            statement.setString(2, lName);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int ticketId = resultSet.getInt("ticket_id");
+                    String flightNum = resultSet.getString("flight_num");
+                    String seatNumber = resultSet.getString("seat_number");
+                    String departureDate = resultSet.getString("departure_date");
+                    String returnDate = resultSet.getString("return_date");
+                    String paymentType = resultSet.getString("payment_type");
+                    String ticketStatus = resultSet.getString("ticket_status");
+                    int assignedTo = resultSet.getInt("assigned_to");
+
+                    String airline = resultSet.getString("airline");
+                    double price = resultSet.getDouble("price");
+                    int flightSeatNumber = resultSet.getInt("flightSeatNumber");
+                    String departureLocation = resultSet.getString("departureLocation");
+                    String arrivalLocation = resultSet.getString("arrivalLocation");
+                    String departureTime = resultSet.getString("departureTime");
+                    String arrivalTime = resultSet.getString("arrivalTime");
+
+                    // Use the flight details to create the Flight object
+                    Flight flight = new Flight(flightNum, airline, price, flightSeatNumber, departureLocation, arrivalLocation, departureTime, arrivalTime);
+
+                    // Create a basic Client object with the given fName and lName
+                    Client client = new Client(lName, fName, "", "", "", 0, "", "", 0);
+
+                    // Create Ticket object using the above information
+                    Ticket ticket;
+                    if (returnDate != null) {
+                        ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+                    } else {
+                        ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
+                    }
+
+                    // Add the ticket to the list
+                    tickets.add(ticket);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return tickets;
+    }
     /**
      *
      *    displays specific ticket by id
@@ -1593,5 +1648,76 @@ public class DatabaseController {
             throw new RuntimeException(e);
         }
         return accounts;
+    }
+
+    /**
+     * Checks if a user account exists with the given username and password.
+     *
+     * @param username the username of the user
+     * @param password the password of the user
+     * @return true if the account exists, false otherwise
+     */
+    public static boolean checkEmployeeAccount(String username, String password) {
+        READ_LOCK.lock();
+        String sql = "SELECT COUNT(*) FROM employees WHERE username = ? AND password = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Return true if a matching record exists
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return false;
+    }
+    public static boolean checkClientAccount(String username, String password) {
+        READ_LOCK.lock();
+        String sql = "SELECT COUNT(*) FROM clients WHERE username = ? AND password = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Return true if a matching record exists
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return false;
+    }
+    public static boolean checkManagerAccount(String username, String password) {
+        READ_LOCK.lock();
+        String sql = "SELECT COUNT(*) FROM manager WHERE username = ? AND password = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Return true if a matching record exists
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return false;
     }
 }
