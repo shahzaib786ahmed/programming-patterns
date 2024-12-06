@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 
 public class BookingFlightController {
     private TicketSystem ticketSystem;
+    private DatabaseController databaseController;
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     public BookingFlightController() {
@@ -21,6 +22,14 @@ public class BookingFlightController {
     private void initTables() {
         DatabaseController.createFlightTable();
         DatabaseController.createTicketTable();
+    }
+
+    public void setTicketSystem(TicketSystem ticketSystem) {
+        this.ticketSystem = ticketSystem;
+    }
+
+    public void setDatabaseController(DatabaseController databaseController) {
+        this.databaseController = databaseController;
     }
 
     /**
@@ -409,7 +418,6 @@ public class BookingFlightController {
     private void cancelTicket(Ticket ticket) {
         threadPool.submit(() -> {
             TicketSystem.getBoughtTickets().remove(ticket);
-            //DatabaseController.deleteTicket(ticket.getTicketId());
             TicketSystem.getCancelledTickets().add(ticket);
         });
     }

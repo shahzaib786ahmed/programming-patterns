@@ -34,63 +34,37 @@ public abstract class User {
         this.password = password;
     }
 
-    /**
-     * Validates the format of the passport number
-     *
-     * @param passportNum to be used to verify the format
-     * @return the string to return the passport number or error message
-     */
-    private String validatePassportNum(String passportNum) {
+    public String validatePassportNum(String passportNum) {
         if (isPassportNumValid(passportNum)) {
+            this.passportNum = passportNum;
             return passportNum;
+        } else {
+            throw new IllegalArgumentException("Invalid passport number!");
         }
-        throw new IllegalArgumentException("Invalid passport number!");
     }
 
-    /**
-     * Validates the format of the phone number
-     *
-     * @param phoneNumber to be used to verify the format
-     * @return the string to return the phone number or error message
-     */
-    private String validatePhoneNumber(String phoneNumber) {
+    public String validatePhoneNumber(String phoneNumber) {
         if (isPhoneNumberValid(phoneNumber)) {
+            this.phoneNumber = phoneNumber;
             return phoneNumber;
         } else {
             throw new IllegalArgumentException("Invalid phone number!");
         }
     }
 
-    /**
-     * Validates the format of the phone number
-     *
-     * @param emailAddress to be used to verify the format
-     * @return the string to return the email address or error message
-     */
-    private String validateEmailAddress(String emailAddress) {
+    public String validateEmailAddress(String emailAddress) {
         if (isEmailValid(emailAddress)) {
+            this.emailAddress = emailAddress;
             return emailAddress;
         } else {
             throw new IllegalArgumentException("Invalid email address!");
         }
     }
 
-    /**
-     * Checks if the passport number has the proper format
-     *
-     * @param passportNum to be used to verify the format
-     * @return the boolean to see if it has the correct format, if not, throw an exception
-     */
     public boolean isPassportNumValid(String passportNum) {
         return passportNum != null && passportNum.matches("[A-Za-z0-9]{9}");
     }
 
-    /**
-     * Checks if the phone number has the proper format
-     *
-     * @param phoneNumber to be used to verify the format
-     * @return the boolean to see if it has the correct format, if not, throw an exception
-     */
     public boolean isPhoneNumberValid(String phoneNumber) {
         if (phoneNumber.length() == 10) {
             return true;
@@ -99,12 +73,6 @@ public abstract class User {
         }
     }
 
-    /**
-     * Checks if the email address has the proper format
-     *
-     * @param emailAddress to be used to verify the format
-     * @return the boolean to see if it has the correct format, if not, throw an exception
-     */
     public boolean isEmailValid(String emailAddress) {
         if (emailAddress.contains("@")) {
             return true;
@@ -113,35 +81,5 @@ public abstract class User {
         }
     }
 
-    /**
-     * Sets the passport number
-     *
-     * @param passportNum of the passport
-     */
-    public void setPassportNum(String passportNum) {
-        validatePassportNum(passportNum);
-    }
-
-    /**
-     * Sets the phone number
-     *
-     * @param phoneNumber of the passenger
-     */
-    public void setPhoneNumber(String phoneNumber) {
-        validatePhoneNumber(phoneNumber);
-    }
-
-    /**
-     * Sets the email address
-     *
-     * @param emailAddress of the passenger
-     */
-    public void setEmailAddress(String emailAddress) {
-        validateEmailAddress(emailAddress);
-    }
-
-    /**
-     * Displays the details of the user
-     */
     public abstract void displayDetails();
 }

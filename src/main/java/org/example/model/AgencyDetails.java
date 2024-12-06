@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.DatabaseController;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -60,9 +59,10 @@ public class AgencyDetails {
      *
      * @param agencyName of the agency
      */
-    public void setAgencyName(String agencyName) {
+    public String validateAgencyName(String agencyName) {
         if (agencyName != null && !agencyName.trim().isEmpty()) {
             this.agencyName = agencyName;
+            return agencyName;
         } else {
             throw new IllegalArgumentException("Agency name cannot be null or empty.");
         }
@@ -73,12 +73,13 @@ public class AgencyDetails {
      *
      * @param agencyPhone of the agency
      */
-    public void setAgencyPhone(String agencyPhone) {
-        if (isValidPhone(agencyPhone)) {
-            this.agencyPhone = agencyPhone;
-        } else {
+    public String validateAgencyPhone(String agencyPhone) {
+        if (agencyPhone == null || !isValidPhone(agencyPhone)) {
             throw new IllegalArgumentException("Invalid phone number: must contain exactly 10 digits.");
         }
+
+        this.agencyPhone = agencyPhone;
+        return agencyPhone;
     }
 
     /**
@@ -86,12 +87,13 @@ public class AgencyDetails {
      *
      * @param agencyEmail of the agency
      */
-    public void setAgencyEmail(String agencyEmail) {
-        if (isValidEmail(agencyEmail)) {
-            this.agencyEmail = agencyEmail;
-        } else {
+    public String validateAgencyEmail(String agencyEmail) {
+        if (agencyEmail == null || !isValidEmail(agencyEmail)) {
             throw new IllegalArgumentException("Invalid email: must contain '@'.");
         }
+
+        this.agencyEmail = agencyEmail;
+        return agencyEmail;
     }
 
     /**

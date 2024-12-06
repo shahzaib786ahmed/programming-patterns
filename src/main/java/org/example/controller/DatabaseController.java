@@ -13,12 +13,24 @@ public class DatabaseController {
     private static final ReentrantReadWriteLock.WriteLock WRITE_LOCK = LOCK.writeLock();
     private static final ReentrantReadWriteLock.ReadLock READ_LOCK = LOCK.readLock();
 
-    private static Connection connect() {
-        try {
-            return DriverManager.getConnection(DATABASE_URL);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    private static Connection connection;
+
+    public DatabaseController() {
+    }
+
+    public DatabaseController(Connection connection) {
+        DatabaseController.connection = connection;
+    }
+
+    public void setConnection(Connection connection) {
+        DatabaseController.connection = connection;
+    }
+
+    public static Connection connect() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(DATABASE_URL);
         }
+        return connection;
     }
 
     //ABOUT CLIENTS
