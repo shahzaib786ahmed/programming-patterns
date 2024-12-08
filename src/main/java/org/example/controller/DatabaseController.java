@@ -164,6 +164,20 @@ return true;
 
         return insertClient(lName,fName,passportNumber,phoneNumber,emailAddress,age,userName,password,loyaltyPoints);
     }
+    public static Client findClientByPassportNumber(String passportNumber) {
+        // Retrieve the list of all clients
+        List<Client> clients = queryAllClients();
+
+        // Search for the client with the specified passport number
+        for (Client client : clients) {
+            if (client.getPassportNum().equals(passportNumber)) {
+                return client; // Return the matching client
+            }
+        }
+
+        // If no match is found, return null or throw an exception
+        return null;
+    }
 
     /**
      * displays all the clients records
@@ -491,39 +505,56 @@ return true;
             WRITE_LOCK.unlock();
         }
     }
+    public static Flight findFlightByNumber(String flightNum) {
+        // Retrieve the list of all flights
+        List<Flight> flights = queryAllFlight();
 
+        // Search for the flight with the specified flightNum
+        for (Flight flight : flights) {
+            if (flight.getFlightNumber().equals(flightNum)) {
+                return flight; // Return the matching flight
+            }
+        }
+
+        // If no match is found, return null or throw an exception
+        return null;
+    }
     /**
      *  displays all flights
      * @return the list of flights
      */
-    public static List<Flight> queryAllFlight(){
-        READ_LOCK.lock();
-        String sql ="SELECT * FROM flights";
+    public static List<Flight> queryAllFlight() {
+        READ_LOCK.lock();  // Lock to ensure thread-safety
+        String sql = "SELECT * FROM flights";  // Your SQL query to get all flights
 
         List<Flight> flights = new ArrayList<>();
-        try(Connection connection = connect();
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql)){
-            while(resultSet.next()){
-               String flightNumber = resultSet.getString("flightNumber");
-               String airline = resultSet.getString("airline");
-               double price = resultSet.getDouble("price");
-               int flightSeatNumber = resultSet.getInt("flightSeatNumber");
-               String departureLocation = resultSet.getString("departureLocation");
-               String arrivalLocation = resultSet.getString("arrivalLocation");
-               String departureTime = resultSet.getString("departureTime");
-               String arrivalTime = resultSet.getString("arrivalTime");
+        try (Connection connection = connect();  // Assuming connect() gives you a valid DB connection
+             Statement stmt = connection.createStatement();  // Create a statement
+             ResultSet resultSet = stmt.executeQuery(sql)) {  // Execute the query
 
-               flights.add(new Flight(flightNumber,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime));
+            while (resultSet.next()) {  // Iterate through the result set
+                String flightNumber = resultSet.getString("flightNumber");
+                String airline = resultSet.getString("airline");
+                double price = resultSet.getDouble("price");
+                int flightSeatNumber = resultSet.getInt("flightSeatNumber");
+                String departureLocation = resultSet.getString("departureLocation");
+                String arrivalLocation = resultSet.getString("arrivalLocation");
+                String departureTime = resultSet.getString("departureTime");
+                String arrivalTime = resultSet.getString("arrivalTime");
 
+                // Create a new Flight object and add it to the list
+                flights.add(new Flight(flightNumber, airline, price, flightSeatNumber, departureLocation,
+                        arrivalLocation, departureTime, arrivalTime));
             }
-        }catch(SQLException e){
-            throw new RuntimeException(e);
-        }finally{
-            READ_LOCK.unlock();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);  // Handle any SQL exceptions
+        } finally {
+            READ_LOCK.unlock();  // Unlock after operation
         }
-        return flights;
+
+        return flights;  // Return the list of flights
     }
+
 
     /**
      * Create Manager Table
@@ -887,6 +918,34 @@ return true;
               }
               return rooms;
           }
+    public static Room findRoomByNumber(int roomNumber) {
+        READ_LOCK.lock();
+        String sql = """
+        SELECT *
+        FROM rooms
+        WHERE roomNum = ?
+    """;
+        Room room = null;
+        try (Connection conn = connect();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1, roomNumber);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int roomNum = resultSet.getInt("roomNum");
+                    int capacity = resultSet.getInt("capacity");
+                    String roomStatusStr = resultSet.getString("roomStatus");
+                    Room.RoomStatus roomStatus = Room.RoomStatus.valueOf(roomStatusStr);
+                    double price = resultSet.getDouble("price");
+                    room = new Room(roomNum, capacity, roomStatus, price);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return room;
+    }
 
     /**
      * creates hotel table
@@ -999,6 +1058,33 @@ return true;
         }
         return hotels;
     }
+    public static List<Hotel> findHotelByName(String hotelName) {
+        READ_LOCK.lock();
+        String sql = "SELECT * FROM hotels WHERE name LIKE ?";
+
+        List<Hotel> hotels = new ArrayList<>();
+        try (Connection conn = connect();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            // Using LIKE for partial matching (wildcards allowed)
+            preparedStatement.setString(1, "%" + hotelName + "%");
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int hotelId = resultSet.getInt("hotel_id");
+                    int totalRooms = resultSet.getInt("totalRooms");
+                    String address = resultSet.getString("address");
+                    String name = resultSet.getString("name");
+                    hotels.add(new Hotel(totalRooms, name, address));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return hotels;
+    }
+
 
     /**
      * create a review table where customers will be able to insert reviews
@@ -1165,8 +1251,8 @@ return true;
                 statement.setString(5, ticket.getDepartureDate());
                 statement.setObject(6, ticket.getReturnDate() != null ? ticket.getReturnDate() : null);
                 statement.setString(7, ticket.getPaymentType());
-                statement.setObject(8, ticket.getAssignedTo() != null ? ticket.getAssignedTo() : null);
-                statement.setString(9, ticket.getTicketStatus().name());
+
+                statement.setString(8, ticket.getTicketStatus().name());
                 statement.executeUpdate();
                 System.out.println("Ticket data inserted successfully.");
             } else {
@@ -1262,16 +1348,8 @@ return true;
                 Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
                 Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
 
-                Ticket ticket;
-                if (client != null && returnDate != null) {
-                    ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
-                } else if (client != null) {
-                    ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
-                } else if (returnDate != null) {
-                    ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
-                } else {
-                    ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
-                }
+                Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+
 
                 ticket.setTicketStatus(Status.valueOf(ticketStatus));
                 tickets.add(ticket);
@@ -1282,6 +1360,20 @@ return true;
             READ_LOCK.unlock();
         }
         return tickets;
+    }
+    public static Ticket findTicketById(String ticketId) {
+        // Retrieve the list of all tickets
+        List<Ticket> tickets = queryAllBoughtTickets();
+
+        // Search for the ticket with the specified ticketId
+        for (Ticket ticket : tickets) {
+            if (String.valueOf(ticket.getTicketId()).equals(ticketId)) { // Use .equals() for string comparison
+                return ticket; // Return the matching ticket
+            }
+        }
+
+        // If no match is found, return null
+        return null;
     }
 
     /**
@@ -1332,16 +1424,8 @@ return true;
                 Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
                 Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
 
-                Ticket ticket;
-                if (client != null && returnDate != null) {
-                    ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
-                } else if (client != null) {
-                    ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
-                } else if (returnDate != null) {
-                    ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
-                } else {
-                    ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
-                }
+                Ticket  ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+
 
                 tickets.add(ticket);
             }
@@ -1401,16 +1485,8 @@ return true;
                 Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
                 Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
 
-                Ticket ticket;
-                if (client != null && returnDate != null) {
-                    ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
-                } else if (client != null) {
-                    ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
-                } else if (returnDate != null) {
-                    ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
-                } else {
-                    ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
-                }
+                Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+
 
                 tickets.add(ticket);
             }
@@ -1462,12 +1538,8 @@ return true;
                     Client client = new Client(lName, fName, "", "", "", 0, "", "", 0);
 
                     // Create Ticket object using the above information
-                    Ticket ticket;
-                    if (returnDate != null) {
-                        ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
-                    } else {
-                        ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
-                    }
+                    Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
+
 
                     // Add the ticket to the list
                     tickets.add(ticket);

@@ -1,5 +1,6 @@
 package org.example.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Setter
 @Getter
+
 public class Client extends User {
     private int loyaltyPoints;
     private List<Double> paymentHistory = new ArrayList<>();

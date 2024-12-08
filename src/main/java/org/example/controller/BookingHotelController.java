@@ -26,24 +26,30 @@ public class BookingHotelController {
      * Adds a hotel to the system and inserts it into the database.
      *
      * @param hotel the hotel to be added
+     * @return
      */
-    public void addHotel(Hotel hotel) {
+    public boolean addHotel(Hotel hotel) {
         threadPool.submit(() -> {
             DatabaseController.insertHotel(hotel);
             HotelSystem.getHotels().add(hotel);
+            return true;
         });
+        return false;
     }
 
     /**
      * Removes a hotel from the system and deletes it from the database.
      *
      * @param hotel the hotel to be removed
+     * @return
      */
-    public void removeHotel(Hotel hotel) {
+    public boolean removeHotel(Hotel hotel) {
         threadPool.submit(() -> {
             DatabaseController.deleteHotel(hotel.getHotel_id());
             HotelSystem.getHotels().remove(hotel);
+            return true;
         });
+        return false;
     }
 
     /**

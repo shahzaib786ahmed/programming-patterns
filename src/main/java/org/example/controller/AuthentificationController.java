@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class AuthentificationController {
     private CompanySystem companySystem;
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10);
-
+    private static DatabaseController databaseController;
     /**
      * Constructs an instance of the AuthenticationController with the given CompanySystem.
      * Initializes necessary tables for account management.
@@ -38,42 +38,12 @@ public class AuthentificationController {
      * @param username the username of the new account
      * @param password the password of the new account
      */
-    public void insertAccount(String username, String password) {
+    public static void insertAccount(String username, String password) {
         threadPool.submit(() -> {
             DatabaseController.insertAccount(username, password);  // Store in database
         });
     }
-
-    /**
-     * Changes the username of a client asynchronously. It searches for the client by
-     * their old username and checks if the provided password matches the current password.
-     * If valid, the username is updated in both memory and database.
-     *
-     * @param newUsername the new username to be set
-     * @param oldUsername the current username to search for
-     * @param password the current password to validate
-     */
-    public void changeUsername(String newUsername, String oldUsername, String password) {
-        threadPool.submit(() -> {
-            // Find client by old username
-            Client client = null;
-            for (Client c : companySystem.getClients()) {
-                if (c.getUsername().equals(oldUsername)) {
-                    client = c;
-                    break;
-                }
-            }
-
-            if (client != null && client.getPassword().equals(password)) {
-                // Update the username in memory and database
-                client.setUsername(newUsername);
-                DatabaseController.updateUsername(newUsername, oldUsername, password);  // Update in DB
-            } else {
-                System.out.println("Invalid username or password");
-            }
-        });
-    }
-
+    //TODO: ADD IT TO THE LOGIN VIEW AND
     /**
      * Changes the password of a client asynchronously. It searches for the client by
      * their username and checks if the provided old password matches the current password.
@@ -105,24 +75,40 @@ public class AuthentificationController {
     }
 
     /**
-     * Checks if the provided login credentials are valid. This method synchronously checks
-     * through the list of clients to find a match for the username and password.
+     * Checks if the provided login credentials are valid. This method checks
+     * the database to determine the user type (Client, Employee, or Manager)
+     * and validates the credentials accordingly.
      *
      * @param userName the username to check
      * @param password the password to check
      * @return true if the credentials are valid, false otherwise
      */
-    public boolean isLogin(String userName, String password) {
+    public static boolean isLogin(String userName, String password) {
         if (userName == null || password == null) {
             return false;
         }
 
-        // Synchronously check client credentials
-        for (Client client : companySystem.getClients()) {
-            if (client.getUsername().equals(userName) && client.getPassword().equals(password)) {
-                return true;
-            }
+        // Check if the user is a Client
+
+        if (databaseController.checkClientAccount(userName, password)) {
+            System.out.println("Login successful as Client.");
+            return true;
         }
+
+        // Check if the user is an Employee
+        if (databaseController.checkEmployeeAccount(userName, password)) {
+            System.out.println("Login successful as Employee.");
+            return true;
+        }
+
+        // Check if the user is a Manager
+        if (databaseController.checkManagerAccount(userName, password)) {
+            System.out.println("Login successful as Manager.");
+            return true;
+        }
+
+        // If none of the checks pass, return false
+        System.out.println("Login failed: Invalid credentials.");
         return false;
     }
 }

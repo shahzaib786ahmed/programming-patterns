@@ -1,5 +1,6 @@
 package org.example.view;
 
+import org.example.controller.AuthentificationController;
 import org.example.controller.DatabaseController;
 import org.example.model.Client;
 
@@ -103,7 +104,7 @@ public class CreateAccountView extends JFrame {
 
             if (DatabaseController.insertClient(c1)) {
                 JOptionPane.showMessageDialog(null, "Account Created Successfully!");
-                DatabaseController.insertAccount(username,password);
+                AuthentificationController.insertAccount(username,password);
                 new LoginView().setVisible(true);
                 dispose();
             } else {

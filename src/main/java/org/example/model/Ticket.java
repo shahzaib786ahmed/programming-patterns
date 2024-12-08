@@ -20,7 +20,6 @@ public class Ticket {
     private Employee bookedBy;
     private MyQueue<Operation> operationHistory;
     private String departureDate;
-    private Employee assignedTo;
     private String returnDate;
     private String paymentType;
 
@@ -31,50 +30,11 @@ public class Ticket {
         this.flight = flight;
         this.client = client;
         this.seatNumber = seatNumber;
-        this.assignedTo = null;
         this.ticketStatus = Status.CREATED;
         this.operationHistory = new MyQueue<>();
         this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
         this.departureDate = departureDate;
         this.returnDate = returnDate;
-        this.paymentType = paymentType;
-    }
-
-    public Ticket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType) {
-        this.ticketId = idCounter++;
-        this.flight = flight;
-        this.client = client;
-        this.seatNumber = seatNumber;
-        this.assignedTo = null;
-        this.ticketStatus = Status.CREATED;
-        this.operationHistory = new MyQueue<>();
-        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
-        this.departureDate = departureDate;
-        this.paymentType = paymentType;
-    }
-
-    public Ticket(Flight flight, String seatNumber, String departureDate, String returnDate, String paymentType) {
-        this.ticketId = idCounter++;
-        this.flight = flight;
-        this.seatNumber = seatNumber;
-        this.assignedTo = null;
-        this.ticketStatus = Status.CREATED;
-        this.operationHistory = new MyQueue<>();
-        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
-        this.departureDate = departureDate;
-        this.returnDate = returnDate;
-        this.paymentType = paymentType;
-    }
-
-    public Ticket(Flight flight, String seatNumber, String departureDate, String paymentType) {
-        this.ticketId = idCounter++;
-        this.flight = flight;
-        this.seatNumber = seatNumber;
-        this.assignedTo = null;
-        this.ticketStatus = Status.CREATED;
-        this.operationHistory = new MyQueue<>();
-        this.operationHistory.add(new Operation(bookedBy, "Ticket Created"));
-        this.departureDate = departureDate;
         this.paymentType = paymentType;
     }
 

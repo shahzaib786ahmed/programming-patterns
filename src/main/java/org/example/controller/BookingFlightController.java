@@ -33,42 +33,6 @@ public class BookingFlightController {
     }
 
     /**
-     * Adds an employee to the system and database.
-     *
-     * @param employee the employee to be added
-     */
-    public void addEmployee(Employee employee) {
-        threadPool.submit(() -> {
-            TicketSystem.getEmployees().add(employee);
-            DatabaseController.insertEmployee(employee);
-        });
-    }
-
-    /**
-     * Adds a client to the system and database.
-     *
-     * @param client the client to be added
-     */
-    public void addClient(Client client) {
-        threadPool.submit(() -> {
-            TicketSystem.getClients().add(client);
-            DatabaseController.insertClient(client);
-        });
-    }
-
-    /**
-     * Adds a manager to the system and database.
-     *
-     * @param manager the manager to be added
-     */
-    public void addManager(Manager manager) {
-        threadPool.submit(() -> {
-            TicketSystem.getManagers().add(manager);
-            DatabaseController.insertManager(manager);
-        });
-    }
-
-    /**
      * Adds a flight to the system and database.
      *
      * @param flight the flight to be added
@@ -95,7 +59,7 @@ public class BookingFlightController {
      */
     public void viewAllFlights() {
         threadPool.submit(() -> {
-            DatabaseController.queryAllFlight();
+            DatabaseController.queryAllFlight().forEach(System.out::println);
         });
     }
 
@@ -258,116 +222,6 @@ public class BookingFlightController {
             //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
             //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
-        });
-
-        return ticket;
-    }
-
-    /**
-     * Purchases a two-way (round-trip) flight ticket for the employee
-     *
-     * @param flight           to be booked for the passenger
-     * @param employee         that is booking the ticket
-     * @param seatNumber       of the passenger where they will be assigned
-     * @param departureDate    of the flight selected
-     * @param returnDate       of the flight selected
-     * @param paymentType      to make the payment for the ticket
-     * @param recipientEmail   of the passenger to send email of confirmation
-     * @param creditCardNumber of the passenger to be used to make the payment
-     * @return a new ticket for the passenger
-     */
-    public Ticket purchaseEmployeeFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String returnDate, String paymentType, String recipientEmail, String creditCardNumber) {
-        Ticket ticket = new Ticket(flight, seatNumber, departureDate, returnDate, paymentType);
-        threadPool.submit(() -> {
-            validateAndReserveSeat(flight);
-
-            flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.getDiscountRate() / 100)));
-            makePayment(ticket, paymentType, recipientEmail, creditCardNumber);
-            addTicket(ticket);
-
-            ticket.setTicketStatus(Status.PURCHASED);
-
-            System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
-                    " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
-            System.out.println("Here's your ticket: ");
-            //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
-
-            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
-            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
-            ticket.displayDetails();
-        });
-
-        return ticket;
-    }
-
-    /**
-     * Purchases a one-way flight ticket for the client
-     *
-     * @param flight           to be booked for the passenger
-     * @param client           that is purchasing the ticket
-     * @param seatNumber       of the passenger where they will be assigned
-     * @param departureDate    of the flight selected
-     * @param paymentType      to make the payment for the ticket
-     * @param recipientEmail   of the passenger to send email of confirmation
-     * @param creditCardNumber of the passenger to be used if paid by credit card
-     * @return a new ticket for the passenger
-     */
-    public Ticket purchaseOneWayFlightTicket(Flight flight, Client client, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
-        Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, paymentType);
-        threadPool.submit(() -> {
-            validateAndReserveSeat(flight);
-
-            makePayment(ticket, paymentType, recipientEmail, creditCardNumber);
-            addTicket(ticket);
-            ticket.setTicketStatus(Status.PURCHASED);
-            client.setLoyaltyPoints((int) flight.getPrice() / 4);
-
-            System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
-                    " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
-            System.out.println("Here's your ticket: ");
-            //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
-
-            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
-            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
-            ticket.displayDetails();
-
-        });
-
-        return ticket;
-    }
-
-    /**
-     * Purchases a one-way flight ticket for the employee
-     *
-     * @param flight           to be booked for the passenger
-     * @param employee         that is booking the ticket
-     * @param seatNumber       of the passenger where they will be assigned
-     * @param departureDate    of the flight selected
-     * @param paymentType      to make the payment for the ticket
-     * @param recipientEmail   of the passenger to send email of confirmation
-     * @param creditCardNumber of the passenger to be used to make the payment
-     * @return a new ticket for the passenger
-     */
-    public Ticket purchaseEmployeeOneWayFlightTicket(Flight flight, Employee employee, String seatNumber, String departureDate, String paymentType, String recipientEmail, String creditCardNumber) {
-
-        Ticket ticket = new Ticket(flight, seatNumber, departureDate, paymentType);
-        threadPool.submit(() -> {
-            validateAndReserveSeat(flight);
-
-            flight.setPrice(flight.getPrice() - (flight.getPrice() * (employee.getDiscountRate() / 100)));
-            ticket.setTicketStatus(Status.PURCHASED);
-            addTicket(ticket);
-            makePayment(ticket, paymentType, recipientEmail, creditCardNumber);
-
-            System.out.println("Ticket has been purchased for employee: " + employee.getLName() + ", " + employee.getFName() +
-                    " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
-            System.out.println("Here's your ticket: ");
-            //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
-
-            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
-            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
-            ticket.displayDetails();
-
         });
 
         return ticket;

@@ -1,5 +1,6 @@
 package org.example.view;
 
+import org.example.controller.AuthentificationController;
 import org.example.controller.DatabaseController;
 
 import javax.swing.*;
@@ -67,15 +68,15 @@ public class LoginView extends JFrame {
                 String password = new String(passwordField.getPassword());
 
                 if (employeeButton.isSelected()) {
-                    if (databaseController.checkEmployeeAccount(username, password)) {
+                    if (AuthentificationController.isLogin(username, password)) {
                         JOptionPane.showMessageDialog(null, "Welcome Employee!");
-                        new EmployeeView().setVisible(true); // Open Employee Form
+                        new EmployeeView(username).setVisible(true); // Open Employee Form
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Invalid Employee Credentials.");
                     }
                 } else if (clientButton.isSelected()) {
-                    if (databaseController.checkClientAccount(username, password)) {
+                    if (AuthentificationController.isLogin(username, password)) {
                         JOptionPane.showMessageDialog(null, "Welcome Client!");
                         new ClientView(username).setVisible(true); // Open Client Form
                         dispose();
@@ -83,7 +84,7 @@ public class LoginView extends JFrame {
                         JOptionPane.showMessageDialog(null, "Invalid Client Credentials.");
                     }
                 } else if (managerButton.isSelected()) {
-                    if (databaseController.checkManagerAccount(username, password)) {
+                    if (AuthentificationController.isLogin(username, password)) {
                         JOptionPane.showMessageDialog(null, "Welcome Manager!");
                         new ManagerView().setVisible(true); // Open Manager Form
                         dispose();
