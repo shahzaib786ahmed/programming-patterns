@@ -6,32 +6,72 @@ import org.example.controller.DatabaseController;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoginView extends JFrame {
     private DatabaseController databaseController;
+    private Locale currentLocale; // Current locale for the UI
+    private ResourceBundle bundle; // Resource bundle for translations
+    private JPanel panel;
 
-    public LoginView(){
+    public LoginView(Locale locale) {
+        this.currentLocale = locale != null ? locale : Locale.getDefault();
+        this.bundle = ResourceBundle.getBundle("messages", this.currentLocale);
+        initializeUI();
+    }
+
+    private void initializeUI() {
         // Frame settings
-        setTitle("Login");
-        setSize(400, 300);
+        setTitle(bundle.getString("title"));
+        setSize(400, 350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Panel
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setLayout(null);
 
+        // Language Selection Combo Box
+        JLabel languageLabel = new JLabel(bundle.getString("selectLanguage"));
+        languageLabel.setBounds(50, 10, 100, 30);
+        panel.add(languageLabel);
+
+        JComboBox<String> languageComboBox = new JComboBox<>(new String[]{"English", "Français"});
+        languageComboBox.setBounds(150, 10, 150, 30);
+        panel.add(languageComboBox);
+
+        // Set the initial selection based on the current locale
+        switch (currentLocale.getLanguage()) {
+            case "fr" -> languageComboBox.setSelectedItem("Français");
+            default -> languageComboBox.setSelectedItem("English");
+        }
+
+        // Listener for language changes
+        languageComboBox.addActionListener(e -> {
+            String selectedLanguage = (String) languageComboBox.getSelectedItem();
+            Locale newLocale;
+            switch (selectedLanguage) {
+                case "Français" -> newLocale = new Locale("fr", "FR");
+                default -> newLocale = Locale.US;
+            }
+
+            // Reload the UI with the new locale
+            new LoginView(newLocale).setVisible(true);
+            dispose();
+        });
+
         // User Type Selection
-        JLabel selectLabel = new JLabel("Login as:");
-        selectLabel.setBounds(50, 30, 100, 30);
+        JLabel selectLabel = new JLabel(bundle.getString("loginAs"));
+        selectLabel.setBounds(50, 50, 100, 30);
         panel.add(selectLabel);
 
         JRadioButton employeeButton = new JRadioButton("Employee");
-        employeeButton.setBounds(50, 70, 100, 30);
+        employeeButton.setBounds(50, 90, 100, 30);
         JRadioButton managerButton = new JRadioButton("Manager");
-        managerButton.setBounds(150, 70, 100, 30);
+        managerButton.setBounds(150, 90, 100, 30);
         JRadioButton clientButton = new JRadioButton("Client");
-        clientButton.setBounds(250, 70, 100, 30); // Adjusted position
+        clientButton.setBounds(250, 90, 100, 30);
 
         ButtonGroup group = new ButtonGroup();
         group.add(employeeButton);
@@ -42,25 +82,25 @@ public class LoginView extends JFrame {
         panel.add(clientButton);
 
         // Username and Password Fields
-        JLabel userLabel = new JLabel("Username:");
-        userLabel.setBounds(50, 110, 100, 30);
+        JLabel userLabel = new JLabel(bundle.getString("username"));
+        userLabel.setBounds(50, 130, 100, 30);
         panel.add(userLabel);
 
         JTextField usernameField = new JTextField();
-        usernameField.setBounds(150, 110, 150, 30);
+        usernameField.setBounds(150, 130, 150, 30);
         panel.add(usernameField);
 
-        JLabel passLabel = new JLabel("Password:");
-        passLabel.setBounds(50, 150, 100, 30);
+        JLabel passLabel = new JLabel(bundle.getString("password"));
+        passLabel.setBounds(50, 170, 100, 30);
         panel.add(passLabel);
 
         JPasswordField passwordField = new JPasswordField();
-        passwordField.setBounds(150, 150, 150, 30);
+        passwordField.setBounds(150, 170, 150, 30);
         panel.add(passwordField);
 
         // Login Button
-        JButton loginButton = new JButton("Login");
-        loginButton.setBounds(50, 200, 100, 30);
+        JButton loginButton = new JButton(bundle.getString("login"));
+        loginButton.setBounds(50, 210, 100, 30);
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,46 +109,49 @@ public class LoginView extends JFrame {
 
                 if (employeeButton.isSelected()) {
                     if (AuthentificationController.isLogin(username, password)) {
-                        JOptionPane.showMessageDialog(null, "Welcome Employee!");
-                        new EmployeeView(username).setVisible(true); // Open Employee Form
+                        JOptionPane.showMessageDialog(null, bundle.getString("welcomeEmployee"));
+                        new EmployeeView(username, currentLocale).setVisible(true);
                         dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Invalid Employee Credentials.");
+                        JOptionPane.showMessageDialog(null, bundle.getString("invalidEmployeeCredentials"));
                     }
                 } else if (clientButton.isSelected()) {
                     if (AuthentificationController.isLogin(username, password)) {
-                        JOptionPane.showMessageDialog(null, "Welcome Client!");
-                        new ClientView(username).setVisible(true); // Open Client Form
+                        JOptionPane.showMessageDialog(null, bundle.getString("welcomeClient"));
+
+                        // Pass the selected Locale (e.g., dynamically retrieved from a settings menu or combo box)
+                        new ClientView(username, currentLocale).setVisible(true);
                         dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Invalid Client Credentials.");
+                        JOptionPane.showMessageDialog(null, bundle.getString("invalidClientCredentials"));
                     }
+
                 } else if (managerButton.isSelected()) {
                     if (AuthentificationController.isLogin(username, password)) {
-                        JOptionPane.showMessageDialog(null, "Welcome Manager!");
-                        new ManagerView().setVisible(true); // Open Manager Form
+                        JOptionPane.showMessageDialog(null, bundle.getString("welcomeManager"));
+                        new ManagerView().setVisible(true);
                         dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Invalid Manager Credentials.");
+                        JOptionPane.showMessageDialog(null, bundle.getString("invalidManagerCredentials"));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please select a user type.");
+                    JOptionPane.showMessageDialog(null, bundle.getString("pleaseSelectUserType"));
                 }
             }
         });
         panel.add(loginButton);
 
         // Create Account Button
-        JButton createAccountButton = new JButton("Create Account");
-        createAccountButton.setBounds(200, 200, 150, 30);
+        JButton createAccountButton = new JButton(bundle.getString("createAccount"));
+        createAccountButton.setBounds(200, 210, 150, 30);
         createAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (clientButton.isSelected()) {
-                    new CreateAccountView().setVisible(true); // Open Create Account Form
+                    new CreateAccountView().setVisible(true);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please select 'Client' to create an account.");
+                    JOptionPane.showMessageDialog(null, bundle.getString("pleaseSelectClientToCreateAccount"));
                 }
             }
         });

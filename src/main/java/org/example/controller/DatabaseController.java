@@ -22,10 +22,6 @@ public class DatabaseController {
         DatabaseController.connection = connection;
     }
 
-    public void setConnection(Connection connection) {
-        DatabaseController.connection = connection;
-    }
-
     public static Connection connect() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(DATABASE_URL);
@@ -1237,8 +1233,8 @@ return true;
     public static void insertTicket(Ticket ticket) {
         WRITE_LOCK.lock();
         String sql = """
-                INSERT INTO tickets(ticket_id, flight_num, client_id, seat_number, departure_date, return_date, payment_type, assigned_to, ticket_status)
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+                INSERT INTO tickets(ticket_id, flight_num, client_id, seat_number, departure_date, return_date, payment_type)
+                VALUES(?, ?, ?, ?, ?, ?, ?);
                 """;
 
         try (Connection connection = connect();
@@ -1252,7 +1248,7 @@ return true;
                 statement.setObject(6, ticket.getReturnDate() != null ? ticket.getReturnDate() : null);
                 statement.setString(7, ticket.getPaymentType());
 
-                statement.setString(8, ticket.getTicketStatus().name());
+//                statement.setString(8, ticket.getTicketStatus().name());
                 statement.executeUpdate();
                 System.out.println("Ticket data inserted successfully.");
             } else {
@@ -1268,7 +1264,7 @@ return true;
     public static void updateTicketStatus(Status newStatus, int id) {
         WRITE_LOCK.lock();
         String sql = """
-                UPDATE tickets SET ticket_status = ? WHERE id = ?
+                UPDATE tickets SET ticket_status = ? WHERE ticket_id = ?
                 """;
 
         try (Connection connection = connect();
@@ -1444,17 +1440,22 @@ return true;
     public static List<Ticket> queryAllBoughtTickets() {
         READ_LOCK.lock();
         String sql = """
-                SELECT * FROM tickets
-                WHERE ticket_status = "PURCHASED"
-                """;
+            SELECT t.*, c.*, f.* 
+            FROM tickets t
+            INNER JOIN clients c ON t.client_id = c.id 
+            INNER JOIN flights f ON t.flight_num = f.flightNumber
+            WHERE t.ticket_status = 'CREATED'
+            """;
 
         List<Ticket> tickets = new ArrayList<>();
         try (Connection connection = connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
+
             while (resultSet.next()) {
+                // Mapping ticket-related fields
                 int ticketId = resultSet.getInt("ticket_id");
-                String flightNum = resultSet.getString("flight_num");
+                String flightNum = resultSet.getString("flightNumber");
                 int clientId = resultSet.getInt("client_id");
                 String seatNumber = resultSet.getString("seat_number");
                 String departureDate = resultSet.getString("departure_date");
@@ -1463,6 +1464,7 @@ return true;
                 String ticketStatus = resultSet.getString("ticket_status");
                 int assignedTo = resultSet.getInt("assigned_to");
 
+                // Mapping flight-related fields
                 String airline = resultSet.getString("airline");
                 double price = resultSet.getDouble("price");
                 int flightSeatNumber = resultSet.getInt("flightSeatNumber");
@@ -1471,7 +1473,7 @@ return true;
                 String departureTime = resultSet.getString("departureTime");
                 String arrivalTime = resultSet.getString("arrivalTime");
 
-                int clientid = resultSet.getInt("id");
+                // Mapping client-related fields
                 String lName = resultSet.getString("lName");
                 String fName = resultSet.getString("fName");
                 String passportNumber = resultSet.getString("passportNumber");
@@ -1482,12 +1484,12 @@ return true;
                 String password = resultSet.getString("password");
                 int loyaltyPoints = resultSet.getInt("loyaltyPoints");
 
-                Flight flight = new Flight(flightNum,airline,price,flightSeatNumber,departureLocation,arrivalLocation,departureTime,arrivalTime);
-                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password,loyaltyPoints);
-
+                // Creating objects from the data
+                Flight flight = new Flight(flightNum, airline, price, flightSeatNumber, departureLocation, arrivalLocation, departureTime, arrivalTime);
+                Client client = new Client(lName, fName, passportNumber, phoneNumber, emailAddress, age, userName, password, loyaltyPoints);
                 Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
 
-
+                // Adding ticket to the list
                 tickets.add(ticket);
             }
         } catch (SQLException e) {
@@ -1497,11 +1499,12 @@ return true;
         }
         return tickets;
     }
-    public static List<Ticket> queryAllBoughtTicketsClient(String fName, String lName) {
+
+    public static List<Ticket> queryAllBoughtTicketsClient(int client_id) {
         READ_LOCK.lock();
         String sql = """
         SELECT * FROM tickets
-        WHERE ticket_status = "PURCHASED" AND fName = ? AND lName = ?
+        WHERE ticket_status = "PURCHASED" AND client_id = ?
         """;
 
         List<Ticket> tickets = new ArrayList<>();
@@ -1509,8 +1512,7 @@ return true;
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             // Set the fName and lName in the prepared statement
-            statement.setString(1, fName);
-            statement.setString(2, lName);
+            statement.setInt(1, client_id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1535,11 +1537,10 @@ return true;
                     Flight flight = new Flight(flightNum, airline, price, flightSeatNumber, departureLocation, arrivalLocation, departureTime, arrivalTime);
 
                     // Create a basic Client object with the given fName and lName
-                    Client client = new Client(lName, fName, "", "", "", 0, "", "", 0);
+                    Client client = new Client("", "", "", "", "", 0, "", "", 0);
 
                     // Create Ticket object using the above information
                     Ticket ticket = new Ticket(flight, client, seatNumber, departureDate, returnDate, paymentType);
-
 
                     // Add the ticket to the list
                     tickets.add(ticket);
@@ -1785,7 +1786,7 @@ return true;
     }
     public static boolean checkManagerAccount(String username, String password) {
         READ_LOCK.lock();
-        String sql = "SELECT COUNT(*) FROM manager WHERE username = ? AND password = ?";
+        String sql = "SELECT COUNT(*) FROM managers WHERE username = ? AND password = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -265,7 +265,7 @@ public class BookingFlightController {
     }
 
     /**
-     * Cancels a ticket and removes it from the system and database.
+     * Cancels a ticket.
      *
      * @param ticket the ticket to be cancelled
      */

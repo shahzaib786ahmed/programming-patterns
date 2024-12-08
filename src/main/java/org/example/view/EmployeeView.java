@@ -4,24 +4,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class EmployeeView extends JFrame {
-    public EmployeeView(String employeeName) {
+    public EmployeeView(String employeeName, Locale currentLocale) {
+        // Load the appropriate resource bundle based on the selected locale
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", currentLocale);
+
         // Set up the frame
-        setTitle("Employee Dashboard");
+        setTitle(bundle.getString("employeeDashboardTitle"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300); // Adjusted size for better visual balance
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(20, 20)); // Adjusted gap between components
 
         // Create a welcome label with better styling
-        JLabel welcomeLabel = new JLabel("Welcome, " + employeeName + "!", SwingConstants.CENTER);
+        JLabel welcomeLabel = new JLabel(
+                String.format(bundle.getString("employeeWelcomeMessage"), employeeName),
+                SwingConstants.CENTER
+        );
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
         welcomeLabel.setForeground(new Color(50, 150, 250));
 
-        // Create buttons with modern style
-        JButton openBookingButton = createStyledButton("Go to Booking Flights");
-        JButton openHotelButton = createStyledButton("Go to Booking Hotels");
+        // Create buttons with localized text
+        JButton openBookingButton = createStyledButton(bundle.getString("bookingFlightsButton"));
+        JButton openHotelButton = createStyledButton(bundle.getString("bookingHotelsButton"));
 
         // Create a panel for the buttons with BoxLayout for vertical alignment
         JPanel buttonPanel = new JPanel();
@@ -37,7 +45,7 @@ public class EmployeeView extends JFrame {
         openBookingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new BookingFlightView().setVisible(true);
+                new BookingFlightView(currentLocale).setVisible(true);
                 dispose(); // Close the EmployeeView window
             }
         });
@@ -45,7 +53,7 @@ public class EmployeeView extends JFrame {
         openHotelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new BookingHotelView().setVisible(true);
+                new BookingHotelView(currentLocale).setVisible(true);
                 dispose(); // Close the EmployeeView window
             }
         });

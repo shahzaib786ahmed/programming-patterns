@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 
 public class WelcomeView extends JFrame {
     public WelcomeView() {
@@ -27,7 +28,8 @@ public class WelcomeView extends JFrame {
         getStartedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new LoginView().setVisible(true); // Open Login Form
+                // Defaulting to the system locale or explicitly pass Locale.ENGLISH if needed
+                new LoginView(Locale.US).setVisible(true); // Open Login Form with locale support
                 dispose(); // Close Welcome Form
             }
         });
@@ -35,6 +37,4 @@ public class WelcomeView extends JFrame {
 
         add(panel);
     }
-
-
 }

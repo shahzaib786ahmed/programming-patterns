@@ -6,6 +6,8 @@ import org.example.model.Client;
 
 import javax.swing.*;
 
+import java.util.Locale;
+
 import static org.example.controller.DatabaseController.insertClient;
 
 public class CreateAccountView extends JFrame {
@@ -105,7 +107,7 @@ public class CreateAccountView extends JFrame {
             if (DatabaseController.insertClient(c1)) {
                 JOptionPane.showMessageDialog(null, "Account Created Successfully!");
                 AuthentificationController.insertAccount(username,password);
-                new LoginView().setVisible(true);
+                new LoginView(Locale.US).setVisible(true);
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "Error creating account. Try again.");

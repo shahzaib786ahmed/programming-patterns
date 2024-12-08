@@ -8,45 +8,49 @@ import org.example.model.Room;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class BookingHotelView extends JFrame {
 
     private BookingHotelController controller;
+    private ResourceBundle bundle;
 
-    public BookingHotelView() {
+    public BookingHotelView(Locale currentLocale) {
+        // Load resource bundle based on the locale
+        bundle = ResourceBundle.getBundle("messages", currentLocale);
+
         // Initialize the controller
         controller = new BookingHotelController();
 
-        // Set up the JFrame
-        setTitle("Hotel Booking System");
-        setSize(600, 650); // Increased height for better visibility of buttons
+        // Set up the frame
+        setTitle(bundle.getString("hotelBookingSystemTitle"));
+        setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS)); // Use BoxLayout for vertical layout
+        setLayout(new BorderLayout());
 
-        // Add components
-        add(createButtonPanel());
-        add(Box.createRigidArea(new Dimension(0, 10))); // Adds spacing between panels
-        add(createRoomBookingPanel());
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(createHotelManagementPanel());
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(createRoomManagementPanel());
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(createViewPanel());
+        // Create tabs
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        // Add tabs with localized titles
+        tabbedPane.addTab(bundle.getString("roomBookingTab"), createRoomBookingPanel());
+        tabbedPane.addTab(bundle.getString("hotelManagementTab"), createHotelManagementPanel());
+        tabbedPane.addTab(bundle.getString("roomManagementTab"), createRoomManagementPanel());
+        tabbedPane.addTab(bundle.getString("viewPanelTab"), createViewPanel());
+
+        // Add tabs to the frame
+        add(tabbedPane, BorderLayout.CENTER);
 
         // Make the frame visible
         setVisible(true);
     }
 
-    /**
-     * Creates a panel with buttons for common actions.
-     */
+
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JButton viewHotelsButton = new JButton("View All Hotels");
-        JButton viewRoomsButton = new JButton("View All Rooms");
+        JButton viewHotelsButton = new JButton(bundle.getString("view.all.hotels"));
+        JButton viewRoomsButton = new JButton(bundle.getString("view.all.rooms"));
 
         viewHotelsButton.addActionListener(e -> controller.viewAllHotels());
         viewRoomsButton.addActionListener(e -> controller.viewAllRooms());
@@ -57,26 +61,23 @@ public class BookingHotelView extends JFrame {
         return buttonPanel;
     }
 
-    /**
-     * Creates a panel for room booking actions.
-     */
     private JPanel createRoomBookingPanel() {
         JPanel bookingPanel = new JPanel();
         bookingPanel.setLayout(new BoxLayout(bookingPanel, BoxLayout.Y_AXIS)); // Arrange vertically
 
-        JLabel clientLabel = new JLabel("Client Passport Number:");
+        JLabel clientLabel = new JLabel(bundle.getString("client.passport.number"));
         JTextField clientField = new JTextField(10);
 
-        JLabel roomNumLabel = new JLabel("Room Number:");
+        JLabel roomNumLabel = new JLabel(bundle.getString("room.number"));
         JTextField roomNumField = new JTextField(5);
 
-        JLabel nightsLabel = new JLabel("Nights:");
+        JLabel nightsLabel = new JLabel(bundle.getString("nights"));
         JTextField nightsField = new JTextField(3);
 
-        JLabel cardLabel = new JLabel("Credit Card:");
+        JLabel cardLabel = new JLabel(bundle.getString("credit.card"));
         JTextField cardField = new JTextField(16);
 
-        JButton bookRoomButton = new JButton("Book Room");
+        JButton bookRoomButton = new JButton(bundle.getString("book.room"));
 
         bookRoomButton.addActionListener(e -> {
             try {
@@ -92,15 +93,15 @@ public class BookingHotelView extends JFrame {
                 if (room != null && client != null) {
                     boolean success = controller.bookRoom(client, room, nights, creditCard);
                     if (success) {
-                        JOptionPane.showMessageDialog(this, "Room booked successfully!");
+                        JOptionPane.showMessageDialog(this, bundle.getString("room.booked.successfully"));
                     } else {
-                        JOptionPane.showMessageDialog(this, "Room booking failed.");
+                        JOptionPane.showMessageDialog(this, bundle.getString("room.booking.failed"));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Invalid client or room information.");
+                    JOptionPane.showMessageDialog(this, bundle.getString("invalid.client.room"));
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid number of nights.");
+                JOptionPane.showMessageDialog(this, bundle.getString("room.booking.failed"));
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage());
             }
@@ -119,24 +120,21 @@ public class BookingHotelView extends JFrame {
         return bookingPanel;
     }
 
-    /**
-     * Creates a panel for hotel management actions.
-     */
     private JPanel createHotelManagementPanel() {
         JPanel hotelPanel = new JPanel();
         hotelPanel.setLayout(new BoxLayout(hotelPanel, BoxLayout.Y_AXIS));
 
-        JLabel hotelNameLabel = new JLabel("Hotel Name:");
+        JLabel hotelNameLabel = new JLabel(bundle.getString("hotel.name"));
         JTextField hotelNameField = new JTextField(10);
 
-        JLabel addressLabel = new JLabel("Address:");
+        JLabel addressLabel = new JLabel(bundle.getString("address"));
         JTextField addressField = new JTextField(15);
 
-        JLabel totalRoomsLabel = new JLabel("Total Rooms:");
+        JLabel totalRoomsLabel = new JLabel(bundle.getString("total.rooms"));
         JTextField totalRoomsField = new JTextField(5);
 
-        JButton addHotelButton = new JButton("Add Hotel");
-        JButton removeHotelButton = new JButton("Remove Hotel");
+        JButton addHotelButton = new JButton(bundle.getString("add.hotel"));
+        JButton removeHotelButton = new JButton(bundle.getString("remove.hotel"));
 
         addHotelButton.addActionListener(e -> {
             try {
@@ -198,24 +196,21 @@ public class BookingHotelView extends JFrame {
         return hotelPanel;
     }
 
-    /**
-     * Creates a panel for room management actions.
-     */
     private JPanel createRoomManagementPanel() {
         JPanel roomPanel = new JPanel();
         roomPanel.setLayout(new BoxLayout(roomPanel, BoxLayout.Y_AXIS));
 
-        JLabel roomNumLabel = new JLabel("Room Number:");
+        JLabel roomNumLabel = new JLabel(bundle.getString("room.number"));
         JTextField roomNumField = new JTextField(5);
 
-        JLabel capacityLabel = new JLabel("Capacity:");
+        JLabel capacityLabel = new JLabel(bundle.getString("capacity"));
         JTextField capacityField = new JTextField(5);
 
-        JLabel priceLabel = new JLabel("Price:");
+        JLabel priceLabel = new JLabel(bundle.getString("price"));
         JTextField priceField = new JTextField(7);
 
-        JButton addRoomButton = new JButton("Add Room");
-        JButton deleteRoomButton = new JButton("Delete Room");
+        JButton addRoomButton = new JButton(bundle.getString("add.room"));
+        JButton deleteRoomButton = new JButton(bundle.getString("delete.room"));
 
         addRoomButton.addActionListener(e -> {
             try {
@@ -225,9 +220,9 @@ public class BookingHotelView extends JFrame {
 
                 Room room = new Room(roomNum, capacity, Room.RoomStatus.AVAILABLE, price);
                 controller.addRooms(room);
-                JOptionPane.showMessageDialog(this, "Room added successfully!");
+                JOptionPane.showMessageDialog(this, bundle.getString("room.added.successfully"));
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter valid capacity and price values.");
+                JOptionPane.showMessageDialog(this, bundle.getString("invalid.room.details"));
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage());
             }
@@ -239,9 +234,9 @@ public class BookingHotelView extends JFrame {
 
             if (room != null) {
                 controller.removeRoom(room);
-                JOptionPane.showMessageDialog(this, "Room deleted successfully!");
+                JOptionPane.showMessageDialog(this, bundle.getString("room.deleted.successfully"));
             } else {
-                JOptionPane.showMessageDialog(this, "Room not found.");
+                JOptionPane.showMessageDialog(this, bundle.getString("room.not.found"));
             }
         });
 
@@ -257,13 +252,10 @@ public class BookingHotelView extends JFrame {
         return roomPanel;
     }
 
-    /**
-     * Creates a panel for view operations.
-     */
     private JPanel createViewPanel() {
         JPanel viewPanel = new JPanel(new FlowLayout());
 
-        JButton viewAvailableRoomsButton = new JButton("View Available Rooms");
+        JButton viewAvailableRoomsButton = new JButton(bundle.getString("view.available.rooms"));
 
         viewAvailableRoomsButton.addActionListener(e -> controller.viewAllRooms());
 

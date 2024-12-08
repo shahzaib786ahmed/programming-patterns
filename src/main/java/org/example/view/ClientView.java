@@ -6,16 +6,22 @@ import org.example.model.Ticket;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class ClientView extends JFrame {
-    private String username; // To store the client's username
+    private String username;
 
-    public ClientView(String username) {
+    public ClientView(String username, Locale locale) {
         this.username = username;
 
+        // Load resource bundle for localization
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+
         // Frame settings
-        setTitle("Client Dashboard");
+        setTitle(bundle.getString("clientDashboard"));
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -25,51 +31,33 @@ public class ClientView extends JFrame {
         panel.setLayout(null);
 
         // Welcome Label
-        JLabel welcomeLabel = new JLabel("Welcome, " + username + "!");
+        JLabel welcomeLabel = new JLabel(MessageFormat.format(bundle.getString("welcome"), username));
         welcomeLabel.setBounds(50, 30, 300, 30);
         panel.add(welcomeLabel);
 
-        // First Name Input
-        JLabel firstNameLabel = new JLabel("Enter First Name:");
-        firstNameLabel.setBounds(50, 80, 150, 30);
-        panel.add(firstNameLabel);
+        // ID Input
+        JLabel idLabel = new JLabel(bundle.getString("enterId"));
+        idLabel.setBounds(50, 80, 150, 30);
+        panel.add(idLabel);
 
-        JTextField firstNameField = new JTextField();
-        firstNameField.setBounds(200, 80, 150, 30);
-        panel.add(firstNameField);
+        JTextField idField = new JTextField();
+        idField.setBounds(200, 80, 150, 30);
+        panel.add(idField);
 
-        // Last Name Input
-        JLabel lastNameLabel = new JLabel("Enter Last Name:");
-        lastNameLabel.setBounds(50, 120, 150, 30);
-        panel.add(lastNameLabel);
-
-        JTextField lastNameField = new JTextField();
-        lastNameField.setBounds(200, 120, 150, 30);
-        panel.add(lastNameField);
-
-        // Display Bought Tickets Button
-        JButton displayTicketsButton = new JButton("View Tickets");
-        displayTicketsButton.setBounds(50, 180, 150, 30);
-        displayTicketsButton.addActionListener(new ActionListener() {
+        // View Tickets Button
+        JButton viewTicketsButton = new JButton(bundle.getString("viewTickets"));
+        viewTicketsButton.setBounds(50, 180, 150, 30);
+        viewTicketsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get the first and last name from the input fields
-                String fName = firstNameField.getText();
-                String lName = lastNameField.getText();
+                int clientId = Integer.parseInt(idField.getText());
 
-                if (fName.isEmpty() || lName.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter both first name and last name.");
-                    return;
-                }
-
-                // Query the database using the provided names
-                List<Ticket> tickets = DatabaseController.queryAllBoughtTicketsClient(fName, lName);
+                List<Ticket> tickets = DatabaseController.queryAllBoughtTicketsClient(clientId);
 
                 if (tickets.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No tickets found for the provided names.");
+                    JOptionPane.showMessageDialog(null, bundle.getString("noTicketsFound"));
                 } else {
-                    // Display the tickets
-                    StringBuilder ticketsInfo = new StringBuilder("Your Tickets:\n");
+                    StringBuilder ticketsInfo = new StringBuilder(bundle.getString("yourTickets") + "\n");
                     for (Ticket ticket : tickets) {
                         ticketsInfo.append(ticket.toString()).append("\n");
                     }
@@ -77,53 +65,51 @@ public class ClientView extends JFrame {
                 }
             }
         });
-        panel.add(displayTicketsButton);
+        panel.add(viewTicketsButton);
 
         // Add Review Button
-        JButton addReviewButton = new JButton("Add Review");
+        JButton addReviewButton = new JButton(bundle.getString("addReview"));
         addReviewButton.setBounds(50, 230, 150, 30);
         addReviewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Input dialog for review details
-                String email = JOptionPane.showInputDialog("Enter your email:");
-                String title = JOptionPane.showInputDialog("Enter review title:");
-                String body = JOptionPane.showInputDialog("Enter review body:");
+                String email = JOptionPane.showInputDialog(bundle.getString("enterEmail"));
+                String title = JOptionPane.showInputDialog(bundle.getString("enterTitle"));
+                String body = JOptionPane.showInputDialog(bundle.getString("enterBody"));
 
                 if (email != null && title != null && body != null && !email.isEmpty() && !title.isEmpty() && !body.isEmpty()) {
-                    if (DatabaseController.insertReview(email, title, body)) { // Example method
-                        JOptionPane.showMessageDialog(null, "Review added successfully!");
+                    if (DatabaseController.insertReview(email, title, body)) {
+                        JOptionPane.showMessageDialog(null, bundle.getString("reviewSuccess"));
                     } else {
-                        JOptionPane.showMessageDialog(null, "Failed to add review. Try again.");
+                        JOptionPane.showMessageDialog(null, bundle.getString("reviewFailed"));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "All fields are required!");
+                    JOptionPane.showMessageDialog(null, bundle.getString("allFieldsRequired"));
                 }
             }
         });
         panel.add(addReviewButton);
 
-        // Display All Reviews Button
-        JButton displayReviewsButton = new JButton("View Reviews");
-        displayReviewsButton.setBounds(50, 280, 150, 30);
-        displayReviewsButton.addActionListener(new ActionListener() {
+        // View Reviews Button
+        JButton viewReviewsButton = new JButton(bundle.getString("viewReviews"));
+        viewReviewsButton.setBounds(50, 280, 150, 30);
+        viewReviewsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Logic to display reviews (Fetch from database)
-                String reviews = DatabaseController.queryAllReviews().toString(); // Example method
-                JOptionPane.showMessageDialog(null, "All Reviews:\n" + reviews);
+                String reviews = DatabaseController.queryAllReviews().toString();
+                JOptionPane.showMessageDialog(null, bundle.getString("allReviews") + "\n" + reviews);
             }
         });
-        panel.add(displayReviewsButton);
+        panel.add(viewReviewsButton);
 
         // Logout Button
-        JButton logoutButton = new JButton("Log Out");
+        JButton logoutButton = new JButton(bundle.getString("logOut"));
         logoutButton.setBounds(50, 330, 150, 30);
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new WelcomeView().setVisible(true); // Return to Welcome View
-                dispose(); // Close current window
+                new WelcomeView().setVisible(true);
+                dispose();
             }
         });
         panel.add(logoutButton);

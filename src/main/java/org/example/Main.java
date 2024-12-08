@@ -11,5 +11,4 @@ public class Main {
     //TODO: IF WE RUN DIRECTLY CSM IT DOESNT FIND THE TABLES
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new WelcomeView().setVisible(true)); // Open the WelcomeView
-
     }}
