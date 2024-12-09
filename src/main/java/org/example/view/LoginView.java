@@ -129,7 +129,7 @@ public class LoginView extends JFrame {
                 } else if (managerButton.isSelected()) {
                     if (AuthentificationController.isLogin(username, password)) {
                         JOptionPane.showMessageDialog(null, bundle.getString("welcomeManager"));
-                        new ManagerView().setVisible(true);
+                        new EmployeeView(username, currentLocale).setVisible(true);
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, bundle.getString("invalidManagerCredentials"));

@@ -43,7 +43,7 @@ public class AuthentificationController {
             DatabaseController.insertAccount(username, password);  // Store in database
         });
     }
-    //TODO: ADD IT TO THE LOGIN VIEW AND
+
     /**
      * Changes the password of a client asynchronously. It searches for the client by
      * their username and checks if the provided old password matches the current password.
