@@ -21,6 +21,9 @@ public class LoginView extends JFrame {
         initializeUI();
     }
 
+    /**
+     * This method initializes the user interface
+     */
     private void initializeUI() {
         // Frame settings
         setTitle(bundle.getString("title"));

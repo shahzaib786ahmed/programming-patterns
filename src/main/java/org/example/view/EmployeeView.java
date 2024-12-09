@@ -79,6 +79,11 @@ public class EmployeeView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * This method creates a style button
+     * @param text of the button
+     * @return the button
+     */
     // Helper method to create buttons with consistent styling
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);

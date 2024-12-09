@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 
 public class Employee extends User {
   //private List<Ticket> requestedBookings;

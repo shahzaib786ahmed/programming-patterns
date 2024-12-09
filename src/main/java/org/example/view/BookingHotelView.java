@@ -45,7 +45,10 @@ public class BookingHotelView extends JFrame {
         setVisible(true);
     }
 
-
+    /**
+     * Create panel button
+     * @return a panel
+     */
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -61,6 +64,10 @@ public class BookingHotelView extends JFrame {
         return buttonPanel;
     }
 
+    /**
+     * Creates a room booking panel
+     * @return a panel
+     */
     private JPanel createRoomBookingPanel() {
         JPanel bookingPanel = new JPanel();
         bookingPanel.setLayout(new BoxLayout(bookingPanel, BoxLayout.Y_AXIS)); // Arrange vertically
@@ -120,6 +127,10 @@ public class BookingHotelView extends JFrame {
         return bookingPanel;
     }
 
+    /**
+     * Creates a hotel management panel
+     * @return a panel
+     */
     private JPanel createHotelManagementPanel() {
         JPanel hotelPanel = new JPanel();
         hotelPanel.setLayout(new BoxLayout(hotelPanel, BoxLayout.Y_AXIS));
@@ -196,6 +207,10 @@ public class BookingHotelView extends JFrame {
         return hotelPanel;
     }
 
+    /**
+     * Creates a room management panel
+     * @return a panel
+     */
     private JPanel createRoomManagementPanel() {
         JPanel roomPanel = new JPanel();
         roomPanel.setLayout(new BoxLayout(roomPanel, BoxLayout.Y_AXIS));
@@ -252,6 +267,10 @@ public class BookingHotelView extends JFrame {
         return roomPanel;
     }
 
+    /**
+     * Create a view panel
+     * @return a panel
+     */
     private JPanel createViewPanel() {
         JPanel viewPanel = new JPanel(new FlowLayout());
 

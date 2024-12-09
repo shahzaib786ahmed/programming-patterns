@@ -69,6 +69,12 @@ public class CompanySystemView extends JFrame {
         add(buttonPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Shows data in a popup
+     * @param title of the popup
+     * @param columnNames in the popup
+     * @param data that is going to be displayed in the popup
+     */
     private void showDataInPopup(String title, String[] columnNames, Object[][] data) {
         JDialog dialog = new JDialog(this, title, true);
         dialog.setSize(600, 400);
@@ -82,6 +88,9 @@ public class CompanySystemView extends JFrame {
         dialog.setVisible(true);
     }
 
+    /**
+     * Display the clients
+     */
     private void displayClients() {
         String[] columnNames = {
                 messages.getString("firstName"),
@@ -115,6 +124,9 @@ public class CompanySystemView extends JFrame {
         showDataInPopup(messages.getString("displayClients"), columnNames, data);
     }
 
+    /**
+     * Displays all the employees
+     */
     private void displayEmployees() {
         String[] columnNames = {
                 messages.getString("firstName"),

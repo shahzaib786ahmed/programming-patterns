@@ -2,10 +2,8 @@ package org.example.view;
 
 import org.example.controller.BookingFlightController;
 import org.example.controller.DatabaseController;
-import org.example.model.Client;
 import org.example.model.Flight;
-import org.example.model.Ticket;
-import java.util.List; // Correct package
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,7 +11,6 @@ import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.example.controller.DatabaseController.*;
 
 public class BookingFlightView extends JFrame {
     private static DatabaseController databaseController;
@@ -44,6 +41,10 @@ public class BookingFlightView extends JFrame {
         add(tabbedPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Create a manage flight panel
+     * @return a panel
+     */
     private JPanel createManageFlightsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -183,6 +184,10 @@ public class BookingFlightView extends JFrame {
         return panel;
     }
 
+    /**
+     * Create a purchase ticket panel
+     * @return a panel
+     */
     private JPanel createPurchaseTicketsPanel() {
         JPanel panel = new JPanel(new GridLayout(10, 2, 10, 10));
 

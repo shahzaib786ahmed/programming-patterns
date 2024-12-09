@@ -751,7 +751,7 @@ return true;
     }
 
     /**
-     *  displays all managers
+     * displays all managers
      * @return a list of all managers
      */
     public static List<Manager> queryAllManagers(){
