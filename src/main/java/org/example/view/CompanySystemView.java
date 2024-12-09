@@ -12,10 +12,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * The CompanySystemView class represents the graphical user interface (GUI)
+ * of the company system, allowing users to interact with the system through
+ * a set of buttons that manage Clients, Employees, and Managers. The view
+ * is responsible for displaying, adding, and deleting records, as well as
+ * handling user input and showing information in pop-up dialogs.
+ */
 public class CompanySystemView extends JFrame {
     private CompanySystemController controller;
     private ResourceBundle messages;
 
+    /**
+     * Constructor to initialize the view with the controller and locale.
+     *
+     * @param controller The controller responsible for handling user actions.
+     * @param locale     The locale to load the resource bundle for internationalization.
+     */
     public CompanySystemView(CompanySystemController controller, Locale locale) {
         this.controller = controller;
         this.messages = ResourceBundle.getBundle("messages", locale);
@@ -71,9 +84,10 @@ public class CompanySystemView extends JFrame {
 
     /**
      * Shows data in a popup
-     * @param title of the popup
+     *
+     * @param title       of the popup
      * @param columnNames in the popup
-     * @param data that is going to be displayed in the popup
+     * @param data        that is going to be displayed in the popup
      */
     private void showDataInPopup(String title, String[] columnNames, Object[][] data) {
         JDialog dialog = new JDialog(this, title, true);
@@ -162,6 +176,9 @@ public class CompanySystemView extends JFrame {
         showDataInPopup(messages.getString("displayEmployees"), columnNames, data);
     }
 
+    /**
+     * Displays all the managers in a table.
+     */
     private void displayManagers() {
         String[] columnNames = {
                 messages.getString("firstName"),
@@ -197,6 +214,11 @@ public class CompanySystemView extends JFrame {
         showDataInPopup(messages.getString("displayManagers"), columnNames, data);
     }
 
+    /**
+     * Prompts the user for the details to create a new client.
+     *
+     * @return The Client object with the provided details.
+     */
     private Client promptForClientDetails() {
         String fName = JOptionPane.showInputDialog(this, messages.getString("promptClientFirstName"));
         String lName = JOptionPane.showInputDialog(this, messages.getString("promptClientLastName"));
@@ -209,6 +231,11 @@ public class CompanySystemView extends JFrame {
         return new Client(lName, fName, passNum, phone, email, age, username, password, 0);
     }
 
+    /**
+     * Prompts the user for the details to create a new employee.
+     *
+     * @return The Employee object with the provided details.
+     */
     private Employee promptForEmployeeDetails() {
         String fName = JOptionPane.showInputDialog(this, messages.getString("promptEmployeeFirstName"));
         String lName = JOptionPane.showInputDialog(this, messages.getString("promptEmployeeLastName"));
@@ -222,6 +249,11 @@ public class CompanySystemView extends JFrame {
         return new Employee(lName, fName, passNum, phone, email, age, username, password, discount);
     }
 
+    /**
+     * Prompts the user for the details to create a new manager.
+     *
+     * @return The Manager object with the provided details.
+     */
     private Manager promptForManagerDetails() {
         String fName = JOptionPane.showInputDialog(this, messages.getString("promptManagerFirstName"));
         String lName = JOptionPane.showInputDialog(this, messages.getString("promptManagerLastName"));
@@ -235,19 +267,33 @@ public class CompanySystemView extends JFrame {
         return new Manager(lName, fName, passNum, phone, email, age, username, password, discount);
     }
 
+    /**
+     * Prompts the user for the client ID to delete.
+     *
+     * @return The Client object with the provided ID.
+     */
     private Client promptForClientId() {
         String passNum = JOptionPane.showInputDialog(this, messages.getString("promptDeleteClient"));
         return DatabaseController.findClientByPassportNumber(passNum);
     }
 
+    /**
+     * Prompts the user for the employee ID to delete.
+     *
+     * @return The Employee object with the provided ID.
+     */
     private Employee promptForEmployeeId() {
         String passNum = JOptionPane.showInputDialog(this, messages.getString("promptDeleteEmployee"));
         return DatabaseController.queryEmployeeByPassport(passNum);
     }
 
+    /**
+     * Prompts the user for the manager ID to delete.
+     *
+     * @return The Manager object with the provided ID.
+     */
     private Manager promptForManagerId() {
         String passNum = JOptionPane.showInputDialog(this, messages.getString("promptDeleteManager"));
         return DatabaseController.queryManagerByPassportNumber(passNum);
     }
-
 }

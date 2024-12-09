@@ -9,7 +9,19 @@ import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the employee dashboard view in the application.
+ * It provides options for the employee to access different functionalities,
+ * including booking flights, booking hotels, and accessing the company system.
+ * The view is localized based on the provided locale to display the appropriate messages.
+ */
 public class EmployeeView extends JFrame {
+    /**
+     * Constructs an EmployeeView object with the specified employee's name and current locale.
+     *
+     * @param employeeName the name of the employee to be displayed in the welcome message
+     * @param currentLocale the locale used for displaying localized text
+     */
     public EmployeeView(String employeeName, Locale currentLocale) {
         // Load the appropriate resource bundle based on the selected locale
         ResourceBundle bundle = ResourceBundle.getBundle("messages", currentLocale);
@@ -81,6 +93,7 @@ public class EmployeeView extends JFrame {
 
     /**
      * This method creates a style button
+     *
      * @param text of the button
      * @return the button
      */
@@ -105,7 +118,6 @@ public class EmployeeView extends JFrame {
                 button.setBackground(new Color(50, 150, 250)); // Original blue
             }
         });
-
         return button;
     }
 }

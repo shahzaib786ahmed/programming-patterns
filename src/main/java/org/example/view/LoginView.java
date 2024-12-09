@@ -15,6 +15,13 @@ public class LoginView extends JFrame {
     private ResourceBundle bundle; // Resource bundle for translations
     private JPanel panel;
 
+    /**
+     * Constructs a LoginView object with the specified locale.
+     * If the locale is null, the default locale is used.
+     * Initializes the UI components based on the selected or default locale.
+     *
+     * @param locale the locale used for displaying localized text. If null, the default locale is used.
+     */
     public LoginView(Locale locale) {
         this.currentLocale = locale != null ? locale : Locale.getDefault();
         this.bundle = ResourceBundle.getBundle("messages", this.currentLocale);

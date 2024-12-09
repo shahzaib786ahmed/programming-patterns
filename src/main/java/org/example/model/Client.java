@@ -14,7 +14,7 @@ public class Client extends User {
     private List<Double> paymentHistory = new ArrayList<>();
 
     public Client(String lName, String fName, String passportNum, String phoneNumber, String emailAddress, int age, String username, String password, int loyaltyPoints) {
-        super(lName, fName, passportNum, phoneNumber, emailAddress, age, username , password);
+        super(lName, fName, passportNum, phoneNumber, emailAddress, age, username, password);
         this.loyaltyPoints = loyaltyPoints;
     }
 

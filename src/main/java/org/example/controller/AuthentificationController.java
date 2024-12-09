@@ -15,10 +15,10 @@ public class AuthentificationController {
     private CompanySystem companySystem;
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10);
     private static DatabaseController databaseController;
+
     /**
      * Constructs an instance of the AuthenticationController with the given CompanySystem.
      * Initializes necessary tables for account management.
-     *
      */
     public AuthentificationController() {
         initTable();
@@ -49,7 +49,7 @@ public class AuthentificationController {
      * their username and checks if the provided old password matches the current password.
      * If valid, the password is updated in both memory and database.
      *
-     * @param username the username of the client whose password needs to be changed
+     * @param username    the username of the client whose password needs to be changed
      * @param oldPassword the current password to validate
      * @param newPassword the new password to be set
      */

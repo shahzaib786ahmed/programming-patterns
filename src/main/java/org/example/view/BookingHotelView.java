@@ -16,6 +16,14 @@ public class BookingHotelView extends JFrame {
     private BookingHotelController controller;
     private ResourceBundle bundle;
 
+    /**
+     * Constructs a new `BookingHotelView` instance, initializing the frame,
+     * loading the appropriate resource bundle based on the specified locale,
+     * setting up the GUI components, and displaying the window.
+     *
+     * @param currentLocale The locale that determines the language and region
+     *                      for the UI strings.
+     */
     public BookingHotelView(Locale currentLocale) {
         // Load resource bundle based on the locale
         bundle = ResourceBundle.getBundle("messages", currentLocale);

@@ -106,18 +106,39 @@ public class CompanySystemController {
         });
     }
 
+    /**
+     * Updates a client
+     *
+     * @param client       the client object to be updated
+     * @param phoneNumber  its phone number
+     * @param emailAddress its email address
+     */
     public void updateClient(Client client, String phoneNumber, String emailAddress) {
         threadPool.submit(() -> {
             DatabaseController.updateClient(client.getId(), phoneNumber, emailAddress);
         });
     }
 
+    /**
+     * Updates a employee
+     *
+     * @param employee     the employee object to be updated
+     * @param phoneNumber  its phone number
+     * @param emailAddress its email address
+     */
     public void updateEmployee(Employee employee, String phoneNumber, String emailAddress) {
         threadPool.submit(() -> {
             DatabaseController.updateEmployee(employee.getId(), phoneNumber, emailAddress);
         });
     }
 
+    /**
+     * Updates a manager
+     *
+     * @param manager      the manager object to be updated
+     * @param phoneNumber  its phone number
+     * @param emailAddress its email address
+     */
     public void updateManager(Manager manager, String phoneNumber, String emailAddress) {
         threadPool.submit(() -> {
             DatabaseController.updateManager(manager.getId(), phoneNumber, emailAddress);

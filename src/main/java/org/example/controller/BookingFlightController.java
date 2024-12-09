@@ -39,6 +39,11 @@ public class BookingFlightController {
         this.ticketSystem = ticketSystem;
     }
 
+    /**
+     * Sets the databaseController
+     *
+     * @param databaseController the databaseController to be set
+     */
     public void setDatabaseController(DatabaseController databaseController) {
         this.databaseController = databaseController;
     }
@@ -295,7 +300,7 @@ public class BookingFlightController {
             cancelTicket(ticket);
             ticket.getFlight().setFlightSeatNumber(ticket.getFlight().getFlightSeatNumber() + 1);
             refund(ticket);
-           System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
+            System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
         });
     }
 

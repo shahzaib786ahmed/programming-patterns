@@ -3,6 +3,7 @@ package org.example.view;
 import org.example.controller.BookingFlightController;
 import org.example.controller.DatabaseController;
 import org.example.model.Flight;
+
 import java.util.List;
 
 import javax.swing.*;
@@ -17,6 +18,13 @@ public class BookingFlightView extends JFrame {
     private BookingFlightController controller;
     private ResourceBundle bundle;
 
+    /**
+     * Constructs a BookingFlightView instance, initializing the GUI for managing flight bookings and ticket purchases.
+     * The interface is localized based on the provided locale.
+     *
+     * @param currentLocale the Locale to use for localization of the GUI text.
+     *                      This determines the language and regional formatting of the interface.
+     */
     public BookingFlightView(Locale currentLocale) {
         // Load resource bundle based on the locale
         bundle = ResourceBundle.getBundle("messages", currentLocale);
@@ -43,6 +51,7 @@ public class BookingFlightView extends JFrame {
 
     /**
      * Create a manage flight panel
+     *
      * @return a panel
      */
     private JPanel createManageFlightsPanel() {
@@ -186,6 +195,7 @@ public class BookingFlightView extends JFrame {
 
     /**
      * Create a purchase ticket panel
+     *
      * @return a panel
      */
     private JPanel createPurchaseTicketsPanel() {

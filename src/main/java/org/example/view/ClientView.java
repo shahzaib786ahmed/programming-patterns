@@ -11,9 +11,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * The `ClientView` class represents the user interface for a client in the system,
+ * allowing the client to view their dashboard, tickets, reviews, and perform various actions.
+ * The view is dynamically localized based on the provided locale.
+ */
 public class ClientView extends JFrame {
     private String username;
 
+    /**
+     * Constructs a new `ClientView` instance with the provided username and locale.
+     * Initializes the UI components, loads the resource bundle for localization,
+     * and sets up action listeners for the buttons in the dashboard.
+     *
+     * @param username The username of the client.
+     * @param locale The locale used to load the appropriate language and region settings for the UI.
+     */
     public ClientView(String username, Locale locale) {
         this.username = username;
 

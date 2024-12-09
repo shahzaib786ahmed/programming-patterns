@@ -7,6 +7,13 @@ import java.awt.event.ActionListener;
 import java.util.Locale;
 
 public class WelcomeView extends JFrame {
+
+    /**
+     * Constructs a WelcomeView object.
+     * Sets up the frame, displays a welcome message, and provides a "Get Started" button that
+     * leads to the LoginView when clicked.
+     * The LoginView is displayed with the default system locale (Locale.US is used in this example).
+     */
     public WelcomeView() {
         // Frame settings
         setTitle("Welcome to Travel Agency");
@@ -34,7 +41,6 @@ public class WelcomeView extends JFrame {
             }
         });
         panel.add(getStartedButton, BorderLayout.SOUTH);
-
         add(panel);
     }
 }

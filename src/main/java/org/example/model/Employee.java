@@ -9,7 +9,6 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 
 public class Employee extends User {
-  //private List<Ticket> requestedBookings;
     @Setter
     private double discountRate;
 

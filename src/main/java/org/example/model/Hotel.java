@@ -11,7 +11,7 @@ public class Hotel extends Services {
     private String address;
     private final int totalRooms;
 
-    private static int nextId=1;
+    private static int nextId = 1;
 
     public Hotel(int totalRooms, String address, String name) {
         super();
@@ -34,7 +34,7 @@ public class Hotel extends Services {
                         "Address     : %s\n" +
                         "Total Rooms : %d\n" +
                         "===========================",
-                hotel_id,name, address, totalRooms
+                hotel_id, name, address, totalRooms
         );
     }
 }

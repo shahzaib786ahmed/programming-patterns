@@ -29,6 +29,7 @@ public class CompanySystem {
     /**
      * Returns the singleton instance of the CompanySystem.
      * If the instance does not already exist, it creates a new one.
+     *
      * @return the singleton instance of the CompanySystem.
      */
     public static CompanySystem getInstance() {

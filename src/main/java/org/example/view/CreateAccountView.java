@@ -8,9 +8,20 @@ import javax.swing.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * A view class for creating a new user account. This class provides a graphical interface
+ * where users can input their details such as first name, last name, passport number,
+ * phone number, email, age, username, and password. Upon submitting the form, the
+ * account details are validated and saved to the database.
+ */
 public class CreateAccountView extends JFrame {
     private ResourceBundle messages;
 
+    /**
+     * Constructs the CreateAccountView with the specified locale for internationalization.
+     *
+     * @param locale The locale to use for displaying the interface text in the appropriate language.
+     */
     public CreateAccountView(Locale locale) {
         messages = ResourceBundle.getBundle("messages", locale);
 
