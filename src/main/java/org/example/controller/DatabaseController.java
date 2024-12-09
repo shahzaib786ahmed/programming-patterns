@@ -371,6 +371,40 @@ return true;
         return employees;
     }
 
+    public static Employee queryEmployeeByPassport(String passportNumber) {
+        READ_LOCK.lock();
+        String sql = "SELECT * FROM employees WHERE passportNumber = ?";
+        Employee employee = null;
+
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            // Set the parameter for the query
+            preparedStatement.setString(1, passportNumber);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    String lName = resultSet.getString("lName");
+                    String fName = resultSet.getString("fName");
+                    String phoneNumber = resultSet.getString("phoneNumber");
+                    String emailAddress = resultSet.getString("emailAddress");
+                    int age = resultSet.getInt("age");
+                    String username = resultSet.getString("username");
+                    String password = resultSet.getString("password");
+                    double discountRate = resultSet.getDouble("discountRate");
+
+                    employee = new Employee(lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password, discountRate);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+        return employee;
+    }
+
+
     //ABOUT FLIGHTS
     /**
      *  Create Flight Table
@@ -679,6 +713,41 @@ return true;
         }finally{
             WRITE_LOCK.unlock();
         }
+    }
+    public static Manager queryManagerByPassportNumber(String passportNumber) {
+        READ_LOCK.lock();
+        String sql = "SELECT * FROM managers WHERE passportNumber = ?";
+        Manager manager = null;
+
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            // Set the parameter for the query
+            preparedStatement.setString(1, passportNumber);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // Check if a manager was found
+                if (resultSet.next()) {
+                    String lName = resultSet.getString("lName");
+                    String fName = resultSet.getString("fName");
+                    String phoneNumber = resultSet.getString("phoneNumber");
+                    String emailAddress = resultSet.getString("emailAddress");
+                    int age = resultSet.getInt("age");
+                    String username = resultSet.getString("username");
+                    String password = resultSet.getString("password");
+                    double discountRate = resultSet.getDouble("discountRate");
+
+                    // Create the Manager object
+                    manager = new Manager(lName, fName, passportNumber, phoneNumber, emailAddress, age, username, password, discountRate);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            READ_LOCK.unlock();
+        }
+
+        return manager;
     }
 
     /**
@@ -1763,6 +1832,13 @@ return true;
         }
         return false;
     }
+
+    /**
+     * checks if a client exists with the corresponding username and password
+     * @param username the username of that client to be found
+     * @param password the password of that client to be found
+     * @return true if the specific client is founc
+     */
     public static boolean checkClientAccount(String username, String password) {
         READ_LOCK.lock();
         String sql = "SELECT COUNT(*) FROM clients WHERE username = ? AND password = ?";
@@ -1784,6 +1860,13 @@ return true;
         }
         return false;
     }
+
+    /**
+     * checks if a manager has the same username and password
+     * @param username the username of the manager to be found
+     * @param password the password of the manager to be found
+     * @return true if a manager is found
+     */
     public static boolean checkManagerAccount(String username, String password) {
         READ_LOCK.lock();
         String sql = "SELECT COUNT(*) FROM managers WHERE username = ? AND password = ?";

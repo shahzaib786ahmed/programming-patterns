@@ -24,7 +24,19 @@ public class BookingFlightController {
         DatabaseController.createTicketTable();
     }
 
+    /**
+     * Sets the {@link TicketSystem} instance for this object.
+     * This method allows the association of a specific {@link TicketSystem} to the current object,
+     * enabling it to interact with and utilize the functionalities provided by the {@link TicketSystem}.
+     *
+     * @param ticketSystem the {@link TicketSystem} instance to be associated with this object.
+     *                     Must not be {@code null}.
+     * @throws IllegalArgumentException if {@code ticketSystem} is {@code null}.
+     */
     public void setTicketSystem(TicketSystem ticketSystem) {
+        if (ticketSystem == null) {
+            throw new IllegalArgumentException("TicketSystem cannot be null");
+        }
         this.ticketSystem = ticketSystem;
     }
 
@@ -217,10 +229,6 @@ public class BookingFlightController {
             System.out.println("Ticket has been purchased for client: " + client.getLName() + ", " + client.getFName() +
                     " for flight: " + flight.getFlightNumber() + " from: " + flight.getDepartureLocation() + " to: " + flight.getArrivalLocation());
             System.out.println("Here's your ticket: ");
-            //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
-
-            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
-            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
             ticket.displayDetails();
         });
 
@@ -288,18 +296,14 @@ public class BookingFlightController {
             cancelTicket(ticket);
             ticket.getFlight().setFlightSeatNumber(ticket.getFlight().getFlightSeatNumber() + 1);
             refund(ticket);
-            //do we use search ticket bc it displays a specific ticket but now that method needs to be verified by yi
-
-            //Search ticket is for if a customer or employee want to look up a specific ticket for any client and displayDetails is good for
-            //printing after purchase like an overall look of the purchased ticket, so I think we should keep it, but we can discuss with yi if you still want
-            System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
+           System.out.println("Ticket: " + ticket.getTicketId() + " has been cancelled.");
         });
     }
 
     /**
-     * Checks a ticket from the list of bought ticket(s) of a client
+     * Checks a ticket from the list of tickets using the id
      *
-     * @param ticket_id list of the client
+     * @param ticket_id ticket id
      */
     public void viewTicketDetails(int ticket_id) {
         threadPool.submit(() -> {

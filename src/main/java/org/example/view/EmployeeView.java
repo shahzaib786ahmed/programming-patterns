@@ -1,5 +1,7 @@
 package org.example.view;
 
+import org.example.controller.CompanySystemController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +17,7 @@ public class EmployeeView extends JFrame {
         // Set up the frame
         setTitle(bundle.getString("employeeDashboardTitle"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300); // Adjusted size for better visual balance
+        setSize(400, 400); // Adjusted size for better visual balance
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(20, 20)); // Adjusted gap between components
 
@@ -30,6 +32,7 @@ public class EmployeeView extends JFrame {
         // Create buttons with localized text
         JButton openBookingButton = createStyledButton(bundle.getString("bookingFlightsButton"));
         JButton openHotelButton = createStyledButton(bundle.getString("bookingHotelsButton"));
+        JButton openCompanySystemButton = createStyledButton("Open Company System"); // New button for CompanySystemView
 
         // Create a panel for the buttons with BoxLayout for vertical alignment
         JPanel buttonPanel = new JPanel();
@@ -40,6 +43,8 @@ public class EmployeeView extends JFrame {
         buttonPanel.add(openBookingButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Space between buttons
         buttonPanel.add(openHotelButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Space between buttons
+        buttonPanel.add(openCompanySystemButton);
 
         // Add action listeners to buttons
         openBookingButton.addActionListener(new ActionListener() {
@@ -54,6 +59,14 @@ public class EmployeeView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new BookingHotelView(currentLocale).setVisible(true);
+                dispose(); // Close the EmployeeView window
+            }
+        });
+
+        openCompanySystemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new CompanySystemView(new CompanySystemController()).setVisible(true); // Open CompanySystemView
                 dispose(); // Close the EmployeeView window
             }
         });
