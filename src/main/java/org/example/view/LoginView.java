@@ -66,11 +66,11 @@ public class LoginView extends JFrame {
         selectLabel.setBounds(50, 50, 100, 30);
         panel.add(selectLabel);
 
-        JRadioButton employeeButton = new JRadioButton("Employee");
+        JRadioButton employeeButton = new JRadioButton(bundle.getString("employee"));
         employeeButton.setBounds(50, 90, 100, 30);
-        JRadioButton managerButton = new JRadioButton("Manager");
+        JRadioButton managerButton = new JRadioButton(bundle.getString("manager"));
         managerButton.setBounds(150, 90, 100, 30);
-        JRadioButton clientButton = new JRadioButton("Client");
+        JRadioButton clientButton = new JRadioButton(bundle.getString("client"));
         clientButton.setBounds(250, 90, 100, 30);
 
         ButtonGroup group = new ButtonGroup();
@@ -148,7 +148,7 @@ public class LoginView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (clientButton.isSelected()) {
-                    new CreateAccountView().setVisible(true);
+                    new CreateAccountView(currentLocale).setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, bundle.getString("pleaseSelectClientToCreateAccount"));

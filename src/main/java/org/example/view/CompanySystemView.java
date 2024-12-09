@@ -8,15 +8,19 @@ import org.example.model.Manager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class CompanySystemView extends JFrame {
     private CompanySystemController controller;
+    private ResourceBundle messages;
 
-    public CompanySystemView(CompanySystemController controller) {
+    public CompanySystemView(CompanySystemController controller, Locale locale) {
         this.controller = controller;
-        setTitle("Company System");
+        this.messages = ResourceBundle.getBundle("messages", locale);
+
+        setTitle(messages.getString("title"));
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -24,17 +28,17 @@ public class CompanySystemView extends JFrame {
         // Initialize UI components
         JPanel buttonPanel = new JPanel(new GridLayout(3, 3, 10, 10));
 
-        JButton addClientButton = new JButton("Add Client");
-        JButton addEmployeeButton = new JButton("Add Employee");
-        JButton addManagerButton = new JButton("Add Manager");
+        JButton addClientButton = new JButton(messages.getString("addClient"));
+        JButton addEmployeeButton = new JButton(messages.getString("addEmployee"));
+        JButton addManagerButton = new JButton(messages.getString("addManager"));
 
-        JButton deleteClientButton = new JButton("Delete Client");
-        JButton deleteEmployeeButton = new JButton("Delete Employee");
-        JButton deleteManagerButton = new JButton("Delete Manager");
+        JButton deleteClientButton = new JButton(messages.getString("deleteClient"));
+        JButton deleteEmployeeButton = new JButton(messages.getString("deleteEmployee"));
+        JButton deleteManagerButton = new JButton(messages.getString("deleteManager"));
 
-        JButton displayClientsButton = new JButton("Display Clients");
-        JButton displayEmployeesButton = new JButton("Display Employees");
-        JButton displayManagersButton = new JButton("Display Managers");
+        JButton displayClientsButton = new JButton(messages.getString("displayClients"));
+        JButton displayEmployeesButton = new JButton(messages.getString("displayEmployees"));
+        JButton displayManagersButton = new JButton(messages.getString("displayManagers"));
 
         // Add buttons to the panel
         buttonPanel.add(addClientButton);
@@ -58,69 +62,180 @@ public class CompanySystemView extends JFrame {
         deleteEmployeeButton.addActionListener(e -> controller.deleteEmployee(promptForEmployeeId()));
         deleteManagerButton.addActionListener(e -> controller.deleteManager(promptForManagerId()));
 
-        displayClientsButton.addActionListener(e -> controller.displayClients());
-        displayEmployeesButton.addActionListener(e -> controller.displayEmployee());
-        displayManagersButton.addActionListener(e -> controller.displayManagers());
+        displayClientsButton.addActionListener(e -> displayClients());
+        displayEmployeesButton.addActionListener(e -> displayEmployees());
+        displayManagersButton.addActionListener(e -> displayManagers());
 
         add(buttonPanel, BorderLayout.CENTER);
     }
 
+    private void showDataInPopup(String title, String[] columnNames, Object[][] data) {
+        JDialog dialog = new JDialog(this, title, true);
+        dialog.setSize(600, 400);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setLocationRelativeTo(this);
+
+        JTable table = new JTable(data, columnNames);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        dialog.setVisible(true);
+    }
+
+    private void displayClients() {
+        String[] columnNames = {
+                messages.getString("firstName"),
+                messages.getString("lastName"),
+                messages.getString("passportNumber"),
+                messages.getString("phone"),
+                messages.getString("email"),
+                messages.getString("age"),
+                messages.getString("username")
+        };
+
+        List<Client> clients = DatabaseController.queryAllClients();
+        if (clients.isEmpty()) {
+            JOptionPane.showMessageDialog(this, messages.getString("noClientsFound"));
+            return;
+        }
+
+        Object[][] data = new Object[clients.size()][columnNames.length];
+        for (int i = 0; i < clients.size(); i++) {
+            Client client = clients.get(i);
+            data[i] = new Object[]{
+                    client.getFName(),
+                    client.getLName(),
+                    client.getPassportNum(),
+                    client.getPhoneNumber(),
+                    client.getEmailAddress(),
+                    client.getAge(),
+                    client.getUsername()
+            };
+        }
+        showDataInPopup(messages.getString("displayClients"), columnNames, data);
+    }
+
+    private void displayEmployees() {
+        String[] columnNames = {
+                messages.getString("firstName"),
+                messages.getString("lastName"),
+                messages.getString("passportNumber"),
+                messages.getString("phone"),
+                messages.getString("email"),
+                messages.getString("age"),
+                messages.getString("username"),
+                messages.getString("discount")
+        };
+
+        List<Employee> employees = DatabaseController.queryAllEmployees();
+        if (employees.isEmpty()) {
+            JOptionPane.showMessageDialog(this, messages.getString("noEmployeesFound"));
+            return;
+        }
+
+        Object[][] data = new Object[employees.size()][columnNames.length];
+        for (int i = 0; i < employees.size(); i++) {
+            Employee employee = employees.get(i);
+            data[i] = new Object[]{
+                    employee.getFName(),
+                    employee.getLName(),
+                    employee.getPassportNum(),
+                    employee.getPhoneNumber(),
+                    employee.getEmailAddress(),
+                    employee.getAge(),
+                    employee.getUsername(),
+                    employee.getDiscountRate()
+            };
+        }
+        showDataInPopup(messages.getString("displayEmployees"), columnNames, data);
+    }
+
+    private void displayManagers() {
+        String[] columnNames = {
+                messages.getString("firstName"),
+                messages.getString("lastName"),
+                messages.getString("passportNumber"),
+                messages.getString("phone"),
+                messages.getString("email"),
+                messages.getString("age"),
+                messages.getString("username"),
+                messages.getString("discount")
+        };
+
+        List<Manager> managers = DatabaseController.queryAllManagers();
+        if (managers.isEmpty()) {
+            JOptionPane.showMessageDialog(this, messages.getString("noManagersFound"));
+            return;
+        }
+
+        Object[][] data = new Object[managers.size()][columnNames.length];
+        for (int i = 0; i < managers.size(); i++) {
+            Manager manager = managers.get(i);
+            data[i] = new Object[]{
+                    manager.getFName(),
+                    manager.getLName(),
+                    manager.getPassportNum(),
+                    manager.getPhoneNumber(),
+                    manager.getEmailAddress(),
+                    manager.getAge(),
+                    manager.getUsername(),
+                    manager.getDiscountRate()
+            };
+        }
+        showDataInPopup(messages.getString("displayManagers"), columnNames, data);
+    }
+
     private Client promptForClientDetails() {
-        String fName = JOptionPane.showInputDialog(this, "Enter Client First Name:");
-        String lName = JOptionPane.showInputDialog(this, "Enter Client last Name:");
-        String passNum = JOptionPane.showInputDialog(this, "Enter Client Passport Number:");
-
-        String phone = JOptionPane.showInputDialog(this, "Enter Client Phone Number:");
-        String email = JOptionPane.showInputDialog(this, "Enter Client Email:");
-        int age = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Client age:"));
-        String username = JOptionPane.showInputDialog(this, "Enter Client username:");
-        String password= JOptionPane.showInputDialog(this, "Enter Client Password:");
-
-
-        return new Client(lName,fName,passNum,phone,email,age,username,password,0); // Assumes Client has this constructor.
+        String fName = JOptionPane.showInputDialog(this, messages.getString("promptClientFirstName"));
+        String lName = JOptionPane.showInputDialog(this, messages.getString("promptClientLastName"));
+        String passNum = JOptionPane.showInputDialog(this, messages.getString("promptClientPassport"));
+        String phone = JOptionPane.showInputDialog(this, messages.getString("promptClientPhone"));
+        String email = JOptionPane.showInputDialog(this, messages.getString("promptClientEmail"));
+        int age = Integer.parseInt(JOptionPane.showInputDialog(this, messages.getString("promptClientAge")));
+        String username = JOptionPane.showInputDialog(this, messages.getString("promptClientUsername"));
+        String password = JOptionPane.showInputDialog(this, messages.getString("promptClientPassword"));
+        return new Client(lName, fName, passNum, phone, email, age, username, password, 0);
     }
 
     private Employee promptForEmployeeDetails() {
-        String lname = JOptionPane.showInputDialog(this, "Enter Employee Last Name:");
-        String fname = JOptionPane.showInputDialog(this, "Enter Employee First Name:");
-        String passNum = JOptionPane.showInputDialog(this, "Enter Employee Passport Number:");
-        String phone = JOptionPane.showInputDialog(this, "Enter Employee Phone Number:");
-        String email = JOptionPane.showInputDialog(this, "Enter Employee Email:");
-        int age = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Employee age:"));
-        String username = JOptionPane.showInputDialog(this, "Enter Employee username:");
-        String password= JOptionPane.showInputDialog(this, "Enter Employee Password:");
-        double discount = Double.parseDouble(JOptionPane.showInputDialog(this, "Enter Employee Discount:"));
-
-        return new Employee(lname,fname,passNum,phone,email,age,username,password,0.5); // Assumes Employee has this constructor.
+        String fName = JOptionPane.showInputDialog(this, messages.getString("promptEmployeeFirstName"));
+        String lName = JOptionPane.showInputDialog(this, messages.getString("promptEmployeeLastName"));
+        String passNum = JOptionPane.showInputDialog(this, messages.getString("promptEmployeePassport"));
+        String phone = JOptionPane.showInputDialog(this, messages.getString("promptEmployeePhone"));
+        String email = JOptionPane.showInputDialog(this, messages.getString("promptEmployeeEmail"));
+        int age = Integer.parseInt(JOptionPane.showInputDialog(this, messages.getString("promptEmployeeAge")));
+        String username = JOptionPane.showInputDialog(this, messages.getString("promptEmployeeUsername"));
+        String password = JOptionPane.showInputDialog(this, messages.getString("promptEmployeePassword"));
+        double discount = Double.parseDouble(JOptionPane.showInputDialog(this, messages.getString("promptEmployeeDiscount")));
+        return new Employee(lName, fName, passNum, phone, email, age, username, password, discount);
     }
 
     private Manager promptForManagerDetails() {
-        String lname = JOptionPane.showInputDialog(this, "Enter Manager Last Name:");
-        String fname = JOptionPane.showInputDialog(this, "Enter Manager First Name:");
-        String passNum = JOptionPane.showInputDialog(this, "Enter Manager Passport Number:");
-        String phone = JOptionPane.showInputDialog(this, "Enter Manager Phone Number:");
-        String email = JOptionPane.showInputDialog(this, "Enter Manager Email:");
-        int age = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Manager age:"));
-        String username = JOptionPane.showInputDialog(this, "Enter Manager username:");
-        String password= JOptionPane.showInputDialog(this, "Enter Manager Password:");
-        double discount = Double.parseDouble(JOptionPane.showInputDialog(this, "Enter Manager Discount:"));
-
-        return new Manager(lname,fname,passNum,phone,email,age,username,password,0.7); // Assumes Employee has this constructor.
+        String fName = JOptionPane.showInputDialog(this, messages.getString("promptManagerFirstName"));
+        String lName = JOptionPane.showInputDialog(this, messages.getString("promptManagerLastName"));
+        String passNum = JOptionPane.showInputDialog(this, messages.getString("promptManagerPassport"));
+        String phone = JOptionPane.showInputDialog(this, messages.getString("promptManagerPhone"));
+        String email = JOptionPane.showInputDialog(this, messages.getString("promptManagerEmail"));
+        int age = Integer.parseInt(JOptionPane.showInputDialog(this, messages.getString("promptManagerAge")));
+        String username = JOptionPane.showInputDialog(this, messages.getString("promptManagerUsername"));
+        String password = JOptionPane.showInputDialog(this, messages.getString("promptManagerPassword"));
+        double discount = Double.parseDouble(JOptionPane.showInputDialog(this, messages.getString("promptManagerDiscount")));
+        return new Manager(lName, fName, passNum, phone, email, age, username, password, discount);
     }
 
     private Client promptForClientId() {
-        String passNum = JOptionPane.showInputDialog(this, "Enter Client Passport Number to delete:");
-        return DatabaseController.findClientByPassportNumber(passNum); // Assumes Client can be constructed with an ID for deletion purposes.
+        String passNum = JOptionPane.showInputDialog(this, messages.getString("promptDeleteClient"));
+        return DatabaseController.findClientByPassportNumber(passNum);
     }
 
     private Employee promptForEmployeeId() {
-        String passNum = JOptionPane.showInputDialog(this, "Enter Employee Passport Number to delete:");
-        return DatabaseController.queryEmployeeByPassport(passNum); // Assumes Employee can be constructed with an ID for deletion purposes.
+        String passNum = JOptionPane.showInputDialog(this, messages.getString("promptDeleteEmployee"));
+        return DatabaseController.queryEmployeeByPassport(passNum);
     }
 
     private Manager promptForManagerId() {
-        String passNum = JOptionPane.showInputDialog(this, "Enter Manager Passport Number to delete:");
-        return DatabaseController.queryManagerByPassportNumber(passNum); // Assumes Manager can be constructed with an ID for deletion purposes.
+        String passNum = JOptionPane.showInputDialog(this, messages.getString("promptDeleteManager"));
+        return DatabaseController.queryManagerByPassportNumber(passNum);
     }
 
 }

@@ -5,6 +5,7 @@ import org.example.controller.DatabaseController;
 import org.example.model.Client;
 import org.example.model.Flight;
 import org.example.model.Ticket;
+import java.util.List; // Correct package
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -145,8 +146,31 @@ public class BookingFlightView extends JFrame {
         });
 
         viewFlightsButton.addActionListener(e -> {
-            controller.viewAllFlights();
-            JOptionPane.showMessageDialog(this, bundle.getString("viewFlightsMessage"));
+            // Clear existing rows in the table
+            model.setRowCount(0);
+
+            // Fetch the list of flights from the database or controller
+            List<Flight> flights = DatabaseController.queryAllFlight();
+
+            // Check if flights exist
+            if (flights.isEmpty()) {
+                JOptionPane.showMessageDialog(panel, bundle.getString("noFlightsMessage"));
+            } else {
+                // Add each flight's details as a row in the table
+                for (Flight flight : flights) {
+                    model.addRow(new Object[]{
+                            flight.getFlightNumber(),
+                            flight.getAirline(),
+                            flight.getPrice(),
+                            flight.getFlightSeatNumber(),
+                            flight.getDepartureLocation(),
+                            flight.getArrivalLocation(),
+                            flight.getDepartureTime(),
+                            flight.getArrivalTime()
+                    });
+                }
+                JOptionPane.showMessageDialog(panel, bundle.getString("flightsLoadedMessage"));
+            }
         });
 
         buttonPanel.add(addFlightButton);

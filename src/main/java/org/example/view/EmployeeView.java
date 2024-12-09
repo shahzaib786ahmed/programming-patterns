@@ -32,7 +32,7 @@ public class EmployeeView extends JFrame {
         // Create buttons with localized text
         JButton openBookingButton = createStyledButton(bundle.getString("bookingFlightsButton"));
         JButton openHotelButton = createStyledButton(bundle.getString("bookingHotelsButton"));
-        JButton openCompanySystemButton = createStyledButton("Open Company System"); // New button for CompanySystemView
+        JButton openCompanySystemButton = createStyledButton(bundle.getString("openCompanySystemButton")); // Localized button text
 
         // Create a panel for the buttons with BoxLayout for vertical alignment
         JPanel buttonPanel = new JPanel();
@@ -66,7 +66,7 @@ public class EmployeeView extends JFrame {
         openCompanySystemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CompanySystemView(new CompanySystemController()).setVisible(true); // Open CompanySystemView
+                new CompanySystemView(new CompanySystemController(), currentLocale).setVisible(true); // Open CompanySystemView
                 dispose(); // Close the EmployeeView window
             }
         });

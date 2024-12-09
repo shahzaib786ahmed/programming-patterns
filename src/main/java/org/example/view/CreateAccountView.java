@@ -5,14 +5,16 @@ import org.example.controller.DatabaseController;
 import org.example.model.Client;
 
 import javax.swing.*;
-
 import java.util.Locale;
-
-import static org.example.controller.DatabaseController.insertClient;
+import java.util.ResourceBundle;
 
 public class CreateAccountView extends JFrame {
-    public CreateAccountView() {
-        setTitle("Create Account");
+    private ResourceBundle messages;
+
+    public CreateAccountView(Locale locale) {
+        messages = ResourceBundle.getBundle("messages", locale);
+
+        setTitle(messages.getString("createAccount"));
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -21,7 +23,7 @@ public class CreateAccountView extends JFrame {
         panel.setLayout(null);
 
         // Adjusted coordinates to prevent overlapping
-        JLabel firstNameLabel = new JLabel("First Name:");
+        JLabel firstNameLabel = new JLabel(messages.getString("firstName"));
         firstNameLabel.setBounds(50, 20, 100, 30);
         panel.add(firstNameLabel);
 
@@ -29,7 +31,7 @@ public class CreateAccountView extends JFrame {
         firstNameField.setBounds(150, 20, 150, 30);
         panel.add(firstNameField);
 
-        JLabel lastNameLabel = new JLabel("Last Name:");
+        JLabel lastNameLabel = new JLabel(messages.getString("lastName"));
         lastNameLabel.setBounds(50, 60, 100, 30);
         panel.add(lastNameLabel);
 
@@ -37,7 +39,7 @@ public class CreateAccountView extends JFrame {
         lastNameField.setBounds(150, 60, 150, 30);
         panel.add(lastNameField);
 
-        JLabel passNumLabel = new JLabel("Passport Number:");
+        JLabel passNumLabel = new JLabel(messages.getString("passNum"));
         passNumLabel.setBounds(50, 100, 120, 30);
         panel.add(passNumLabel);
 
@@ -45,7 +47,7 @@ public class CreateAccountView extends JFrame {
         passNumField.setBounds(150, 100, 150, 30);
         panel.add(passNumField);
 
-        JLabel phoneNumLabel = new JLabel("Phone Number:");
+        JLabel phoneNumLabel = new JLabel(messages.getString("phoneNum"));
         phoneNumLabel.setBounds(50, 140, 100, 30);
         panel.add(phoneNumLabel);
 
@@ -53,7 +55,7 @@ public class CreateAccountView extends JFrame {
         phoneNumField.setBounds(150, 140, 150, 30);
         panel.add(phoneNumField);
 
-        JLabel emailLabel = new JLabel("Email:");
+        JLabel emailLabel = new JLabel(messages.getString("email"));
         emailLabel.setBounds(50, 180, 100, 30);
         panel.add(emailLabel);
 
@@ -61,7 +63,7 @@ public class CreateAccountView extends JFrame {
         emailField.setBounds(150, 180, 150, 30);
         panel.add(emailField);
 
-        JLabel ageLabel = new JLabel("Age:");
+        JLabel ageLabel = new JLabel(messages.getString("age"));
         ageLabel.setBounds(50, 220, 100, 30);
         panel.add(ageLabel);
 
@@ -69,7 +71,7 @@ public class CreateAccountView extends JFrame {
         ageField.setBounds(150, 220, 150, 30);
         panel.add(ageField);
 
-        JLabel usernameLabel = new JLabel("Username:");
+        JLabel usernameLabel = new JLabel(messages.getString("username"));
         usernameLabel.setBounds(50, 260, 100, 30);
         panel.add(usernameLabel);
 
@@ -77,7 +79,7 @@ public class CreateAccountView extends JFrame {
         usernameField.setBounds(150, 260, 150, 30);
         panel.add(usernameField);
 
-        JLabel passLabel = new JLabel("Password:");
+        JLabel passLabel = new JLabel(messages.getString("pass"));
         passLabel.setBounds(50, 300, 100, 30);
         panel.add(passLabel);
 
@@ -85,7 +87,7 @@ public class CreateAccountView extends JFrame {
         passwordField.setBounds(150, 300, 150, 30);
         panel.add(passwordField);
 
-        JButton createButton = new JButton("Create Account");
+        JButton createButton = new JButton(messages.getString("createAccount"));
         createButton.setBounds(100, 340, 150, 30);
         createButton.addActionListener(e -> {
             String fName = firstNameField.getText();
@@ -97,7 +99,7 @@ public class CreateAccountView extends JFrame {
             try {
                 age = Integer.parseInt(ageField.getText().trim());
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid age format.");
+                JOptionPane.showMessageDialog(null, messages.getString("invalidAge"));
                 return;
             }
             String username = usernameField.getText();
@@ -105,18 +107,16 @@ public class CreateAccountView extends JFrame {
             Client c1 = new Client(lName, fName, passNum, phoneNum, email, age, username, password, 0);
 
             if (DatabaseController.insertClient(c1)) {
-                JOptionPane.showMessageDialog(null, "Account Created Successfully!");
-                AuthentificationController.insertAccount(username,password);
-                new LoginView(Locale.US).setVisible(true);
+                JOptionPane.showMessageDialog(null, messages.getString("accountCreated"));
+                AuthentificationController.insertAccount(username, password);
+                new LoginView(locale).setVisible(true);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Error creating account. Try again.");
+                JOptionPane.showMessageDialog(null, messages.getString("errorCreatingAccount"));
             }
         });
         panel.add(createButton);
 
         add(panel);
     }
-
 }
-
